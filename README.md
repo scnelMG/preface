@@ -10,22 +10,58 @@
 휴대폰으로 얼굴을 한 바퀴 찍으면 내 3D 얼굴이 만들어지고,<br>
 부위를 골라 원하는 만큼 바꿔 보며 전후를 비교하는 웹 서비스다.
 
-[개인 기여](#개인-기여) · [로컬 실행](#로컬-실행) · [공개 범위](docs/public-scope.md)
+[개인 기여](#개인-기여) · [설계 결정](#핵심-설계-결정) · [팀 성과](#팀-성과) · [아키텍처](#시스템-아키텍처) · [로컬 실행](#로컬-실행)
 
-<sub>SSAFY 15기 자율 프로젝트 · B204</sub>
+**박민규 · AI 상담·3D 편집 연동**<br>
+<sub>SSAFY 15기 자율 프로젝트 · B204 · 7인 팀</sub>
 
 </div>
 
-<p align="center">
-  <a href="#왜-만들었나">왜 만들었나</a> ·
-  <a href="#주요-기능">주요 기능</a> ·
-  <a href="#휴대폰-영상-47초가-3d-얼굴이-되기까지">3D 생성 과정</a> ·
-  <a href="#개선-결과">개선 결과</a> ·
-  <a href="#트러블슈팅">트러블슈팅</a> ·
-  <a href="#시스템-아키텍처">아키텍처</a> ·
-  <a href="#저장소-구조">저장소 구조</a> ·
-  <a href="#팀">팀</a>
-</p>
+## 개인 기여
+
+**자연어 상담을 실제 3D 얼굴 편집으로 연결하는 기능을 구현했다.** Spring 상담 API에서 요청을 해석하고, 편집 검증·저장과 React 상담 화면을 연결했다. 답변이 생성되는 것뿐 아니라 **어떤 변경이 실제로 저장됐는지 화면과 대화가 일치하는 것**을 중심에 두었다.
+
+| 담당 영역 | 직접 구현·개선한 내용 |
+| --- | --- |
+| 상담 API·편집 적용 | 자연어를 지원 효과의 후보로 변환하고, 모호한 요청은 되묻는다. 서버의 편집 검증·저장 결과를 대화·변경 카드와 연결한다 |
+| 현재 시안에 근거한 추천 | 원본과 편집된 얼굴의 측정·관찰, 조절 전후 시험값을 추천에 연결한다. 허용된 후보·근거를 검증하고 해당 슬라이더·3D 비교로 이어 준다 |
+| 상태 관리·실패 복구 | 중복 GMS 호출을 제한하고, 시안 버전이 바뀐 뒤 오래된 제안을 적용하지 않게 한다. 대화 복귀 시 적용 결과와 추천을 복원한다 |
+
+주로 사용한 기술은 **Java·Spring Boot, React·TypeScript, Redis, GMS**다. 공통 3D 편집 엔진·모델 검증 계약은 관련 팀원과 연동했으며, 아래의 복원 속도·생성 실패율·유저 테스트 결과는 **팀 성과**다. 개인 작업 범위는 원본 Git 작성 이력과 공개된 구현·테스트를 대조해 정리했다.
+
+## 핵심 설계 결정
+
+### 1. AI의 해석과 얼굴의 변경을 별도 단계로 처리했다
+
+AI가 요청을 이해해도 모델에서 지원하지 않거나 저장에 실패하면 얼굴은 바뀌지 않는다. 상담 API는 **편집 후보**를 만들고, 적용 API가 소유권·`stateVersion`·모델별 허용 범위와 형상 검증 결과를 확인한 뒤 저장하도록 연결했다. 화면의 성공 안내·변경 카드는 저장된 `applyResult`를 기준으로 만든다. 실패한 후보가 대화 기록에서 적용된 것처럼 보이지 않게 처리했다.
+
+외부 GMS 호출은 DB 트랜잭션 밖에서 수행하고, 저장 시점에 상태를 다시 확인한다. 같은 요청 ID는 Redis에서 7일간 선점해 재전송 시 GMS를 다시 호출하지 않는다.
+
+[상담·저장 구현](services/backend/api/src/main/java/com/preface/api/consult/service/ConsultService.java) · [호출 중복 차단](services/backend/api/src/main/java/com/preface/api/consult/service/SpringConsultClient.java#L2069) · [클라이언트의 적용 결과 처리](apps/web/src/features/edit/lab/useConsult.ts#L80)
+
+### 2. 추천의 근거를 현재 3D 시안과 연결했다
+
+일반적인 미용 조언은 사용자가 이미 바꾼 얼굴이나 유지하려는 부위를 반영하지 못한다. 현재 시안에서 조절 전후를 시험한 측정값과 참고 자료를 후보에 연결하고, GMS에는 그 후보 안에서 선택·설명하도록 요청했다. 반환된 후보·측정·근거 ID와 방향을 다시 대조해, 준비한 근거와 맞지 않는 결과는 채택하지 않는다.
+
+추천 카드는 이유를 읽는 데서 끝나지 않고 해당 슬라이더와 3D 비교를 열 수 있게 했다. 새 시안에 예전 측정값을 표시하거나, 반영되지 않은 변경을 이미 적용했다고 설명하지 않게 했다.
+
+[추천 근거·응답 검증](services/backend/api/src/main/java/com/preface/api/consult/service/NextAdjustmentEvidence.java) · [현재 시안·비교 UI](apps/web/src/features/edit/lab/ConsultPanel.tsx) · [전후 측정 기반 추천 테스트](services/backend/api/src/test/java/com/preface/api/consult/service/SpringConsultClientTest.java#L3079)
+
+### 3. 대화와 편집 상태가 어긋나는 경우를 검증했다
+
+상담 도중 슬라이더를 움직이거나 새 대화를 시작하면 이전 제안이 현재 얼굴과 맞지 않을 수 있다. 후보를 시안의 편집 버전·대화 경계와 연결하고, 오래된 제안의 적용은 차단했다. 대화에 복귀할 때는 서버에 저장된 적용 결과와 추천을 복원한다.
+
+정상 응답뿐 아니라 **중복 요청·GMS 실패·버전 충돌·새 대화·화면 복귀**를 검사하는 회귀 코드를 함께 작성했다.
+
+| 확인할 상황 | 기대 동작 | 검증 코드 |
+| --- | --- | --- |
+| 같은 상담 요청을 재전송 | GMS 호출과 대화를 중복 생성하지 않는다 | [통합 테스트](services/backend/api/src/test/java/com/preface/api/consult/ConsultFlowIT.java#L1218) |
+| GMS가 지연되거나 실패 | 사용자 메시지·편집 후보를 저장하지 않는다 | [실패 경로 테스트](services/backend/api/src/test/java/com/preface/api/consult/ConsultFlowIT.java#L1118) |
+| 상담 후 편집 버전이 달라짐 | 변경을 거절하고 얼굴과 이력을 유지한다 | [버전 충돌 테스트](services/backend/api/src/test/java/com/preface/api/consult/ConsultFlowIT.java#L1027) |
+| 새 대화에서 이전 후보를 적용 | 기존 편집은 보존하고 이전 후보 적용은 차단한다 | [대화 경계 테스트](services/backend/api/src/test/java/com/preface/api/consult/ConsultFlowIT.java#L87) |
+| 슬라이더에서 상담으로 복귀 | 기존 추천과 비교 동작을 유지한다 | [화면 복귀 테스트](apps/web/src/features/edit/lab/ConsultPanel.test.tsx#L200) |
+
+각 테스트에서 해당 상황의 입력과 기대 결과를 확인할 수 있다. 서비스 간 책임은 [상담·편집 적용 계약](contracts/edit/consult-apply-v1.md)에 정리했다.
 
 ## 왜 만들었나
 
@@ -74,6 +110,11 @@
 
 ## 휴대폰 영상 47초가 3D 얼굴이 되기까지
 
+<details>
+<summary>팀이 구현한 3D 생성 파이프라인과 시연 수치</summary>
+
+<br>
+
 <table>
 <tr>
 <td width="50%" align="center"><img src="apps/web/public/guide/capture-sequence.gif" alt="휴대폰을 들고 얼굴을 한 바퀴 찍는 순서" width="100%"><br><sub>① 녹화: 음성 안내를 따라 얼굴을 한 바퀴 담는다</sub></td>
@@ -91,18 +132,22 @@
 | ⑥ 색 입히기 | 사진 색을 3D 피부에 입히기 | GPU 텍스처 굽기 · 사람별 헤어라인 · 민머리 피부 | 2048×2048 피부 지도 |
 | ⑦ 결과 확인 | 실제 사진과 겹쳐 닮았는지 확인 | 찍은 카메라 그대로 3D를 그려 비교 | 만들 때 안 쓴 사진 18장으로 채점 |
 
-## 개선 결과
+</details>
+
+## 팀 성과
+
+3D 복원·촬영·인프라·화면 개선을 합친 팀의 결과다. 개인 담당 기능의 성능 수치로 해석하지 않는다.
 
 <div align="center">
 
 | 3D 생성 실패율 | 한 명 처리 시간 | 닮은 정도 (10점 만점) | 피부가 어색하다는 응답 |
 | :---: | :---: | :---: | :---: |
 | 34.5% → **9.3%** | 13분 37초 → **3분 24초** | 6.36 → **8.11** | 63.6% → **15.8%** |
-| 운영 작업 기록[^ops] | PoC 단독 실행 → 운영 평균[^time] | 1·2차 유저 테스트[^ut] | 1·2차 유저 테스트[^ut] |
+| 발표자료의 생성 기록[^ops] | PoC·개선 후 비교[^time] | 1·2차 유저 테스트[^ut] | 1·2차 유저 테스트[^ut] |
 
 </div>
 
-## 트러블슈팅
+## 팀의 3D 복원 개선
 
 결과에 가장 크게 영향을 준 세 가지다. 그 밖에 부딪힌 문제(평균 얼굴로 채워진 부위, 쌍꺼풀이 사라짐, 기종마다 다른 카메라·자이로 축, 텍스처 이음매, 카톡 압축 화질 등)는 [발표 자료](https://preface-presentation.vercel.app)에 있다.
 
@@ -147,28 +192,6 @@
 한 건을 빠르게 만드는 것과 대기열을 줄이는 것은 별개의 문제였다. 1차 배포에서는 워커 하나가 한 명씩 처리했다. 2차 배포에서는 **Redis 리스트에 작업을 대기시키고 GPU 워커 4개가 나눠 처리**하도록 운영했다.
 
 캠퍼스 부스에서 **23명의 요청이 집중된 운영 사례의 평균 완료 시간은 5분 53초**였다. 이는 해당 운영 사례의 결과이며, 지속적인 동시접속 23명이나 최대 처리량을 보장하는 부하 테스트 수치는 아니다.
-
-## 개인 기여
-
-**박민규 · AI 상담·챗봇**
-
-원본 저장소의 작성자 이력과 코드를 기준으로 정리한 개인 작업이다. 3D 복원 성능과 유저 테스트 결과는 팀 성과다.
-
-- **자연어 상담과 3D 편집 연결:** 사용자 요청을 편집 후보로 해석하고, 모호한 요청의 추가 질문·미지원 안내·실제 적용 결과를 대화와 연결했다.
-- **얼굴 분석에 근거한 조절 제안:** 원본과 현재 시안의 측정·관찰을 바탕으로 조절 이유를 설명하고, 추천 카드에서 슬라이더·3D 미리보기로 이어지도록 구현했다.
-- **상담 상태와 실패 복구:** 대화 복귀와 추천 결과 복원, 같은 요청의 중복 호출 방지, 변경된 시안에서 이전 제안을 적용하는 문제를 다뤘다.
-
-상담은 **후보 생성**과 **실제 편집 저장**을 구분한다. AI가 문장을 이해했다는 이유만으로 성공을 표시하지 않고, 저장된 실제 결과를 변경 카드와 대화의 근거로 쓴다. 외부 AI 호출은 DB 트랜잭션 밖에서 수행하고, 저장할 때 소유권·현재 편집 버전·허용 범위를 확인한다.
-
-| 살펴볼 코드 | 내용 |
-| --- | --- |
-| [ConsultService.java](services/backend/api/src/main/java/com/preface/api/consult/service/ConsultService.java) | 상담·편집 후보·저장 경계 |
-| [SpringConsultClient.java](services/backend/api/src/main/java/com/preface/api/consult/service/SpringConsultClient.java) | Spring에서 호출하는 상담 클라이언트 |
-| [NextAdjustmentEvidence.java](services/backend/api/src/main/java/com/preface/api/consult/service/NextAdjustmentEvidence.java) | 다음 조절 제안의 근거 |
-| [ConsultPanel.tsx](apps/web/src/features/edit/lab/ConsultPanel.tsx) | 상담 화면, 추천과 3D 비교 연결 |
-| [상담 테스트](services/backend/api/src/test/java/com/preface/api/consult/service) | 해석·추천·교정·적용 경계의 회귀 검사 |
-
-[상담·적용 계약](contracts/edit/consult-apply-v1.md)에서 서비스 간 책임과 실패 시 동작을 확인할 수 있다.
 
 ## 시스템 아키텍처
 
