@@ -1,0 +1,67 @@
+{
+  "jobId": "7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40",
+  "attempt": 1,
+  "input": {
+    "downloadUrl": "https://storage.example.invalid/synthetic/input.mov",
+    "expiresAt": "2026-10-26T06:40:00Z",
+    "contentType": "video/quicktime",
+    "sizeBytes": 148000000,
+    "checksumSha256": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  "maxFrames": 100,
+  "claimedAt": "2026-10-26T06:30:05Z",
+  "leaseTimeoutSec": 600,
+  "capture": {
+    "method": "WEB_RECORDER",
+    "deviceModel": "SM-S921N",
+    "trace": {
+      "version": 1,
+      "guideVersion": "synthetic",
+      "trackerVersion": "mediapipe-0.10.14",
+      "meta": {
+        "durationMs": 24000,
+        "stopReason": "complete",
+        "stepsDone": 6,
+        "stepsTotal": 6,
+        "mimeType": "video/mp4"
+      },
+      "steps": [
+        {
+          "name": "recleft",
+          "startMs": 0,
+          "endMs": 50
+        },
+        {
+          "name": "sweepleft",
+          "startMs": 50,
+          "endMs": 4200
+        }
+      ],
+      "trace": [
+        [
+          0,
+          55.0,
+          -1.0,
+          1
+        ],
+        [
+          50,
+          54.2,
+          -1.1,
+          1
+        ],
+        [
+          100,
+          null,
+          null,
+          0
+        ]
+      ],
+      "trackSettings": {
+        "width": 1920,
+        "height": 1080,
+        "frameRate": 30
+      }
+    }
+  }
+}

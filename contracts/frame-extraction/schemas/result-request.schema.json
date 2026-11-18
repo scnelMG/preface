@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://preface.local/contracts/frame-extraction/result-request.schema.json",
+  "title": "ExtractionResult (INT-EXT-03)",
+  "description": "추출 결과. SUCCEEDED면 bundle·lens 필수, FAILED면 failCodes 필수. 이미지·서명 URL·토큰은 어느 필드에도 넣지 않는다.",
+  "type": "object",
+  "required": [
+    "attempt",
+    "status"
+  ],
+  "properties": {
+    "attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "SUCCEEDED",
+        "FAILED"
+      ]
+    },
+    "bundle": {
+      "type": "object",
+      "required": [
+        "objectKey",
+        "sizeBytes",
+        "checksumSha256",
+        "frameCount"
+      ],
+      "properties": {
+        "objectKey": {
+          "type": "string",
+          "pattern": "^users/[0-9a-f-]{36}/uploads/[0-9a-f-]{36}/frames-a[0-9]+\\.tar$"
+        },
+        "sizeBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "checksumSha256": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{43}=$"
+        },
+        "frameCount": {
+          "description": "images/ 장 수(1~maxFrames)",
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "lens": {
+      "$ref": "./lens.schema.json"
+    },
+    "videoMeta": {
+      "description": "INT-REC-03 videoMeta와 같은 형식(contracts/reconstruction/schemas/result-request.schema.json). GPS 금지",
+      "type": "object"
+    },
+    "failCodes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "QUALITY_NO_FACE",
+          "QUALITY_ANGLE",
+          "QUALITY_LIGHT",
+          "QUALITY_COMPRESSED",
+          "FIT_FAILED",
+          "TIMEOUT",
+          "INTERNAL"
+        ]
+      }
+    },
+    "debugMessage": {
+      "type": "string",
+      "maxLength": 1000
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "SUCCEEDED"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "bundle",
+          "lens"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "FAILED"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "failCodes"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

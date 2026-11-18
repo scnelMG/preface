@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<title>원본 3D 참조점 검수</title>
+<style>
+  body { font: 16px system-ui, sans-serif; margin: 1rem; }
+  canvas { display: block; width: min(100%, 960px); height: min(68vh, 720px); touch-action: none; background: #e7e8eb; }
+  fieldset { margin: .75rem 0; }
+</style>
+<script type="importmap">
+{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}
+</script>
+<h1>원본 3D 참조점 검수</h1>
+<p>승인된 원본 GLB를 연다. 모델의 오른쪽은 정면에서 화면 왼쪽이다. 확대하고 표시할 점을 고른 뒤 피부를 더블클릭한다.</p>
+<p>눈 안쪽은 위·아래 눈꺼풀이 만나는 점이다. 콧볼은 바깥으로 가장 돌출된 피부점이며, 아래쪽에서 주름과 비공 경계를 구분한다.</p>
+<label>원본 GLB <input id="model" type="file" accept=".glb"></label>
+<label>검수자 가명 <input id="reviewer" autocomplete="off"></label>
+<button id="front" type="button" disabled>정면</button>
+<button id="basal" type="button" disabled>아래쪽</button>
+<fieldset>
+  <legend>표시할 점</legend>
+  <label><input name="point" type="radio" value="0" checked>오른쪽 콧볼</label>
+  <label><input name="point" type="radio" value="1">왼쪽 콧볼</label>
+  <label><input name="point" type="radio" value="2">오른쪽 눈 안쪽</label>
+  <label><input name="point" type="radio" value="3">왼쪽 눈 안쪽</label>
+</fieldset>
+<canvas aria-label="원본 3D 모델"></canvas>
+<p id="status" role="status">파일을 선택한다.</p>
+<label><input id="reviewed" type="checkbox">정면과 아래쪽에서 네 점을 확인했다.</label>
+<button id="save" type="button" disabled>검수 기록 저장</button>
+<script type="module">
+  import * as THREE from 'three';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+  const get = (id) => document.getElementById(id);
+  const canvas = document.querySelector('canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color('#e7e8eb');
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xb6bed1, 2));
+  const light = new THREE.DirectionalLight(0xffffff, 2);
+  light.position.set(-1, 2, 3);
+  scene.add(light);
+  const camera = new THREE.OrthographicCamera();
+  const orbit = new OrbitControls(camera, canvas);
+  const markerGeometry = new THREE.SphereGeometry(1, 12, 8);
+  const markers = [0xa9002d, 0xa9002d, 0x0059b5, 0x0059b5].map((color) => {
+    const marker = new THREE.Mesh(markerGeometry, new THREE.MeshBasicMaterial({ color }));
+    marker.visible = false;
+    scene.add(marker);
+    return marker;
+  });
+  const ray = new THREE.Raycaster();
+  const indices = Array(4).fill(null);
+  const visited = new Set();
+  let root, skin, sha, center, size, loadId = 0;
+
+  function render() {
+    const width = canvas.clientWidth, height = canvas.clientHeight;
+    if (!width || !height) return;
+    renderer.setSize(width, height, false);
+    const half = (size || 1) * .55;
+    camera.left = -half * width / height;
+    camera.right = -camera.left;
+    camera.top = half;
+    camera.bottom = -half;
+    camera.updateProjectionMatrix();
+    renderer.render(scene, camera);
+  }
+  orbit.addEventListener('change', render);
+  new ResizeObserver(render).observe(canvas);
+
+  function refresh() {
+    get('save').disabled = !sha || !get('reviewer').value.trim() ||
+      !get('reviewed').checked || visited.size !== 2 || indices.includes(null);
+    if (sha) get('status').textContent = `표시한 점 ${indices.filter(Number.isInteger).length}/4`;
+  }
+  function view(name) {
+    visited.add(name);
+    const direction = name === 'front' ? new THREE.Vector3(0, 0, 1) : new THREE.Vector3(0, -1, .35);
+    orbit.target.copy(center);
+    camera.position.copy(center).addScaledVector(direction, 3 * size);
+    camera.zoom = 1;
+    camera.near = size * .01;
+    camera.far = size * 12;
+    orbit.update();
+    render();
+    refresh();
+  }
+  get('front').onclick = () => view('front');
+  get('basal').onclick = () => view('basal');
+  get('reviewer').oninput = get('reviewed').onchange = refresh;
+
+  get('model').onchange = (event) => loadModel(event.target.files[0]);
+  async function loadModel(file) {
+    const request = ++loadId;
+    sha = null;
+    skin = null;
+    visited.clear();
+    indices.fill(null);
+    markers.forEach((marker) => { marker.visible = false; });
+    get('front').disabled = get('basal').disabled = true;
+    get('reviewed').checked = false;
+    if (root) scene.remove(root);
+    render();
+    refresh();
+    get('status').textContent = '원본 GLB를 읽는 중이다.';
+    try {
+      const bytes = await file.arrayBuffer();
+      const header = new DataView(bytes);
+      if (header.getUint32(0, true) !== 0x46546c67 || header.getUint32(4, true) !== 2 ||
+          header.getUint32(8, true) !== bytes.byteLength || header.getUint32(16, true) !== 0x4e4f534a) {
+        throw Error('GLB header');
+      }
+      const json = JSON.parse(new TextDecoder().decode(new Uint8Array(bytes, 20, header.getUint32(12, true))));
+      const source = json.meshes?.filter((mesh) => mesh.name === 'skin');
+      if (source?.length !== 1 || source[0].primitives?.length !== 1 ||
+          [...(json.buffers ?? []), ...(json.images ?? [])].some((entry) => entry.uri !== undefined)) {
+        throw Error('external or unsupported mesh');
+      }
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      const gltf = await new GLTFLoader().parseAsync(bytes, '');
+      if (request !== loadId) return;
+      const candidate = gltf.scene.getObjectByName('skin');
+      gltf.scene.updateMatrixWorld(true);
+      if (!candidate?.isMesh || !candidate.matrixWorld.equals(new THREE.Matrix4()) ||
+          !candidate.geometry.index || candidate.geometry.getAttribute('position').count !==
+            json.accessors[source[0].primitives[0].attributes.POSITION].count) throw Error('invalid skin');
+      const bounds = new THREE.Box3().setFromObject(candidate);
+      center = bounds.getCenter(new THREE.Vector3());
+      size = bounds.getSize(new THREE.Vector3()).y;
+      if (!Number.isFinite(size) || size <= 0) throw Error('invalid scale');
+      skin = candidate;
+      root = gltf.scene;
+      scene.add(root);
+      sha = Array.from(new Uint8Array(digest), (value) => value.toString(16).padStart(2, '0')).join('');
+      get('front').disabled = get('basal').disabled = false;
+      view('front');
+    } catch {
+      if (request === loadId) get('status').textContent = '이 원본 GLB의 피부 메시를 열 수 없다.';
+    }
+  }
+
+  canvas.ondblclick = (event) => {
+    if (!skin) return;
+    const { left, top, width, height } = canvas.getBoundingClientRect();
+    ray.setFromCamera(new THREE.Vector2(2 * (event.clientX - left) / width - 1,
+      1 - 2 * (event.clientY - top) / height), camera);
+    const hit = ray.intersectObject(skin, false)[0];
+    if (!hit?.face) return;
+    const slot = Number(document.querySelector('input[name="point"]:checked').value);
+    const positions = skin.geometry.getAttribute('position');
+    const vertex = new THREE.Vector3(), nearest = markers[slot];
+    let distance = Infinity;
+    for (const index of [hit.face.a, hit.face.b, hit.face.c]) {
+      vertex.fromBufferAttribute(positions, index);
+      const squared = hit.point.distanceToSquared(vertex);
+      if (squared >= distance) continue;
+      distance = squared;
+      indices[slot] = index;
+      nearest.position.copy(vertex);
+    }
+    nearest.visible = true;
+    nearest.scale.setScalar(size * .003);
+    get('reviewed').checked = false;
+    render();
+    refresh();
+  };
+
+  get('save').onclick = () => {
+    const review = { meshSha256: sha, reviewer: get('reviewer').value.trim(), frontal: true, basal: true,
+      vertexSpace: 'skin-primitive-index', alar: indices.slice(0, 2), innerEye: indices.slice(2) };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(review, null, 2)], { type: 'application/json' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'baseline-reference.json';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+</script>
+</html>

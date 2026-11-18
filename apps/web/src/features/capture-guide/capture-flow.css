@@ -1,0 +1,852 @@
+/*
+ * 새 모델(PC) 흐름 조각(2026-10-31) — CaptureFlowParts.tsx, app/preview/new/phone-guide.tsx 순서 막대.
+ * 색은 토큰만 쓴다(밝은·어두운 화면 같이 바뀐다). 보라는 쓰지 않고 잉크·흐린 글자·머리카락 선으로만.
+ */
+
+/* ── 준비 카드 넷: 그림(아이콘) + ✓/✕ 표 + 제목 + 한 줄 ── */
+.pf-prep-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 28px;
+}
+.pf-prep-cards li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--pf-hairline);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--pf-surface) 70%, transparent);
+}
+.pf-prep-icon {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--pf-ink) 5%, transparent);
+  color: var(--pf-ink);
+}
+.pf-prep-cards li[data-kind='dont'] .pf-prep-icon {
+  color: var(--pf-muted);
+}
+.pf-prep-text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.pf-prep-text strong {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--pf-ink);
+}
+.pf-prep-text > span {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--pf-muted);
+  word-break: keep-all;
+}
+
+/* ── 휴대폰 안내 아래 순서 막대: 단계마다 머무는 시간만큼의 너비, 지금 단계가 시간에 맞춰 차오른다 ── */
+.pc-guide-controls {
+  width: min(100%, 340px);
+  align-items: flex-start;
+}
+.pc-motion-timeline {
+  display: flex;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+}
+.pc-motion-timeline button {
+  display: flex;
+  min-width: 0;
+  flex-basis: 0;
+  flex-direction: column;
+  gap: 7px;
+  padding: 8px 0 4px;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+.pc-motion-bar {
+  position: relative;
+  display: block;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--pf-hairline-strong);
+}
+.pc-motion-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--pf-ink);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+.pc-motion-timeline button[data-state='done'] .pc-motion-fill,
+.pc-motion-timeline button[data-state='current'] .pc-motion-fill {
+  transform: scaleX(1);
+}
+.pc-motion-label {
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--pf-faint);
+  transition: color 150ms ease;
+}
+.pc-motion-timeline button[data-state='current'] .pc-motion-label {
+  color: var(--pf-ink);
+  font-weight: 600;
+}
+.pc-motion-timeline button[data-state='done'] .pc-motion-label {
+  color: var(--pf-muted);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pc-motion-timeline button:hover .pc-motion-label {
+    color: var(--pf-ink);
+  }
+}
+@keyframes pc-motion-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pc-motion-fill[data-running] {
+    animation-name: pc-motion-fill;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+}
+.pc-guide-controls .pc-guide-play {
+  flex: none;
+  margin-top: 1px;
+}
+
+@media (max-width: 760px) {
+  .pf-prep-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── 촬영 무대(2026-10-31 2차): 옆에서 본 사람 + 겹친 휴대폰 화면 ────────────────────────────
+ * 하나만 기억에 남게: 천천히 흐르는 옅은 그라데이션 무대(shadergradient 느낌, CSS만) 위에 점토 마네킹이 팔을 뻗고,
+ * 오른쪽에 유리 테두리 휴대폰이 떠서 그 순간 화면을 보여 준다(레퍼런스: Pear.no·Cosmos의 넓은 여백, liquid glass 테두리).
+ * 나머지(준비 목록·글)는 조용하게 둔다. */
+.pf-connected-capture .pc-capture-layout {
+  grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.45fr);
+  column-gap: clamp(32px, 4vw, 64px);
+}
+.pf-connected-capture .pc-capture-demo {
+  max-width: 760px;
+  padding-top: 0;
+}
+.pf-connected-capture .pc-guide {
+  width: 100%;
+  align-items: stretch;
+}
+.pc-capture-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  height: clamp(380px, 40vw, 520px);
+  border-radius: 32px;
+  background:
+    radial-gradient(
+      70% 80% at 12% 10%,
+      color-mix(in srgb, var(--pf-accent) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      60% 70% at 92% 96%,
+      color-mix(in srgb, var(--pf-accent) 10%, transparent),
+      transparent 72%
+    ),
+    linear-gradient(165deg, var(--pf-surface) 0%, var(--pf-canvas-deep) 100%);
+  box-shadow: inset 0 0 0 1px var(--pf-hairline);
+}
+/* 천천히 흐르는 빛 덩어리(움직임 줄이기면 멈춘다) */
+.pc-capture-stage::before {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  z-index: -1;
+  background:
+    radial-gradient(
+      34% 30% at 30% 40%,
+      color-mix(in srgb, var(--pf-accent) 20%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      30% 26% at 70% 62%,
+      color-mix(in srgb, var(--pf-surface) 90%, transparent),
+      transparent 70%
+    );
+  filter: blur(30px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pc-capture-stage::before {
+    animation: pc-stage-drift 22s ease-in-out infinite alternate;
+  }
+}
+@keyframes pc-stage-drift {
+  to {
+    transform: translate3d(8%, -6%, 0) rotate(8deg);
+  }
+}
+.pc-arm-view {
+  position: absolute;
+  inset: 0 30% 0 0;
+}
+.pc-arm-view .pc-guide-loading {
+  padding: 32px;
+}
+
+/* 유리 테두리 휴대폰: 테두리는 흰빛→보라빛 그라데이션, 위쪽 빛 맺힘, 아래로 깊은 그림자 */
+.pc-capture-stage .pc-phone {
+  position: absolute;
+  top: 50%;
+  right: 7%;
+  width: 184px;
+  height: 376px;
+  border: 7px solid transparent;
+  border-radius: 36px;
+  background:
+    linear-gradient(var(--pf-surface), var(--pf-surface)) padding-box,
+    linear-gradient(
+        150deg,
+        color-mix(in srgb, white 92%, transparent),
+        color-mix(in srgb, var(--pf-accent) 22%, white) 45%,
+        color-mix(in srgb, white 70%, transparent)
+      )
+      border-box;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 80%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--pf-ink) 8%, transparent),
+    0 34px 60px -28px color-mix(in srgb, var(--pf-ink) 45%, transparent);
+  transform: translateY(-50%) rotate(3deg);
+}
+.pc-capture-stage .pc-phone-island {
+  width: 58px;
+  height: 16px;
+  margin-top: 6px;
+  border-radius: 999px;
+  background: var(--pf-ink);
+}
+.pc-capture-stage .pc-phone-top {
+  padding: 12px 14px 0;
+  font-size: 10.5px;
+  color: var(--pf-muted);
+}
+.pc-phone-rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.pc-phone-rec::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pf-danger);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pc-phone-rec::before {
+    animation: pc-rec-blink 1.6s ease-in-out infinite;
+  }
+}
+@keyframes pc-rec-blink {
+  50% {
+    opacity: 0.35;
+  }
+}
+.pc-capture-stage .pc-phone-model {
+  height: 280px;
+  margin-top: 4px;
+}
+.pc-capture-stage .pc-phone-home {
+  bottom: 8px;
+  width: 64px;
+  left: calc(50% - 32px);
+  background: var(--pf-ink);
+  opacity: 0.8;
+}
+
+/* 지금 단계: 큰 이름 + 한 줄 안내(무대 아래 왼쪽 정렬) */
+.pc-guide-caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+  margin-top: 22px;
+}
+.pc-guide-caption strong {
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  color: var(--pf-ink);
+}
+.pc-guide-caption p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--pf-muted);
+  word-break: keep-all;
+}
+.pf-connected-capture .pc-guide-controls {
+  width: 100%;
+  margin-top: 14px;
+}
+.pf-connected-capture .pc-guide-note {
+  max-width: none;
+  margin-top: 4px;
+  text-align: left;
+  font-size: 12.5px;
+  color: var(--pf-faint);
+}
+
+/* 준비 목록은 조용하게: 테두리 상자 없이 아이콘 + 글 두 줄, 두 칸 */
+.pf-connected-capture .pf-prep-cards {
+  gap: 18px 24px;
+}
+.pf-connected-capture .pf-prep-cards li {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+@media (max-width: 1059px) {
+  .pf-connected-capture .pc-capture-layout {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 36px;
+  }
+  .pf-connected-capture .pc-capture-copy {
+    max-width: 620px;
+  }
+  .pf-connected-capture .pc-capture-demo {
+    max-width: none;
+  }
+}
+@media (max-width: 640px) {
+  .pc-capture-stage {
+    height: 420px;
+  }
+  .pc-arm-view {
+    inset: 0 0 30% 0;
+  }
+  .pc-capture-stage .pc-phone {
+    top: auto;
+    bottom: 18px;
+    right: 18px;
+    width: 132px;
+    height: 262px;
+    border-width: 5px;
+    border-radius: 28px;
+    transform: rotate(3deg);
+  }
+  .pc-capture-stage .pc-phone-model {
+    height: 186px;
+  }
+}
+
+/* ══ 새 모델 페이지(2026-10-31 5차) ═══════════════════════════════════════════════════════
+ * 한 화면에 다 보이게. 왼쪽 열: 제목·핵심 한 줄 → 행동 → 찍기 전 준비. 오른쪽 열: 상자 없이 바탕으로 번지는 시연 영상
+ * → 지금 단계 문구(영상과 함께 한 장씩 넘어감) → 한 줄 진행선. 다른 화면과 같은 토큰(잉크·보라 하나, Pretendard). */
+.pf-cap {
+  position: relative;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(16px, 2.4vh, 32px) 4% 40px;
+}
+.pf-cap-close {
+  position: absolute;
+  top: 8px;
+  right: 4%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--pf-muted);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .pf-cap-close:hover {
+    background: color-mix(in srgb, var(--pf-ink) 6%, transparent);
+    color: var(--pf-ink);
+  }
+}
+/* 큰 화면에서는 머리줄 아래 남는 높이의 가운데에 놓는다 */
+.pf-cap-grid {
+  display: grid;
+  min-height: calc(100svh - 190px);
+  grid-template-columns: minmax(300px, 0.72fr) minmax(0, 1.5fr);
+  align-items: center;
+  gap: clamp(32px, 4.5vw, 72px);
+}
+.pf-cap-left {
+  --pf-cap-left-gap: clamp(22px, 3.4vh, 36px);
+  /* 영상 촬영하기 버튼 위아래 간격(-891) */
+  --pf-cap-cta-gap: 12px;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--pf-cap-left-gap);
+}
+.pf-cap-intro h1 {
+  margin: 0;
+  font-size: clamp(30px, 2.8vw, 46px);
+  line-height: 1.14;
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  color: var(--pf-ink);
+  word-break: keep-all;
+}
+.pf-cap-intro p {
+  max-width: 26em;
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--pf-ink-2);
+  word-break: keep-all;
+}
+/*
+ * 영상 촬영하기 버튼은 소개 줄과 아래 안내 줄("휴대폰으로 QR을 찍으면…") 사이 가운데에 둔다(S15P31B204-891).
+ * 전에는 왼쪽 열 간격(22~36px)에 버튼의 margin-top(flow.css 20px)이 더해져 위가 42~56px, 아래가 10px이었다.
+ */
+.pf-cap-action .pc-capture-preparation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pf-cap-cta-gap);
+}
+/* 큰 화면에서만 소개 바로 아래에 붙는다(좁은 화면은 소개와 버튼 사이에 영상이 와 그대로 둔다). QR 단계도 그대로 둔다 */
+@media (min-width: 861px) {
+  .pf-cap-action .pc-connect-demo {
+    margin-top: 0;
+  }
+  .pf-cap-intro + .pf-cap-action:has(> .pc-capture-preparation) {
+    margin-top: calc(var(--pf-cap-cta-gap) - var(--pf-cap-left-gap));
+  }
+}
+.pf-cap-action .pc-demo-note {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--pf-muted);
+}
+
+/* QR 단계: QR 왼쪽 + 오른쪽 한 칸(제목·설명·연결 상태·안내). 위아래 선·여백 없이 버튼 자리에 그대로 들어간다 */
+.pf-cap .pf-capture-link-page {
+  margin-top: 0;
+}
+.pf-cap .pc-connection {
+  align-items: flex-start;
+  gap: 18px;
+  min-height: 0;
+  margin-top: 0;
+  padding: 0;
+  border: 0;
+}
+.pf-cap .pc-connection-body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+}
+.pf-cap .pc-connection h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 650;
+  color: var(--pf-ink);
+}
+.pf-cap .pc-connection-body > p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--pf-ink-2);
+  word-break: keep-all;
+}
+.pf-cap .pc-connection-body > div {
+  min-height: 0;
+  margin: 4px 0 0;
+  padding: 0;
+  font-size: 13px;
+}
+.pf-cap .pc-connection-body > .pc-demo-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--pf-muted);
+}
+
+/* 시연 영상: 상자·테두리 없이. 가장자리를 마스크로 옅게 해 바탕과 이어진다 */
+.pf-cap-right {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+}
+.pf-motion-stage {
+  position: relative;
+  width: min(100%, calc((100svh - 300px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  mask-composite: intersect;
+}
+.pf-motion-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* 어두운 화면: 밝은 선 그림을 뒤집어 어두운 바탕에 밝은 선으로(보라는 색상 회전으로 되돌린다) */
+:root[data-theme='dark'] .pf-motion-media {
+  filter: invert(1) hue-rotate(180deg);
+}
+.pf-motion-controls {
+  display: flex;
+  width: min(100%, 400px);
+  align-items: center;
+  gap: 14px;
+}
+/* 멈춤 버튼: 테두리 없는 아이콘(마우스를 올리면 옅은 바탕) */
+.pf-motion-play {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--pf-muted);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    scale 150ms ease-out;
+}
+@media (hover: hover) and (pointer: fine) {
+  .pf-motion-play:hover {
+    background: color-mix(in srgb, var(--pf-ink) 6%, transparent);
+    color: var(--pf-ink);
+  }
+}
+.pf-motion-play:active {
+  scale: 0.96;
+}
+
+/* 지금 단계 문구: 영상 바로 아래 가운데. 단계가 바뀌면 아래에서 살짝 떠오르며 선명해진다 */
+.pf-motion-caption {
+  display: flex;
+  width: min(100%, 560px);
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: -4px;
+  text-align: center;
+}
+.pf-motion-slide {
+  display: flex;
+  min-height: 74px;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.pf-motion-slide strong {
+  font-size: 24px;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  color: var(--pf-ink);
+}
+.pf-motion-slide[data-returning] strong {
+  color: var(--pf-muted);
+}
+.pf-motion-slide p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--pf-ink-2);
+  word-break: keep-all;
+}
+@keyframes pf-slide-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    translate: 0 10px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pf-motion-slide {
+    animation: pf-slide-in 380ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  }
+}
+/* 한 줄 진행선: 단계마다 한 칸(머무는 시간만큼의 너비) */
+.pf-motion-track {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  gap: 6px;
+}
+.pf-motion-track button {
+  display: grid;
+  min-width: 0;
+  flex: 1 1 0;
+  height: 20px;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.pf-motion-track button > span {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--pf-hairline-strong);
+  transition: height 150ms ease;
+}
+.pf-motion-track button > span > span {
+  position: absolute;
+  inset: 0;
+  background: var(--pf-ink);
+  transform-origin: left center;
+}
+@media (hover: hover) and (pointer: fine) {
+  .pf-motion-track button:hover > span {
+    height: 4px;
+  }
+}
+
+/* 찍기 전에: 왼쪽 열 아래. 머리카락 선 위에 작은 제목, 그림 + 제목 + 한 줄 설명 넷, 맺음 한 줄 */
+.pf-cap-prep {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 20px;
+  border-top: 1px solid var(--pf-hairline);
+}
+.pf-cap-prep h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--pf-ink);
+}
+.pf-cap .pf-prep-cards,
+.pf-mcap .pf-prep-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 0;
+}
+.pf-cap .pf-prep-cards li,
+.pf-mcap .pf-prep-cards li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.pf-cap .pf-prep-art,
+.pf-mcap .pf-prep-art {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--pf-surface);
+  box-shadow: inset 0 0 0 1px var(--pf-hairline);
+}
+.pf-cap .pf-prep-art img,
+.pf-mcap .pf-prep-art img {
+  width: 88%;
+  height: 88%;
+}
+/* ✓·✕: 제목 앞 작은 기호(그림 밖). ✓는 잉크, ✕만 위험 색 */
+.pf-cap .pf-prep-text strong,
+.pf-mcap .pf-prep-text strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.pf-prep-mark {
+  display: inline-grid;
+  color: var(--pf-ink);
+}
+.pf-cap .pf-prep-cards li[data-kind='dont'] .pf-prep-mark,
+.pf-mcap .pf-prep-cards li[data-kind='dont'] .pf-prep-mark {
+  color: var(--pf-danger);
+}
+.pf-cap .pf-prep-text strong,
+.pf-mcap .pf-prep-text strong {
+  font-size: 14px;
+}
+.pf-cap .pf-prep-text > span,
+.pf-mcap .pf-prep-text > span {
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.pf-prep-note {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--pf-muted);
+  word-break: keep-all;
+}
+:root[data-theme='dark'] .pf-cap .pf-prep-art img,
+:root[data-theme='dark'] .pf-mcap .pf-prep-art img {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* 좁은 화면: 한 줄(소개 → 영상·문구 → 행동 → 준비) */
+@media (max-width: 860px) {
+  .pf-cap {
+    padding: 20px 5% 48px;
+  }
+  .pf-cap-grid {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .pf-cap-left {
+    display: contents;
+  }
+  .pf-cap-intro {
+    order: 1;
+    padding-right: 40px;
+  }
+  .pf-cap-right {
+    order: 2;
+  }
+  .pf-cap-action {
+    order: 3;
+  }
+  .pf-cap-prep {
+    order: 4;
+  }
+  .pf-motion-stage {
+    width: 100%;
+  }
+}
+
+/*
+ * 휴대폰 촬영 안내(SCR-05, 2026-10-31) — features/capture/components/CaptureGuide.tsx.
+ * PC와 같은 시연·준비 그림을 한 줄로 쌓고, 버튼만 화면 아래에 붙인다(외울 순서 줄은 2026-11-01에 뺐다).
+ */
+.pf-mcap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 24px;
+}
+.pf-mcap-intro h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
+  color: var(--pf-ink);
+  word-break: keep-all;
+}
+.pf-mcap-intro p {
+  margin: 8px 0 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--pf-ink-2);
+  word-break: keep-all;
+}
+.pf-mcap-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pf-mcap .pf-motion-stage {
+  width: 100%;
+}
+.pf-mcap .pf-motion-caption {
+  width: 100%;
+  gap: 12px;
+}
+.pf-mcap .pf-motion-slide {
+  min-height: 78px;
+}
+.pf-mcap .pf-motion-slide strong {
+  font-size: 20px;
+}
+.pf-mcap .pf-motion-slide p {
+  font-size: 14px;
+}
+.pf-mcap .pf-motion-controls {
+  width: 100%;
+}
+/* "찍기 전에" 팝업 안(S15P31B204-566). 제목은 Modal이 단다 */
+.pf-mcap-prep {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+/* 영상 아래 작은 글자 링크: 팝업을 다시 연다 */
+.pf-mcap-prep-reopen {
+  margin-top: 12px;
+  padding: 6px 8px;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  color: var(--pf-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+/* 아래에 붙은 버튼: 위로 바탕이 번지듯 흐려진다 */
+.pf-mcap-dock {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: auto calc(50% - 50vw) 0;
+  padding: 28px calc(50vw - 50%) calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-bg-paper) 0%, transparent),
+    var(--color-bg-paper) 26px
+  );
+}
+.pf-mcap-help {
+  margin: -20px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--pf-muted);
+  text-align: center;
+  word-break: keep-all;
+}
+.pf-mcap-help strong {
+  font-weight: 600;
+  color: var(--pf-ink);
+}
+/* 웹 녹화를 못 하는 브라우저: 촬영 버튼 자리에 안내 */
+.pf-mcap-unsupported {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--pf-ink);
+  word-break: keep-all;
+}

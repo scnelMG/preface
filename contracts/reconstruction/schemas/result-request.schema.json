@@ -1,0 +1,345 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://preface.local/contracts/reconstruction/result-request.schema.json",
+  "title": "ResultRequest (INT-REC-03)",
+  "description": "작업이 끝나면(성공·실패) 한 번 보낸다. 같은 내용으로 다시 보내도 된다(멱등). 얼굴 이미지·영상·서명 URL·위치(GPS)는 어떤 필드에도 넣지 않는다.",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/succeeded"
+    },
+    {
+      "$ref": "#/$defs/failed"
+    }
+  ],
+  "$defs": {
+    "succeeded": {
+      "type": "object",
+      "required": [
+        "status",
+        "meshObjectKey",
+        "rigObjectKey",
+        "meshFormat",
+        "morphSchemaVersion",
+        "captureImages"
+      ],
+      "properties": {
+        "status": {
+          "const": "SUCCEEDED"
+        },
+        "meshObjectKey": {
+          "description": "Before 메시 S3 key. INT-REC-04에서 현재 시도에 발급한 mesh.objectKey와 같아야 한다",
+          "$ref": "#/$defs/objectKey"
+        },
+        "rigObjectKey": {
+          "description": "같은 복원 작업의 코 편집 리그 S3 key. 생성 성공에는 필수",
+          "$ref": "#/$defs/objectKey"
+        },
+        "expressionObjectKey": {
+          "description": "표정 트래킹 리그 S3 key(선택, S15P31B204-879). INT-REC-04에서 현재 시도에 발급한 expression.objectKey와 같아야 한다. 만들지 못했으면 생략한다(생성은 그대로 성공)",
+          "$ref": "#/$defs/objectKey"
+        },
+        "noseApproval": {
+          "description": "워커가 생성한 원본·리그 결속과 검증된 코 범위. Spring은 모델 등록 전에 다시 검사한다. 생략되면 모델은 등록하고 코 편집은 잠근다",
+          "type": "object",
+          "required": ["schemaVersion", "binding", "ranges"],
+          "properties": {
+            "schemaVersion": {"type": "string", "pattern": "^v[0-9]+$"},
+            "binding": {
+              "type": "object",
+              "required": ["meshSha256", "rigSha256", "fitSha", "engine", "rigVersion", "topologyVersion"],
+              "properties": {
+                "meshSha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+                "rigSha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+                "fitSha": {"type": "string"},
+                "engine": {"type": "string"},
+                "rigVersion": {"type": "string"},
+                "topologyVersion": {"type": "string"}
+              },
+              "additionalProperties": false
+            },
+            "ranges": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "type": "object",
+                "required": ["min", "max"],
+                "properties": {"min": {"type": "number"}, "max": {"type": "number"}},
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "textureObjectKey": {
+          "description": "텍스처 S3 key. GLB에 내장했으면 생략하거나 null",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/objectKey"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "thumbnailObjectKey": {
+          "description": "정면 썸네일(webp) S3 key. 없으면 생략하거나 null",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/objectKey"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "meshFormat": {
+          "description": "1차는 GLB만",
+          "const": "GLB"
+        },
+        "morphSchemaVersion": {
+          "description": "큐 메시지의 morphSchemaVersion을 그대로",
+          "type": "string",
+          "pattern": "^v[0-9]+$"
+        },
+        "eyeReview": {
+          "description": "GLB asset.extras.live-mirror.eye_review와 같은 눈별 주름 판정. 없으면 기존 모델처럼 눈 편집 잠금",
+          "type": "object",
+          "required": ["L", "R"],
+          "properties": {
+            "L": {"enum": ["present", "absent"]},
+            "R": {"enum": ["present", "absent"]}
+          },
+          "additionalProperties": false
+        },
+        "eyePartsSha256": {
+          "description": "eyeReview를 판정한 원본 model/eye_parts.json 바이트의 SHA-256 소문자 hex. GLB eye_parts_sha256과 같아야 한다. 없으면 눈 승인·편집은 잠긴다",
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "eyeApproval": {
+          "description": "최종 메시·리그 및 눈 판정에 결속된 눈 승인 한계 후보. limits는 브라우저와 같은 엔진(engine/eye-edit.mjs measureEyeSafeLimit)으로 잰 단독 안전 한계(엔진 단위 0~100). <종류>:height는 무쌍(absent) 눈이 있을 때만 있다. 코 승인이 없으면 Spring은 실제 자산을 눈 검사기로 확인한다. 결속·판정이 맞지 않거나 후보가 없으면 눈 편집만 잠근다",
+          "type": "object",
+          "required": ["schemaVersion", "binding", "limits"],
+          "properties": {
+            "schemaVersion": {"type": "string", "pattern": "^v[0-9]+$"},
+            "binding": {
+              "type": "object",
+              "required": ["meshSha256", "rigSha256", "eyePartsSha256", "engine", "rigVersion", "topologyVersion"],
+              "properties": {
+                "meshSha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+                "rigSha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+                "eyePartsSha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+                "engine": {"type": "string"},
+                "rigVersion": {"type": "string"},
+                "topologyVersion": {"type": "string"}
+              },
+              "additionalProperties": false
+            },
+            "limits": {
+              "type": "object",
+              "required": ["inner", "outer", "lower", "upper"],
+              "properties": {
+              "inline:height": {"type": "number", "minimum": 0, "maximum": 100},
+              "inout:height": {"type": "number", "minimum": 0, "maximum": 100},
+              "outline:height": {"type": "number", "minimum": 0, "maximum": 100},
+              "inner": {"type": "number", "minimum": 0, "maximum": 100},
+              "outer": {"type": "number", "minimum": 0, "maximum": 100},
+              "lower": {"type": "number", "minimum": 0, "maximum": 100},
+              "upper": {"type": "number", "minimum": 0, "maximum": 100}
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "hairMeta": {
+          "description": "촬영 프레임으로 추정한 머리 속성(S15P31B204-551). 헤어 템플릿 추천에만 쓴다. 이미지가 아니다. 없거나 형식이 틀리면 Spring은 저장하지 않고 생성은 성공으로 둔다(best-effort). part는 정면 사진을 보는 사람 기준 좌우",
+          "type": "object",
+          "required": ["schemaVersion"],
+          "properties": {
+            "schemaVersion": {"type": "string", "pattern": "^v[0-9]+$"},
+            "length": {"enum": ["short", "medium", "long"]},
+            "bangs": {"enum": ["none", "partial", "full"]},
+            "part": {"enum": ["none", "left", "center", "right"]},
+            "color": {"enum": ["black", "brown", "blond", "gray"]},
+            "rgb": {"type": "string", "pattern": "^#[0-9a-f]{6}$"}
+          },
+          "additionalProperties": false
+        },
+        "measurements": {
+          "description": "부위별 측정값(숫자·짧은 문자열). LLM 입력용 텍스트 수치이며 이미지가 아니다. 키 형식은 AI 파트가 정한다. 직렬화 64KB 이하",
+          "type": "object"
+        },
+        "qualityReport": {
+          "$ref": "#/$defs/qualityReport"
+        },
+        "videoMeta": {
+          "$ref": "#/$defs/videoMeta"
+        },
+        "durationMs": {
+          "$ref": "#/$defs/durationMs"
+        },
+        "captureImages": {
+          "description": "5방향 얼굴 사진 S3 key(INT-REC-04 captures.*.objectKey 그대로). 5개 모두 필수. Spring이 face_capture_image에 영구 보관한다(v2.9)",
+          "type": "object",
+          "required": [
+            "FRONT",
+            "LEFT",
+            "RIGHT",
+            "LEFT_45",
+            "RIGHT_45"
+          ],
+          "properties": {
+            "FRONT": {
+              "$ref": "#/$defs/objectKey"
+            },
+            "LEFT": {
+              "$ref": "#/$defs/objectKey"
+            },
+            "RIGHT": {
+              "$ref": "#/$defs/objectKey"
+            },
+            "LEFT_45": {
+              "$ref": "#/$defs/objectKey"
+            },
+            "RIGHT_45": {
+              "$ref": "#/$defs/objectKey"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "failed": {
+      "type": "object",
+      "required": [
+        "status",
+        "failCodes"
+      ],
+      "properties": {
+        "status": {
+          "const": "FAILED"
+        },
+        "failCodes": {
+          "description": "실패 사유 코드(복수 가능). 사용자 문구는 FE 사전이 코드별로 만든다",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "QUALITY_NO_FACE",
+              "QUALITY_ANGLE",
+              "QUALITY_LIGHT",
+              "QUALITY_COMPRESSED",
+              "FIT_FAILED",
+              "TIMEOUT",
+              "INTERNAL"
+            ]
+          }
+        },
+        "debugMessage": {
+          "description": "운영 로그용 내부 메시지(FE 미노출). 1000자 넘으면 잘라서 저장한다. 서명 URL·토큰·개인정보 금지",
+          "type": "string",
+          "maxLength": 1000
+        },
+        "qualityReport": {
+          "$ref": "#/$defs/qualityReport"
+        },
+        "videoMeta": {
+          "$ref": "#/$defs/videoMeta"
+        },
+        "durationMs": {
+          "$ref": "#/$defs/durationMs"
+        }
+      },
+      "additionalProperties": false
+    },
+    "objectKey": {
+      "type": "string",
+      "pattern": "^users/[0-9a-f-]{36}/models/[0-9a-f-]{36}/[A-Za-z0-9._/-]+$",
+      "maxLength": 500
+    },
+    "durationMs": {
+      "description": "워커 처리 시간(ms). 생략하면 Spring이 startedAt~보고 시각으로 계산",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 86400000
+    },
+    "qualityReport": {
+      "description": "입력 품질 검사 수치(얼굴 검출·각도·조명 등). 키 형식은 AI 파트가 정한다. 직렬화 64KB 이하",
+      "type": "object"
+    },
+    "videoMeta": {
+      "description": "ffprobe로 뽑은 원본 영상 기술 정보. 아래 키만 저장한다(그 밖의 키는 버린다). 위치(GPS)는 보내지 않는다(REQ-N-20)",
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "codec": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "durationMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rotation": {
+          "type": "integer"
+        },
+        "hdr": {
+          "type": "boolean"
+        },
+        "bitrate": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deviceMake": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 100
+        },
+        "deviceModel": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 100
+        },
+        "recordedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "encoder": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 100
+        },
+        "originalSuspect": {
+          "description": "원본이 아닐(재인코딩·편집) 가능성. 서버(워커)만 판단한다",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

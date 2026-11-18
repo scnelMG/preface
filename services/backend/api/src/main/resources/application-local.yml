@@ -1,0 +1,24 @@
+# 로컬 개발용. 로컬 MySQL·Redis(docker)를 쓴다. 비밀번호는 여기 쓰지 않고 환경 변수 DB_PASSWORD로 넘긴다.
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/preface?serverTimezone=UTC&characterEncoding=UTF-8}
+    username: ${DB_USERNAME:preface}
+  flyway:
+    # 로컬은 혼자 쓰므로 앱 시작 때 migration을 돌린다
+    enabled: true
+  jpa:
+    show-sql: false
+
+preface:
+  auth:
+    allowed-redirect-uris: ${OAUTH_ALLOWED_REDIRECT_URIS:http://localhost:3000/oauth/kakao,http://localhost:3000/oauth/google}
+  # 로컬 MinIO 등. 키는 환경 변수 S3_ACCESS_KEY·S3_SECRET_KEY로 넘긴다
+  storage:
+    endpoint: ${S3_ENDPOINT:http://localhost:9000}
+    bucket: ${S3_BUCKET:preface-local}
+    path-style-access: ${S3_PATH_STYLE_ACCESS:true}
+  capture:
+    qr-base-url: ${CAPTURE_QR_BASE_URL:http://localhost:3000}
+  # 로컬은 FE(3000)와 BE(8080) 포트가 달라 cross-origin이다. 배포는 프록시가 같은 주소로 묶어 이 설정이 필요 없다
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}

@@ -1,0 +1,140 @@
+# 공통 설정. 비밀값은 저장소에 두지 않고 환경 변수로만 받는다(REQ-N-09).
+spring:
+  application:
+    name: preface-api
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    # 앱 시작 때 돌리지 않는다. migrate 프로필로 따로 실행한다(MigrateRunner).
+    enabled: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      # 운영은 비밀번호를 건다. 비어 있으면 인증 없이 붙는다(로컬·CI)
+      password: ${REDIS_PASSWORD:}
+
+preface:
+  auth:
+    # HS256 키(32바이트 이상). 배포 환경 변수로만 넣는다
+    jwt-secret: ${JWT_SECRET}
+    access-token-ttl: 30m
+    signup-token-ttl: 10m
+    # [가정] 명세 미정. 로그인 유지 기간
+    refresh-token-ttl: 14d
+    refresh-cookie-secure: true
+    # 같은 도메인의 운영·개발이 쿠키를 덮어쓰지 않게 개발 서버만 refresh_token_dev로 바꾼다
+    refresh-cookie-name: ${REFRESH_COOKIE_NAME:refresh_token}
+    # 쉼표로 구분한 FE 콜백 주소 목록. 비어 있으면 모든 로그인이 AUTH_011
+    allowed-redirect-uris: ${OAUTH_ALLOWED_REDIRECT_URIS:}
+    kakao:
+      client-id: ${OAUTH_KAKAO_CLIENT_ID:}
+      client-secret: ${OAUTH_KAKAO_CLIENT_SECRET:}
+    google:
+      client-id: ${OAUTH_GOOGLE_CLIENT_ID:}
+      client-secret: ${OAUTH_GOOGLE_CLIENT_SECRET:}
+  # 영상 업로드 정책. API-CAP-01 검증과 API-CAP-02 응답이 이 값 하나를 쓴다
+  upload:
+    url-ttl: 10m
+    # multipart 조각 크기(S15P31B204-506). 이보다 큰 영상은 조각으로 나눠 병렬로 올린다
+    part-size-bytes: 8388608
+    video:
+      allowed-content-types: video/mp4,video/webm,video/quicktime
+      max-size-bytes: 262144000
+      min-duration-ms: 20000
+      max-duration-ms: 75000
+      recommended-duration-ms: 25000
+  # S3 호환 스토리지. 키를 비우면 AWS 기본 자격 증명 체인(ECS 작업 역할 등)을 쓴다
+  storage:
+    endpoint: ${S3_ENDPOINT:}
+    region: ${S3_REGION:ap-northeast-2}
+    bucket: ${S3_BUCKET}
+    access-key: ${S3_ACCESS_KEY:}
+    secret-key: ${S3_SECRET_KEY:}
+    path-style-access: ${S3_PATH_STYLE_ACCESS:false}
+  # QR 휴대폰 연결
+  capture:
+    qr-base-url: ${CAPTURE_QR_BASE_URL}
+    link-ttl: 180s
+    session-ttl: 30m
+  # 시안 공유 링크(S15P31B204-574). 이 버전 이상 FACE_PUBLIC 동의가 있어야 공유를 만든다.
+  # 기본값은 가입 때 받는 FACE_PUBLIC v1(필수, 2026-11-10 사용자 결정, S15P31B204-749). 빈 값을 주면 아무도 공유를 만들 수 없다(닫는 스위치)
+  share:
+    web-base-url: ${SHARE_WEB_BASE_URL:${CAPTURE_QR_BASE_URL:}}
+    face-public-min-version: ${SHARE_FACE_PUBLIC_MIN_VERSION:2026-10-v1}
+    ttl: 7d
+  # 관리자 페이지(S15P31B204-651). 운영·개발 탭 표시와 운영에서 촬영 사진을 막는 데 쓴다.
+  # 배포 서버는 compose가 .env의 STAGE(prod·dev)를 넘긴다. 비어 있으면 local
+  admin:
+    environment: ${ADMIN_ENVIRONMENT:local}
+  internal:
+    # GPU 워커와 나누는 공유 시크릿(32바이트 이상). 비어 있으면 /internal/** 가 모두 401
+    secret: ${INTERNAL_API_SECRET:}
+  # Spring이 GMS로 직접 상담한다. GMS_KEY는 서버 환경 변수로만 받는다.
+  ai:
+    base-url: ${GMS_BASE_URL:https://gms.ssafy.io/gmsapi}
+    connect-timeout: 2s
+    read-timeout: 18s
+  reconstruction:
+    morph-schema-version: v1
+    poll-interval: 3s
+    # [가정] 워커 하트비트 간격·lease 만료(contracts/reconstruction/README.md)
+    heartbeat-interval: 120s
+    lease-timeout: 600s
+    max-attempts: 2
+    recent-failure-window: 24h
+    failed-upload-retention: 24h
+    # 프레임 추출(S15P31B204-353): 최대 장 수, 추출 워커 lease·시도 수 [가정]
+    max-frames: 100
+    extract-lease-timeout: 600s
+    extract-max-attempts: 2
+  notification:
+    # [가정] 알림 보관 기간(API 명세서 NOTI-01 [제안] 90일)
+    retention: 90d
+  # Mattermost 완료 알림(S15P31B204-476). webhook URL은 비밀값(채널 고정 해제). 비어 있으면 기능이 꺼진다
+  mattermost:
+    webhook-url: ${MM_NOTIFY_WEBHOOK_URL:}
+    # DM 속 링크의 FE 주소. 따로 안 주면 QR 주소(같은 FE)를 쓴다
+    web-base-url: ${MM_NOTIFY_WEB_BASE_URL:${CAPTURE_QR_BASE_URL:}}
+    code-ttl: 10m
+    resend-interval: 60s
+    max-attempts: 5
+    timeout: 3s
+
+server:
+  port: 8080
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # prometheus: EC2 모니터링이 docker 망 안에서만 읽는다. 프록시(Caddy)는 /api/*만 내보내 밖에서는 닿지 않는다(S15P31B204-454)
+        include: health,prometheus
+  metrics:
+    distribution:
+      # 응답 시간 p95를 Prometheus에서 계산할 수 있게 구간(bucket)을 남긴다
+      percentiles-histogram:
+        http.server.requests: true
+        # 외부 호출(GMS 등) p95. GMS 지연 분포를 보려고 켠다(S15P31B204-372)
+        http.client.requests: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

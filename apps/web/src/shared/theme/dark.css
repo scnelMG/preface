@@ -1,0 +1,57 @@
+/*
+ * 어두운 화면(다크 모드, 2026-10-31) — <html data-theme="dark">일 때만 쓰인다(shared/theme).
+ *
+ * 색 토큰(--pf-*)은 shared/design/system.css의 어두운 값이 바꾼다. 여기서는 토큰 바깥에 박힌 밝은 색만 덮는다:
+ * 예전 층(Figma v3 --v3-*)에서 service.css가 다시 잇지 않은 값, 밝은 바탕을 가정한 글자색.
+ * 밝은 화면(기본)은 이 파일의 영향을 받지 않는다.
+ */
+:root[data-theme='dark'] :is(.preface-app, .preface-preview) {
+  --v3-bg-surface: var(--pf-surface);
+  --v3-bg-warm: var(--pf-raised);
+  --v3-bg-stone: var(--pf-raised);
+  --v3-bg-cream: var(--pf-raised);
+  --v3-brand-lavender-soft: var(--pf-raised);
+  --v3-brand-lavender-tint: var(--pf-raised);
+  --v3-brand-violet-soft: var(--pf-accent);
+  --v3-text-on-dark: var(--pf-on-ink);
+  --v3-text-stone: var(--pf-muted);
+  --v3-text-sand: var(--pf-muted);
+  --v3-line-sand: var(--pf-line);
+  --v3-line-warm: var(--pf-line);
+  /* 고른 탭 글자(Tab)처럼 짙은 숯색을 글자로 쓰던 곳은 밝은 잉크로 */
+  --v3-neutral-charcoal: var(--pf-ink);
+  --v3-overlay-scrim: var(--pf-scrim);
+  --pp-control: var(--pf-raised);
+}
+
+:root[data-theme='dark'] .preface-app dialog {
+  border: 1px solid var(--pf-hairline);
+  box-shadow: var(--pf-shadow-pop);
+}
+:root[data-theme='dark'] .preface-app dialog::backdrop {
+  background: var(--pf-scrim);
+}
+
+/* 떠 있는 메뉴(계정·서비스)와 툴팁 */
+:root[data-theme='dark'] .preface-app :is(.pp-account > div, .pp-nav-panel) {
+  background: var(--pf-surface);
+  border-color: var(--pf-hairline);
+  box-shadow: var(--pf-shadow-pop);
+}
+:root[data-theme='dark'] .preface-app .pp-tooltip-label > span {
+  background: var(--pf-ink);
+  color: var(--pf-on-ink);
+}
+
+/* 공용 버튼의 마우스 올림 색은 밝은 화면 값이 박혀 있다(system.css). 어두운 화면에서는 글자가 묻히지 않게 토큰으로 */
+:root[data-theme='dark'] .preface-app .btn-primary:hover {
+  background: color-mix(in srgb, var(--pf-ink) 86%, var(--pf-canvas));
+}
+:root[data-theme='dark'] .preface-app .btn-ghost:hover {
+  background: color-mix(in srgb, var(--pf-ink) 6%, transparent);
+}
+
+/* 알림 점은 바탕과 떼어 보이게 바탕색 테두리 */
+:root[data-theme='dark'] .preface-app .pf-unread-dot {
+  box-shadow: 0 0 0 2px var(--pf-canvas);
+}

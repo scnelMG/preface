@@ -1,0 +1,72 @@
+# 영역별 세부 항목은 각 영역의 .gitignore에 둔다. 여기에는 저장소 전체에 공통인 항목만 둔다.
+
+# ── 비밀정보 ──────────────────────────────
+.env
+.env.*
+!.env.example
+*.env
+!*.env.example
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+
+# ── OS·편집기 ─────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# ── AI 도구 (개인 설정·작업 폴더) ─────────
+.claude/worktrees/
+.claude/settings.local.json
+CLAUDE.local.md
+
+# ── Node.js / Next.js ─────────────────────
+node_modules/
+.next/
+out/
+.pnpm-store/
+*.tsbuildinfo
+.eslintcache
+next-env.d.ts
+
+# ── Java / Gradle ─────────────────────────
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/gradle/wrapper/gradle-wrapper.jar
+
+# ── Python ────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.uv-cache/
+
+# ── 테스트·CI 산출물 ──────────────────────
+coverage/
+playwright-report/
+test-results/
+*.log
+
+# ── 모델 가중치 (Git에 두지 않고 비공개 저장소에서 받음) ──
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+
+# ── 인프라 코드 ───────────────────────────
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example

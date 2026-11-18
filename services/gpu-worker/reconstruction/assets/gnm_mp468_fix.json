@@ -1,0 +1,8 @@
+{
+ "note": "2026-10-22: ring landmarks attached to socket-interior vertices (inside the eyeball radius) re-attached to the mirror of the other eye's lid-margin vertex (template symmetric about x = 0)",
+ "vertex": {
+  "161": 11037,
+  "385": 1143,
+  "374": 604
+ }
+}

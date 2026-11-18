@@ -1,0 +1,80 @@
+/*
+ * 클래스 하나로 묶어야 하는 컴포넌트 스타일. 브라우저별 가상 요소처럼 Tailwind 클래스로 쓰기 힘든 것만 둔다.
+ *
+ * CSS Module(*.module.css)은 이 프로젝트에서 동작하지 않는다. next.config.ts의 Turbopack 규칙이
+ * *.css 전부를 Tailwind 처리기로 넘겨서 클래스 이름이 만들어지지 않는다. 대신 여기 @utility로 둔다.
+ */
+
+/*
+ * Figma v3/SliderRow의 slider. 트랙 2px(line-default) · 채움 2px(brand-violet)
+ * · 손잡이 14px 단색 원(2026-10-30, 이중 원 대신 하나의 원).
+ * 레이아웃 높이는 Figma처럼 4px인 부모가 잡고, 누르는 영역만 24px로 넓힌다.
+ * 채움 구간은 --fill-from(%)부터 --fill(%)까지다. 0이 원본인 양쪽 범위(−100~100%)는 가운데에서 값 쪽으로만 칠한다.
+ * Firefox의 range-progress는 왼쪽 끝부터만 칠할 수 있어, 양쪽 범위에서는 트랙 그라데이션을 대신 쓴다(SliderRow).
+ */
+@utility slider-range {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 24px;
+  width: 100%;
+  margin: 0;
+  transform: translateY(-50%);
+  background: transparent;
+  appearance: none;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  &::-webkit-slider-runnable-track {
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      var(--v3-line-default) var(--fill-from, 0%),
+      var(--v3-brand-violet) var(--fill-from, 0%),
+      var(--v3-brand-violet) var(--fill),
+      var(--v3-line-default) var(--fill)
+    );
+  }
+
+  &::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+    margin-top: -6px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--v3-text-ink);
+    appearance: none;
+    transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  /* 잡고 있는 동안 손잡이가 조금 커져 지금 조절 중임을 알린다 */
+  &:active:not(:disabled)::-webkit-slider-thumb {
+    transform: scale(1.15);
+  }
+  &:active:not(:disabled)::-moz-range-thumb {
+    transform: scale(1.15);
+  }
+
+  &::-moz-range-track {
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      var(--v3-line-default) var(--fill-from, 0%),
+      var(--v3-brand-violet) var(--fill-from, 0%),
+      var(--v3-brand-violet) var(--fill),
+      var(--v3-line-default) var(--fill)
+    );
+  }
+
+  &::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--v3-text-ink);
+  }
+}

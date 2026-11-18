@@ -1,0 +1,14 @@
+# gitleaks 설정 (CI check:secrets). 기본 규칙에 예외만 더한다.
+# 예외는 실제 비밀이 아닌 예시·테스트 값만 넣는다. 추가할 때는 MR에서 이유를 적는다.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "설정 파일 틀과 검사 스크립트 자체 테스트의 예시 값"
+paths = [
+  '''infra/merge-bot/merge-bot\.env\.example''',
+  '''scripts/check/.*_test\.sh''',
+]
+regexes = [
+  '''REPLACE_WITH_[A-Z_]+''',
+]

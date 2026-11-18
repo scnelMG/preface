@@ -1,0 +1,137 @@
+{
+ "note": "A3 2026-10-23: upper-lid landmarks re-attached from the lid front to the eyeball contact line (tools/make_a3_corr.py); includes the A2 fixes of gnm_mp468_fix.json",
+ "rule": {
+  "max_ratio": 1.1,
+  "target": 1.045,
+  "lo": 1.0,
+  "hi": 1.1,
+  "max_angle": 8.0,
+  "min_facing": -0.3
+ },
+ "moved": [
+  {
+   "landmark": 388,
+   "eye": "L",
+   "from": 4909,
+   "from_ratio": 1.169,
+   "to": 1171,
+   "to_ratio": 1.052,
+   "angle_deg": 1.63,
+   "to_facing": -0.07
+  },
+  {
+   "landmark": 387,
+   "eye": "L",
+   "from": 4908,
+   "from_ratio": 1.174,
+   "to": 1163,
+   "to_ratio": 1.053,
+   "angle_deg": 1.32,
+   "to_facing": -0.27
+  },
+  {
+   "landmark": 386,
+   "eye": "L",
+   "from": 4905,
+   "from_ratio": 1.194,
+   "to": 1159,
+   "to_ratio": 1.073,
+   "angle_deg": 6.53,
+   "to_facing": -0.22
+  },
+  {
+   "landmark": 385,
+   "eye": "L",
+   "from": 1143,
+   "from_ratio": 1.207,
+   "to": 1156,
+   "to_ratio": 1.087,
+   "angle_deg": 1.77,
+   "to_facing": -0.22
+  },
+  {
+   "landmark": 398,
+   "eye": "L",
+   "from": 1252,
+   "from_ratio": 1.221,
+   "to": 565,
+   "to_ratio": 1.047,
+   "angle_deg": 1.39,
+   "to_facing": 0.1
+  },
+  {
+   "landmark": 161,
+   "eye": "R",
+   "from": 11037,
+   "from_ratio": 1.163,
+   "to": 7299,
+   "to_ratio": 1.048,
+   "angle_deg": 1.63,
+   "to_facing": -0.07
+  },
+  {
+   "landmark": 160,
+   "eye": "R",
+   "from": 11035,
+   "from_ratio": 1.176,
+   "to": 7288,
+   "to_ratio": 1.056,
+   "angle_deg": 1.09,
+   "to_facing": -0.24
+  },
+  {
+   "landmark": 159,
+   "eye": "R",
+   "from": 11033,
+   "from_ratio": 1.19,
+   "to": 7287,
+   "to_ratio": 1.068,
+   "angle_deg": 6.58,
+   "to_facing": -0.22
+  },
+  {
+   "landmark": 158,
+   "eye": "R",
+   "from": 7271,
+   "from_ratio": 1.203,
+   "to": 7284,
+   "to_ratio": 1.083,
+   "angle_deg": 1.75,
+   "to_facing": -0.22
+  },
+  {
+   "landmark": 157,
+   "eye": "R",
+   "from": 11013,
+   "from_ratio": 1.154,
+   "to": 6733,
+   "to_ratio": 1.049,
+   "angle_deg": 1.21,
+   "to_facing": 0.08
+  },
+  {
+   "landmark": 173,
+   "eye": "R",
+   "from": 7382,
+   "from_ratio": 1.27,
+   "to": 6697,
+   "to_ratio": 1.086,
+   "angle_deg": 0.63,
+   "to_facing": -0.03
+  }
+ ],
+ "vertex": {
+  "161": 7299,
+  "385": 1156,
+  "374": 604,
+  "388": 1171,
+  "387": 1163,
+  "386": 1159,
+  "398": 565,
+  "160": 7288,
+  "159": 7287,
+  "158": 7284,
+  "157": 6733,
+  "173": 6697
+ }
+}

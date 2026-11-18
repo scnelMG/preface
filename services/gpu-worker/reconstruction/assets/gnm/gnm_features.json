@@ -1,0 +1,1904 @@
+{
+"note": "P1 (2026-10-16): the 468 MediaPipe landmarks split into SYSTEMATIC classes by the GNM Head v3 face regions.",
+"classes": {
+"oval": [
+10,
+21,
+54,
+58,
+67,
+93,
+103,
+109,
+127,
+132,
+136,
+148,
+149,
+150,
+152,
+162,
+172,
+176,
+234,
+251,
+284,
+288,
+297,
+323,
+332,
+338,
+356,
+361,
+365,
+377,
+378,
+379,
+389,
+397,
+400,
+454
+],
+"anchor": [
+0,
+1,
+2,
+3,
+4,
+5,
+6,
+7,
+8,
+9,
+11,
+12,
+13,
+14,
+15,
+16,
+17,
+18,
+19,
+20,
+22,
+23,
+24,
+25,
+26,
+27,
+28,
+29,
+30,
+31,
+33,
+36,
+37,
+38,
+39,
+40,
+41,
+42,
+43,
+44,
+45,
+46,
+47,
+48,
+49,
+51,
+52,
+53,
+55,
+56,
+57,
+59,
+60,
+61,
+62,
+63,
+64,
+65,
+66,
+70,
+72,
+73,
+74,
+75,
+76,
+77,
+78,
+80,
+81,
+82,
+83,
+84,
+85,
+86,
+87,
+88,
+89,
+90,
+91,
+92,
+94,
+95,
+96,
+97,
+98,
+99,
+100,
+101,
+102,
+105,
+106,
+107,
+110,
+112,
+113,
+114,
+115,
+117,
+118,
+119,
+120,
+121,
+122,
+124,
+125,
+126,
+128,
+129,
+130,
+131,
+133,
+134,
+141,
+142,
+144,
+145,
+146,
+153,
+154,
+155,
+156,
+157,
+158,
+159,
+160,
+161,
+163,
+164,
+165,
+166,
+167,
+168,
+173,
+174,
+178,
+179,
+180,
+181,
+182,
+183,
+184,
+185,
+186,
+188,
+189,
+190,
+191,
+193,
+194,
+195,
+196,
+197,
+198,
+200,
+201,
+202,
+203,
+204,
+205,
+206,
+209,
+217,
+218,
+219,
+220,
+221,
+222,
+223,
+224,
+225,
+226,
+228,
+229,
+230,
+231,
+232,
+233,
+235,
+236,
+237,
+239,
+240,
+241,
+242,
+243,
+244,
+245,
+246,
+247,
+248,
+249,
+252,
+253,
+254,
+255,
+256,
+257,
+258,
+259,
+260,
+261,
+263,
+266,
+267,
+268,
+269,
+270,
+271,
+272,
+273,
+274,
+275,
+276,
+277,
+278,
+279,
+281,
+282,
+283,
+285,
+286,
+287,
+289,
+290,
+291,
+292,
+293,
+294,
+295,
+296,
+300,
+302,
+303,
+304,
+305,
+306,
+307,
+308,
+309,
+310,
+311,
+312,
+313,
+314,
+315,
+316,
+317,
+318,
+319,
+320,
+321,
+322,
+324,
+325,
+326,
+327,
+328,
+329,
+330,
+331,
+334,
+335,
+336,
+339,
+341,
+342,
+343,
+344,
+346,
+347,
+348,
+349,
+350,
+351,
+353,
+354,
+355,
+357,
+358,
+359,
+360,
+362,
+363,
+370,
+371,
+373,
+374,
+375,
+380,
+381,
+382,
+383,
+384,
+385,
+386,
+387,
+388,
+390,
+391,
+392,
+393,
+398,
+399,
+402,
+403,
+404,
+405,
+406,
+407,
+408,
+409,
+410,
+412,
+413,
+414,
+415,
+417,
+418,
+419,
+420,
+421,
+422,
+423,
+424,
+425,
+426,
+429,
+437,
+438,
+439,
+440,
+441,
+442,
+443,
+444,
+445,
+446,
+448,
+449,
+450,
+451,
+452,
+453,
+455,
+456,
+457,
+460,
+462,
+463,
+464,
+465,
+466,
+467
+],
+"surface": [
+32,
+34,
+35,
+50,
+68,
+69,
+71,
+104,
+108,
+111,
+116,
+123,
+135,
+137,
+138,
+139,
+140,
+143,
+147,
+151,
+169,
+170,
+171,
+175,
+177,
+187,
+192,
+199,
+207,
+208,
+210,
+211,
+212,
+213,
+214,
+215,
+216,
+227,
+262,
+264,
+265,
+280,
+298,
+299,
+301,
+333,
+337,
+340,
+345,
+352,
+364,
+366,
+367,
+368,
+369,
+372,
+376,
+394,
+395,
+396,
+401,
+411,
+416,
+427,
+428,
+430,
+431,
+432,
+433,
+434,
+435,
+436,
+447
+],
+"other": [
+79,
+238,
+250,
+458,
+459,
+461
+]
+},
+"regions": {
+"0": [
+"upper_lip_region"
+],
+"1": [
+"nose_region"
+],
+"2": [
+"nose_region"
+],
+"3": [
+"nose_region"
+],
+"4": [
+"nose_region"
+],
+"5": [
+"nose_region"
+],
+"6": [
+"nose_region"
+],
+"7": [
+"right_orbital_region"
+],
+"8": [
+"middle_brow_region"
+],
+"9": [
+"middle_brow_region"
+],
+"10": [
+"forehead_region"
+],
+"11": [
+"upper_lip_region"
+],
+"12": [
+"upper_lip_region"
+],
+"13": [
+"upper_lip_region"
+],
+"14": [
+"upper_lip_region"
+],
+"15": [
+"lower_lip_region"
+],
+"16": [
+"lower_lip_region"
+],
+"17": [
+"lower_lip_region"
+],
+"18": [
+"lower_lip_region"
+],
+"19": [
+"nose_region"
+],
+"20": [
+"nose_region"
+],
+"21": [
+"forehead_region"
+],
+"22": [
+"right_orbital_region"
+],
+"23": [
+"right_orbital_region"
+],
+"24": [
+"right_orbital_region"
+],
+"25": [
+"right_orbital_region"
+],
+"26": [
+"right_orbital_region"
+],
+"27": [
+"right_orbital_region"
+],
+"28": [
+"right_orbital_region"
+],
+"29": [
+"right_orbital_region"
+],
+"30": [
+"right_orbital_region"
+],
+"31": [
+"right_orbital_region"
+],
+"32": [
+"chin_region"
+],
+"33": [
+"right_orbital_region"
+],
+"34": [
+"right_temple_region"
+],
+"35": [
+"right_zygomatic_region"
+],
+"36": [
+"right_infraorbital_region"
+],
+"37": [
+"upper_lip_region"
+],
+"38": [
+"upper_lip_region"
+],
+"39": [
+"upper_lip_region"
+],
+"40": [
+"upper_lip_region"
+],
+"41": [
+"lower_lip_region"
+],
+"42": [
+"upper_lip_region"
+],
+"43": [
+"lower_lip_region"
+],
+"44": [
+"nose_region"
+],
+"45": [
+"nose_region"
+],
+"46": [
+"right_brow_region"
+],
+"47": [
+"right_infraorbital_region"
+],
+"48": [
+"nose_region"
+],
+"49": [
+"nose_region"
+],
+"50": [
+"right_zygomatic_region",
+"right_cheek_region"
+],
+"51": [
+"nose_region"
+],
+"52": [
+"right_brow_region"
+],
+"53": [
+"right_brow_region"
+],
+"54": [
+"forehead_region"
+],
+"55": [
+"right_brow_region"
+],
+"56": [
+"right_orbital_region"
+],
+"57": [
+"upper_lip_region"
+],
+"58": [
+"right_parotid_region"
+],
+"59": [
+"nose_region"
+],
+"60": [
+"nose_region"
+],
+"61": [
+"upper_lip_region",
+"lower_lip_region"
+],
+"62": [
+"upper_lip_region"
+],
+"63": [
+"right_brow_region"
+],
+"64": [
+"nose_region"
+],
+"65": [
+"right_brow_region"
+],
+"66": [
+"right_brow_region"
+],
+"67": [
+"forehead_region"
+],
+"68": [
+"forehead_region"
+],
+"69": [
+"forehead_region"
+],
+"70": [
+"forehead_region",
+"right_brow_region"
+],
+"71": [
+"forehead_region"
+],
+"72": [
+"upper_lip_region"
+],
+"73": [
+"upper_lip_region"
+],
+"74": [
+"upper_lip_region"
+],
+"75": [
+"nose_region"
+],
+"76": [
+"upper_lip_region"
+],
+"77": [
+"lower_lip_region"
+],
+"78": [
+"upper_lip_region"
+],
+"79": [],
+"80": [
+"lower_lip_region"
+],
+"81": [
+"lower_lip_region"
+],
+"82": [
+"upper_lip_region"
+],
+"83": [
+"lower_lip_region"
+],
+"84": [
+"lower_lip_region"
+],
+"85": [
+"lower_lip_region"
+],
+"86": [
+"lower_lip_region"
+],
+"87": [
+"upper_lip_region"
+],
+"88": [
+"lower_lip_region"
+],
+"89": [
+"lower_lip_region"
+],
+"90": [
+"lower_lip_region"
+],
+"91": [
+"lower_lip_region"
+],
+"92": [
+"upper_lip_region"
+],
+"93": [
+"right_temple_region",
+"right_parotid_region"
+],
+"94": [
+"nose_region"
+],
+"95": [
+"lower_lip_region"
+],
+"96": [
+"lower_lip_region"
+],
+"97": [
+"nose_region"
+],
+"98": [
+"nose_region"
+],
+"99": [
+"nose_region"
+],
+"100": [
+"right_infraorbital_region"
+],
+"101": [
+"right_infraorbital_region"
+],
+"102": [
+"nose_region"
+],
+"103": [
+"forehead_region"
+],
+"104": [
+"forehead_region"
+],
+"105": [
+"right_brow_region"
+],
+"106": [
+"lower_lip_region"
+],
+"107": [
+"right_brow_region"
+],
+"108": [
+"forehead_region"
+],
+"109": [
+"forehead_region"
+],
+"110": [
+"right_orbital_region"
+],
+"111": [
+"right_zygomatic_region"
+],
+"112": [
+"right_orbital_region"
+],
+"113": [
+"right_orbital_region"
+],
+"114": [
+"nose_region"
+],
+"115": [
+"nose_region"
+],
+"116": [
+"right_zygomatic_region"
+],
+"117": [
+"right_orbital_region",
+"right_zygomatic_region"
+],
+"118": [
+"right_orbital_region",
+"right_zygomatic_region"
+],
+"119": [
+"right_orbital_region",
+"right_infraorbital_region"
+],
+"120": [
+"right_orbital_region",
+"right_infraorbital_region"
+],
+"121": [
+"right_orbital_region",
+"right_infraorbital_region"
+],
+"122": [
+"nose_region"
+],
+"123": [
+"right_zygomatic_region"
+],
+"124": [
+"right_brow_region"
+],
+"125": [
+"nose_region"
+],
+"126": [
+"nose_region",
+"right_infraorbital_region"
+],
+"127": [
+"right_temple_region"
+],
+"128": [
+"right_orbital_region",
+"nose_region"
+],
+"129": [
+"nose_region"
+],
+"130": [
+"right_orbital_region"
+],
+"131": [
+"nose_region"
+],
+"132": [
+"right_parotid_region"
+],
+"133": [
+"right_orbital_region"
+],
+"134": [
+"nose_region"
+],
+"135": [
+"right_cheek_region"
+],
+"136": [
+"right_parotid_region",
+"right_cheek_region"
+],
+"137": [
+"right_temple_region",
+"right_parotid_region"
+],
+"138": [
+"right_parotid_region"
+],
+"139": [
+"forehead_region",
+"right_temple_region"
+],
+"140": [
+"chin_region"
+],
+"141": [
+"nose_region"
+],
+"142": [
+"right_infraorbital_region"
+],
+"143": [
+"right_zygomatic_region"
+],
+"144": [
+"right_orbital_region"
+],
+"145": [
+"right_orbital_region"
+],
+"146": [
+"lower_lip_region"
+],
+"147": [
+"right_zygomatic_region",
+"right_parotid_region"
+],
+"148": [
+"chin_region"
+],
+"149": [
+"right_cheek_region"
+],
+"150": [
+"right_cheek_region"
+],
+"151": [
+"forehead_region"
+],
+"152": [
+"chin_region"
+],
+"153": [
+"right_orbital_region"
+],
+"154": [
+"right_orbital_region"
+],
+"155": [
+"right_orbital_region"
+],
+"156": [
+"forehead_region",
+"right_brow_region"
+],
+"157": [
+"right_orbital_region"
+],
+"158": [
+"right_orbital_region"
+],
+"159": [
+"right_orbital_region"
+],
+"160": [
+"right_orbital_region"
+],
+"161": [],
+"162": [
+"forehead_region",
+"right_temple_region"
+],
+"163": [
+"right_orbital_region"
+],
+"164": [
+"upper_lip_region"
+],
+"165": [
+"upper_lip_region"
+],
+"166": [
+"nose_region"
+],
+"167": [
+"upper_lip_region"
+],
+"168": [
+"nose_region"
+],
+"169": [
+"right_cheek_region"
+],
+"170": [
+"right_cheek_region"
+],
+"171": [
+"chin_region"
+],
+"172": [
+"right_parotid_region"
+],
+"173": [
+"right_orbital_region"
+],
+"174": [
+"nose_region"
+],
+"175": [
+"chin_region"
+],
+"176": [
+"chin_region"
+],
+"177": [
+"right_parotid_region"
+],
+"178": [
+"lower_lip_region"
+],
+"179": [
+"lower_lip_region"
+],
+"180": [
+"lower_lip_region"
+],
+"181": [
+"lower_lip_region"
+],
+"182": [
+"lower_lip_region"
+],
+"183": [
+"upper_lip_region"
+],
+"184": [
+"upper_lip_region"
+],
+"185": [
+"upper_lip_region"
+],
+"186": [
+"upper_lip_region"
+],
+"187": [
+"right_cheek_region"
+],
+"188": [
+"nose_region"
+],
+"189": [
+"right_orbital_region"
+],
+"190": [
+"right_orbital_region"
+],
+"191": [
+"lower_lip_region"
+],
+"192": [
+"right_cheek_region"
+],
+"193": [
+"nose_region"
+],
+"194": [
+"lower_lip_region"
+],
+"195": [
+"nose_region"
+],
+"196": [
+"nose_region"
+],
+"197": [
+"nose_region"
+],
+"198": [
+"nose_region"
+],
+"199": [
+"chin_region"
+],
+"200": [
+"lower_lip_region"
+],
+"201": [
+"lower_lip_region"
+],
+"202": [
+"right_cheek_region",
+"lower_lip_region"
+],
+"203": [
+"right_infraorbital_region"
+],
+"204": [
+"lower_lip_region"
+],
+"205": [
+"right_infraorbital_region",
+"right_cheek_region"
+],
+"206": [
+"right_infraorbital_region",
+"right_cheek_region"
+],
+"207": [
+"right_cheek_region"
+],
+"208": [
+"chin_region"
+],
+"209": [
+"nose_region"
+],
+"210": [
+"right_cheek_region"
+],
+"211": [
+"right_cheek_region"
+],
+"212": [
+"right_cheek_region"
+],
+"213": [
+"right_parotid_region"
+],
+"214": [
+"right_cheek_region"
+],
+"215": [
+"right_parotid_region"
+],
+"216": [
+"right_cheek_region"
+],
+"217": [
+"nose_region"
+],
+"218": [
+"nose_region"
+],
+"219": [
+"nose_region"
+],
+"220": [
+"nose_region"
+],
+"221": [
+"right_orbital_region"
+],
+"222": [
+"right_orbital_region"
+],
+"223": [
+"right_orbital_region"
+],
+"224": [
+"right_orbital_region"
+],
+"225": [
+"right_orbital_region"
+],
+"226": [
+"right_orbital_region"
+],
+"227": [
+"right_temple_region"
+],
+"228": [
+"right_orbital_region"
+],
+"229": [
+"right_orbital_region"
+],
+"230": [
+"right_orbital_region"
+],
+"231": [
+"right_orbital_region"
+],
+"232": [
+"right_orbital_region"
+],
+"233": [
+"right_orbital_region"
+],
+"234": [
+"right_temple_region"
+],
+"235": [
+"nose_region"
+],
+"236": [
+"nose_region"
+],
+"237": [
+"nose_region"
+],
+"238": [],
+"239": [
+"nose_region"
+],
+"240": [
+"nose_region"
+],
+"241": [
+"nose_region"
+],
+"242": [
+"nose_region"
+],
+"243": [
+"right_orbital_region"
+],
+"244": [
+"right_orbital_region",
+"nose_region"
+],
+"245": [
+"nose_region"
+],
+"246": [
+"right_orbital_region"
+],
+"247": [
+"right_orbital_region"
+],
+"248": [
+"nose_region"
+],
+"249": [
+"left_orbital_region"
+],
+"250": [],
+"251": [
+"forehead_region"
+],
+"252": [
+"left_orbital_region"
+],
+"253": [
+"left_orbital_region"
+],
+"254": [
+"left_orbital_region"
+],
+"255": [
+"left_orbital_region"
+],
+"256": [
+"left_orbital_region"
+],
+"257": [
+"left_orbital_region"
+],
+"258": [
+"left_orbital_region"
+],
+"259": [
+"left_orbital_region"
+],
+"260": [
+"left_orbital_region"
+],
+"261": [
+"left_orbital_region"
+],
+"262": [
+"chin_region"
+],
+"263": [
+"left_orbital_region"
+],
+"264": [
+"left_temple_region"
+],
+"265": [
+"left_zygomatic_region"
+],
+"266": [
+"left_infraorbital_region"
+],
+"267": [
+"upper_lip_region"
+],
+"268": [
+"upper_lip_region"
+],
+"269": [
+"upper_lip_region"
+],
+"270": [
+"upper_lip_region"
+],
+"271": [
+"upper_lip_region"
+],
+"272": [
+"upper_lip_region"
+],
+"273": [
+"lower_lip_region"
+],
+"274": [
+"nose_region"
+],
+"275": [
+"nose_region"
+],
+"276": [
+"left_brow_region"
+],
+"277": [
+"left_infraorbital_region"
+],
+"278": [
+"nose_region"
+],
+"279": [
+"nose_region"
+],
+"280": [
+"left_zygomatic_region",
+"left_cheek_region"
+],
+"281": [
+"nose_region"
+],
+"282": [
+"left_brow_region"
+],
+"283": [
+"left_brow_region"
+],
+"284": [
+"forehead_region"
+],
+"285": [
+"left_brow_region"
+],
+"286": [
+"left_orbital_region"
+],
+"287": [
+"upper_lip_region"
+],
+"288": [
+"left_parotid_region"
+],
+"289": [
+"nose_region"
+],
+"290": [
+"nose_region"
+],
+"291": [
+"upper_lip_region"
+],
+"292": [
+"upper_lip_region"
+],
+"293": [
+"left_brow_region"
+],
+"294": [
+"nose_region"
+],
+"295": [
+"left_brow_region"
+],
+"296": [
+"left_brow_region"
+],
+"297": [
+"forehead_region"
+],
+"298": [
+"forehead_region"
+],
+"299": [
+"forehead_region"
+],
+"300": [
+"left_brow_region"
+],
+"301": [
+"forehead_region"
+],
+"302": [
+"upper_lip_region"
+],
+"303": [
+"upper_lip_region"
+],
+"304": [
+"upper_lip_region"
+],
+"305": [
+"nose_region"
+],
+"306": [
+"upper_lip_region"
+],
+"307": [
+"lower_lip_region"
+],
+"308": [
+"upper_lip_region"
+],
+"309": [
+"nose_region"
+],
+"310": [
+"lower_lip_region"
+],
+"311": [
+"upper_lip_region"
+],
+"312": [
+"lower_lip_region"
+],
+"313": [
+"lower_lip_region"
+],
+"314": [
+"lower_lip_region"
+],
+"315": [
+"lower_lip_region"
+],
+"316": [
+"lower_lip_region"
+],
+"317": [
+"lower_lip_region"
+],
+"318": [
+"upper_lip_region"
+],
+"319": [
+"lower_lip_region"
+],
+"320": [
+"lower_lip_region"
+],
+"321": [
+"lower_lip_region"
+],
+"322": [
+"upper_lip_region"
+],
+"323": [
+"left_temple_region"
+],
+"324": [
+"upper_lip_region"
+],
+"325": [
+"lower_lip_region"
+],
+"326": [
+"nose_region"
+],
+"327": [
+"nose_region"
+],
+"328": [
+"nose_region"
+],
+"329": [
+"left_infraorbital_region"
+],
+"330": [
+"left_infraorbital_region"
+],
+"331": [
+"nose_region"
+],
+"332": [
+"forehead_region"
+],
+"333": [
+"forehead_region"
+],
+"334": [
+"left_brow_region"
+],
+"335": [
+"lower_lip_region"
+],
+"336": [
+"left_brow_region"
+],
+"337": [
+"forehead_region"
+],
+"338": [
+"forehead_region"
+],
+"339": [
+"left_orbital_region"
+],
+"340": [
+"left_zygomatic_region"
+],
+"341": [
+"left_orbital_region"
+],
+"342": [
+"left_orbital_region"
+],
+"343": [
+"nose_region"
+],
+"344": [
+"nose_region"
+],
+"345": [
+"left_zygomatic_region"
+],
+"346": [
+"left_orbital_region",
+"left_zygomatic_region"
+],
+"347": [
+"left_orbital_region",
+"left_zygomatic_region"
+],
+"348": [
+"left_orbital_region",
+"left_infraorbital_region"
+],
+"349": [
+"left_orbital_region",
+"left_infraorbital_region"
+],
+"350": [
+"left_orbital_region",
+"left_infraorbital_region"
+],
+"351": [
+"nose_region"
+],
+"352": [
+"left_zygomatic_region"
+],
+"353": [
+"left_brow_region"
+],
+"354": [
+"nose_region"
+],
+"355": [
+"nose_region",
+"left_infraorbital_region"
+],
+"356": [
+"left_temple_region"
+],
+"357": [
+"left_orbital_region",
+"nose_region"
+],
+"358": [
+"nose_region"
+],
+"359": [
+"left_orbital_region"
+],
+"360": [
+"nose_region"
+],
+"361": [],
+"362": [
+"left_orbital_region"
+],
+"363": [
+"nose_region"
+],
+"364": [
+"left_cheek_region"
+],
+"365": [
+"left_parotid_region"
+],
+"366": [
+"left_temple_region"
+],
+"367": [
+"left_parotid_region"
+],
+"368": [
+"forehead_region",
+"left_temple_region"
+],
+"369": [
+"chin_region"
+],
+"370": [
+"nose_region"
+],
+"371": [
+"left_infraorbital_region"
+],
+"372": [
+"left_zygomatic_region"
+],
+"373": [
+"left_orbital_region"
+],
+"374": [],
+"375": [
+"lower_lip_region"
+],
+"376": [
+"left_parotid_region"
+],
+"377": [
+"chin_region"
+],
+"378": [
+"left_cheek_region"
+],
+"379": [
+"left_cheek_region"
+],
+"380": [
+"left_orbital_region"
+],
+"381": [
+"left_orbital_region"
+],
+"382": [
+"left_orbital_region"
+],
+"383": [
+"forehead_region",
+"left_brow_region"
+],
+"384": [
+"left_orbital_region"
+],
+"385": [],
+"386": [
+"left_orbital_region"
+],
+"387": [
+"left_orbital_region"
+],
+"388": [
+"left_orbital_region"
+],
+"389": [
+"forehead_region",
+"left_temple_region"
+],
+"390": [
+"left_orbital_region"
+],
+"391": [
+"upper_lip_region"
+],
+"392": [
+"nose_region"
+],
+"393": [
+"upper_lip_region"
+],
+"394": [
+"left_cheek_region"
+],
+"395": [
+"left_cheek_region"
+],
+"396": [
+"chin_region"
+],
+"397": [
+"left_parotid_region"
+],
+"398": [
+"left_orbital_region"
+],
+"399": [
+"nose_region"
+],
+"400": [
+"chin_region"
+],
+"401": [
+"left_parotid_region"
+],
+"402": [
+"lower_lip_region"
+],
+"403": [
+"lower_lip_region"
+],
+"404": [
+"lower_lip_region"
+],
+"405": [
+"lower_lip_region"
+],
+"406": [
+"lower_lip_region"
+],
+"407": [
+"upper_lip_region"
+],
+"408": [
+"upper_lip_region"
+],
+"409": [
+"upper_lip_region"
+],
+"410": [
+"upper_lip_region"
+],
+"411": [
+"left_cheek_region"
+],
+"412": [
+"nose_region"
+],
+"413": [
+"left_orbital_region"
+],
+"414": [
+"left_orbital_region"
+],
+"415": [
+"upper_lip_region"
+],
+"416": [
+"left_cheek_region"
+],
+"417": [
+"nose_region"
+],
+"418": [
+"lower_lip_region"
+],
+"419": [
+"nose_region"
+],
+"420": [
+"nose_region"
+],
+"421": [
+"lower_lip_region"
+],
+"422": [
+"left_cheek_region",
+"lower_lip_region"
+],
+"423": [
+"left_infraorbital_region"
+],
+"424": [
+"lower_lip_region"
+],
+"425": [
+"left_infraorbital_region",
+"left_cheek_region"
+],
+"426": [
+"left_infraorbital_region",
+"left_cheek_region"
+],
+"427": [
+"left_cheek_region"
+],
+"428": [
+"chin_region"
+],
+"429": [
+"nose_region",
+"left_infraorbital_region"
+],
+"430": [
+"left_cheek_region"
+],
+"431": [
+"left_cheek_region"
+],
+"432": [
+"left_cheek_region"
+],
+"433": [
+"left_parotid_region"
+],
+"434": [
+"left_cheek_region"
+],
+"435": [
+"left_parotid_region"
+],
+"436": [
+"left_cheek_region"
+],
+"437": [
+"nose_region"
+],
+"438": [
+"nose_region"
+],
+"439": [
+"nose_region"
+],
+"440": [
+"nose_region"
+],
+"441": [
+"left_orbital_region"
+],
+"442": [
+"left_orbital_region"
+],
+"443": [
+"left_orbital_region"
+],
+"444": [
+"left_orbital_region"
+],
+"445": [
+"left_orbital_region"
+],
+"446": [
+"left_orbital_region"
+],
+"447": [
+"left_temple_region"
+],
+"448": [
+"left_orbital_region"
+],
+"449": [
+"left_orbital_region"
+],
+"450": [
+"left_orbital_region"
+],
+"451": [
+"left_orbital_region"
+],
+"452": [
+"left_orbital_region"
+],
+"453": [
+"left_orbital_region"
+],
+"454": [
+"left_temple_region"
+],
+"455": [
+"nose_region"
+],
+"456": [
+"nose_region"
+],
+"457": [
+"nose_region"
+],
+"458": [],
+"459": [],
+"460": [
+"nose_region"
+],
+"461": [],
+"462": [
+"nose_region"
+],
+"463": [
+"left_orbital_region"
+],
+"464": [
+"left_orbital_region",
+"nose_region"
+],
+"465": [
+"nose_region"
+],
+"466": [
+"left_orbital_region"
+],
+"467": [
+"left_orbital_region"
+]
+}
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://preface.local/contracts/frame-extraction/bundle-url-response.schema.json",
+  "title": "BundleUrl (INT-EXT-02 응답 data)",
+  "description": "묶음 업로드 presigned PUT(만료 10분). headers를 그대로 붙여 PUT한다(Content-Type·체크섬·SSE). uploadUrl은 로그에 남기지 않는다.",
+  "type": "object",
+  "required": [
+    "objectKey",
+    "uploadUrl",
+    "method",
+    "headers",
+    "expiresAt"
+  ],
+  "properties": {
+    "objectKey": {
+      "description": "result의 bundle.objectKey에 그대로 넣는다. 시도마다 다르다",
+      "type": "string",
+      "pattern": "^users/[0-9a-f-]{36}/uploads/[0-9a-f-]{36}/frames-a[0-9]+\\.tar$"
+    },
+    "uploadUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://"
+    },
+    "method": {
+      "const": "PUT"
+    },
+    "headers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

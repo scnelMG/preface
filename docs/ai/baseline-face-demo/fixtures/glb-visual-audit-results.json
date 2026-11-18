@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-04",
+  "input": "public synthetic base-female/base-male GLB renders only",
+  "purpose": "candidate landmark visual placement check; not anatomical or clinical validation",
+  "completedCalls": [
+    {
+      "sample": "base-female",
+      "model": "gpt-6-astra",
+      "gmsSeconds": 21.05,
+      "observedDebit": 354,
+      "inputTokens": 1028,
+      "outputTokens": 503,
+      "choice": {
+        "innerEye": "PLAUSIBLE",
+        "alarOuter": "PLAUSIBLE",
+        "cheekbone": "PLAUSIBLE",
+        "jawAngle": "UNCLEAR",
+        "viewsConsistent": "YES"
+      }
+    },
+    {
+      "sample": "base-female",
+      "model": "gpt-6-luna",
+      "gmsSeconds": 13.51,
+      "observedDebit": 5,
+      "inputTokens": 1028,
+      "outputTokens": 857,
+      "choice": {
+        "innerEye": "PLAUSIBLE",
+        "alarOuter": "PLAUSIBLE",
+        "cheekbone": "PLAUSIBLE",
+        "jawAngle": "PLAUSIBLE",
+        "viewsConsistent": "YES"
+      }
+    },
+    {
+      "sample": "base-male",
+      "model": "gpt-6-luna",
+      "gmsSeconds": 7.11,
+      "observedDebit": 4,
+      "inputTokens": 1028,
+      "outputTokens": 489,
+      "choice": {
+        "innerEye": "PLAUSIBLE",
+        "alarOuter": "PLAUSIBLE",
+        "cheekbone": "PLAUSIBLE",
+        "jawAngle": "PLAUSIBLE",
+        "viewsConsistent": "YES"
+      }
+    }
+  ],
+  "incompleteCall": "base-female/gpt-6-astra with 300 output-token cap: status incomplete; debit not recorded",
+  "interpretation": "Visual plausibility is not landmark accuracy; disagreement on jaw angle requires independent annotation."
+}

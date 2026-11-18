@@ -1,0 +1,942 @@
+body {
+  background-color: var(--pf-canvas);
+}
+/* 실서비스 연결 테마. 원본 Figma 토큰을 덮어쓰지 않고 화면 트리 안에서 디자인 시스템 v4(shared/design/system.css)를 가리키게 한다. */
+.preface-app {
+  --v3-bg-paper: var(--pf-canvas);
+  --v3-bg-canvas: var(--pf-canvas);
+  --v3-bg-card: var(--pf-surface);
+  --v3-bg-warm: var(--pf-canvas-deep);
+  --v3-bg-stone: var(--pf-canvas-deep);
+  --v3-line-default: var(--pf-line);
+  --v3-line-stone: var(--pf-line);
+  --v3-text-ink: var(--pf-ink);
+  --v3-text-body: var(--pf-ink-2);
+  --v3-text-muted: var(--pf-muted);
+  --v3-text-paragraph: var(--pf-ink-2);
+  --v3-brand-violet: var(--pf-accent);
+  --v3-brand-lavender: var(--pf-ink);
+  --v3-brand-violet-deep: var(--pf-ink);
+  --v3-brand-violet-ink: var(--pf-ink);
+  --v3-brand-violet-text: var(--pf-ink);
+  --v3-brand-lavender-line: var(--pf-line);
+  --v3-bg-cream: var(--pf-canvas);
+  --v3-brand-lavender-soft: var(--pf-canvas-deep);
+  --v3-brand-lavender-tint: oklch(0.98 0.003 286);
+  --pf-panel: var(--pf-surface);
+  --pf-radius: 22px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--v3-bg-paper);
+  color: var(--v3-text-ink);
+  font-family: var(--font-sans);
+}
+.preface-app > .preface-preview,
+.preface-app .pp-connected {
+  min-height: 0;
+}
+.preface-app .pp-global-nav {
+  position: relative;
+  background: transparent;
+}
+.preface-app .pp-nav-icon {
+  position: relative;
+}
+.pf-unread-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--pp-accent);
+}
+.preface-app > footer {
+  margin-top: auto;
+  border-top: 0;
+  opacity: 0.8;
+}
+.preface-app > footer > div {
+  padding-block: var(--space-20);
+}
+.preface-app dialog {
+  background: var(--pf-panel);
+  border-radius: var(--pf-radius);
+  box-shadow: 0 24px 80px #26262918;
+}
+/* 휴대폰(-883): 위 규칙은 층 밖이라 Modal의 rounded-t 클래스를 이겨 시트 아래 모서리까지 둥글렸고,
+ * 그 틈으로 뒤 화면이 비쳤다. 아래 시트는 위 두 모서리만 작게 둥글리고 아래는 화면 끝에 붙인다.
+ * 가운데 창(AI 관상 등)도 같은 작은 반경으로 맞춘다. PC(768px 이상)는 그대로다 */
+@media (max-width: 767px) {
+  .preface-app dialog {
+    border-radius: var(--pf-radius-sheet);
+  }
+  .preface-app dialog[data-placement='sheet'] {
+    border-radius: var(--pf-radius-sheet) var(--pf-radius-sheet) 0 0;
+    border-bottom-width: 0;
+  }
+}
+.preface-app .pf-capture-dialog {
+  max-width: min(560px, calc(100vw - 32px));
+}
+.pf-home-recent {
+  max-width: 1120px;
+  padding: var(--space-32);
+  margin: auto;
+}
+.preface-app .pf-primary-action {
+  min-height: 48px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  background: var(--v3-text-ink);
+  color: var(--v3-text-on-dark);
+  font-size: 13px;
+}
+.preface-app button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.pf-secondary-action {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  color: var(--v3-text-body);
+  font-size: 12px;
+}
+.pf-studio-heading {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  min-height: 64px;
+  padding-block: 12px 8px;
+}
+.pf-studio-heading > .pf-secondary-action {
+  margin-right: auto;
+}
+.pf-studio-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding-inline: 8px;
+  color: var(--v3-text-ink);
+  font-size: 13px;
+}
+/* v4: 머리줄과 같은 여백 안을 꽉 채워, 제목·행동·시안 카드가 로고와 같은 선에서 시작한다 */
+.pf-workspace-models {
+  max-width: none;
+  margin: 0;
+}
+.pf-model-selector {
+  position: relative;
+  min-height: 420px;
+  height: min(50svh, 500px);
+  isolation: isolate;
+}
+.pf-selected-stage {
+  position: absolute;
+  inset: 0 28%;
+  z-index: 1;
+}
+.pf-neighbor {
+  position: absolute;
+  width: 28%;
+  height: 70%;
+  top: 15%;
+  opacity: 0.26;
+}
+.pf-neighbor > span {
+  display: block;
+  height: 100%;
+  pointer-events: none;
+}
+.pf-neighbor-left {
+  left: 6%;
+}
+.pf-neighbor-right {
+  right: 6%;
+  transform: scaleX(-1);
+}
+.pf-model-prev,
+.pf-model-next {
+  position: absolute;
+  top: calc(50% - 22px);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  color: var(--pf-ink);
+  z-index: 2;
+}
+.pf-model-prev {
+  left: 0;
+}
+.pf-model-next {
+  right: 0;
+}
+.pf-model-identity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 8px;
+}
+.pf-model-positions {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 24px;
+}
+.pf-model-positions button {
+  width: 32px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+}
+.pf-model-positions span:first-child {
+  width: 4px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--v3-line-default);
+}
+.pf-model-positions [aria-pressed='true'] span:first-child {
+  width: 22px;
+  height: 3px;
+  background: var(--v3-text-ink);
+}
+/* v4: 행동 하나를 가운데에 둔다(2026-10-30) */
+.pf-model-actions {
+  display: flex;
+  justify-content: center;
+  padding-block: 8px 32px;
+}
+.pf-add-inline {
+  margin-bottom: 24px;
+}
+.pf-lab-shell {
+  padding: 0 4% 24px;
+  min-height: 720px;
+  background: transparent;
+  height: auto;
+}
+.pf-lab-toolbar {
+  border-bottom: 0;
+  padding: 20px 0 24px;
+}
+.pf-lab-body {
+  gap: 28px;
+  min-height: 580px;
+}
+.pf-lab-stage {
+  min-width: 0;
+}
+.pf-lab-stage > section {
+  background: transparent;
+}
+.pf-lab-inspector {
+  border: 0;
+  border-radius: var(--pf-radius);
+  background: var(--pf-panel);
+  width: 340px;
+  max-height: 78svh;
+  overflow-y: auto;
+  box-shadow: 0 12px 40px #26262906;
+}
+@media (min-width: 1060px) {
+  .preface-app .pp-connected .pp-workspace {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(0, 1.3fr) minmax(320px, 1fr);
+    gap: 24px 32px;
+    align-items: center;
+    padding: 48px 4% 32px;
+    min-height: calc(100svh - 96px);
+  }
+  .preface-app .pp-connected .pp-intro {
+    position: static;
+    width: auto;
+    max-width: none;
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .preface-app .pp-connected .pp-intro h1.pp-service-heading {
+    font-size: clamp(36px, 3.5vw, 52px);
+  }
+  .preface-app .pp-connected .pp-model {
+    position: relative;
+    inset: auto;
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    height: clamp(400px, 58svh, 540px);
+  }
+  .preface-app .pp-connected .pp-controls {
+    position: static;
+    width: 100%;
+    min-height: 0;
+    grid-column: 3;
+    grid-row: 1;
+    padding: 24px;
+    box-shadow: 0 12px 40px #26262906;
+  }
+  .preface-app .pp-connected .pp-viewer-footer {
+    position: static;
+    inset: auto;
+    grid-column: 2;
+    grid-row: 2;
+    margin: 0;
+  }
+}
+@media (max-width: 767px) {
+  .pf-model-selector {
+    min-height: 320px;
+    height: 44svh;
+  }
+  .pf-selected-stage {
+    inset-inline: 20%;
+  }
+  .pf-neighbor {
+    width: 27%;
+    height: 60%;
+    top: 20%;
+  }
+  .pf-neighbor-left {
+    left: 0;
+  }
+  .pf-neighbor-right {
+    right: 0;
+  }
+  .pf-model-actions > .btn-primary {
+    width: 100%;
+  }
+  .pf-studio-heading {
+    gap: 12px;
+  }
+  .pf-studio-heading [role='tablist'] {
+    margin: 0;
+  }
+  .pf-lab-body {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .pf-lab-stage {
+    height: 55svh;
+    min-height: 360px;
+  }
+  .pf-lab-inspector {
+    width: 100%;
+    max-height: none;
+  }
+  .pf-lab-shell {
+    padding-inline: 16px;
+  }
+  .pf-lab-toolbar {
+    flex-wrap: wrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .preface-app * {
+    scroll-behavior: auto;
+  }
+}
+
+.pf-face-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+.pf-face-stage > header,
+.pf-face-stage > footer {
+  position: relative;
+  z-index: 3;
+}
+.pf-editor-canvas {
+  isolation: auto;
+}
+.pf-editor-bleed {
+  position: absolute;
+  inset: 0;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 40px,
+    #000 calc(100% - 24px),
+    transparent
+  );
+}
+.preface-app dialog .bg-bg-stone {
+  background: var(--v3-bg-canvas);
+}
+
+/* 기존 공통 버튼의 고정 잉크색도 새 검정 배경에 맞춰 읽히게 한다. */
+.preface-app :is(button, a).bg-brand-lavender {
+  color: var(--v3-text-on-dark);
+}
+/* 편집실과 메인의 슬라이더는 같은 검정 트랙·손잡이를 쓴다. 보라는 바뀐 값 표시에만 남긴다 */
+:is(.pf-lab-inspector, .pp-adjustments) .slider-range {
+  --v3-brand-violet: var(--v3-text-ink);
+}
+:is(.pf-lab-inspector, .pp-adjustments) .slider-range::-webkit-slider-thumb {
+  /* 손잡이는 이중 원 없이 단색 원 하나(2026-10-30) */
+  background: var(--v3-text-ink);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: none;
+}
+:is(.pf-lab-inspector, .pp-adjustments) .slider-range::-moz-range-thumb {
+  background: var(--v3-text-ink);
+  border: 0;
+  border-radius: 50%;
+}
+@media (max-width: 1059px) {
+  .pf-lab-body {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .pf-lab-stage {
+    height: 55svh;
+    min-height: 360px;
+    flex: none;
+  }
+  .pf-lab-inspector {
+    width: 100%;
+    max-height: none;
+  }
+  .pf-lab-inspector [role='tabpanel'] {
+    overflow-y: visible;
+  }
+  .pf-lab-toolbar {
+    flex-wrap: wrap;
+  }
+}
+
+/* ── 편집실 정리(2026-10-30) ─────────────────────────────────────────────
+ * 비교 무대는 메인·실험실처럼 바탕 상자 없이 연다. 라벨은 작은 반투명 칩으로 둔다. */
+.preface-app .pf-face-stage {
+  background: transparent;
+}
+
+/* ── 누름 피드백(2026-10-30, emil-design-eng) ───────────────────────────────
+ * 화면 곳곳의 주요 버튼은 누르는 순간 0.97로 살짝 눌린다. 놓으면 160ms ease-out으로 돌아온다.
+ * transform만 움직여 레이아웃을 흔들지 않는다. 동작 줄이기 설정이면 끈다. */
+:is(.preface-app, .preface-preview)
+  :is(
+    .pf-primary-action,
+    .pf-secondary-action,
+    .pf-studio-add,
+    .pp-compare,
+    .pp-reset,
+    .pp-text-action,
+    .pf-model-prev,
+    .pf-model-next,
+    .pp-nav-login
+  ) {
+  transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+:is(.preface-app, .preface-preview)
+  :is(
+    .pf-primary-action,
+    .pf-secondary-action,
+    .pf-studio-add,
+    .pp-compare,
+    .pp-reset,
+    .pp-text-action,
+    .pf-model-prev,
+    .pf-model-next,
+    .pp-nav-login
+  ):active:not(:disabled) {
+  transform: scale(0.97);
+}
+.pf-neighbor {
+  transition:
+    opacity 200ms ease,
+    filter 200ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .pf-neighbor:hover {
+    opacity: 0.42;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.preface-app, .preface-preview) :is(.pf-primary-action, .pp-compare, .pp-text-action):active {
+    transform: none;
+  }
+}
+
+/* ── 랜딩 2차(2026-10-30, S15P31B204-464) ─────────────────────────────────
+ * 큰 제목은 화면 폭에 맞춰 크게, 줄 간격은 좁게. 페이지가 열릴 때 한 번만 두 줄이 차례로 올라온다.
+ * 시연 영상 무대는 화면에 들어오며 94%에서 제 크기로 자리 잡는다(스크롤 타임라인 지원 브라우저만). */
+.pf-reveal-line {
+  display: block;
+  overflow: clip;
+  padding-bottom: 0.06em;
+}
+.pf-reveal-line > span {
+  display: block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pf-reveal-line > span {
+    animation: pf-line-up 760ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  }
+  .pf-reveal-line:nth-child(2) > span {
+    animation-delay: 90ms;
+  }
+  .pf-landing-hero-side {
+    animation: pf-fade-in 520ms cubic-bezier(0.23, 1, 0.32, 1) 260ms both;
+  }
+  @supports (animation-timeline: view()) {
+    .pf-landing-stage {
+      animation: pf-stage-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 38%;
+    }
+  }
+}
+@keyframes pf-line-up {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes pf-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes pf-stage-settle {
+  from {
+    transform: scale(0.94);
+    border-radius: 36px;
+  }
+  to {
+    transform: scale(1);
+    border-radius: 22px;
+  }
+}
+
+/* ── 편집실 모바일(2026-10-30, -462) ──────────────────────────────────────
+ * 조절 패널을 내려 읽는 동안에도 얼굴이 보이게 3D 무대를 화면 위에 붙인다.
+ * 아래 시트 대신 고른 이유: 상담 입력창이 있어 휴대폰 키보드와 시트가 서로 화면을 빼앗는다. */
+@media (max-width: 767px) {
+  .pf-lab-stage {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    height: 46svh;
+    min-height: 300px;
+    background: var(--v3-bg-paper);
+    box-shadow: 0 1px 0 var(--v3-line-default);
+  }
+  .pf-lab-inspector {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* 자주 묻는 질문: 답이 열릴 때 220ms 동안 위에서 살짝 내려오며 나타난다(동작 줄이기면 끔) */
+@media (prefers-reduced-motion: no-preference) {
+  .pf-faq-panel:not([hidden]) {
+    transition:
+      opacity 220ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
+    @starting-style {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+}
+
+/* ── 3D 불러오는 중: 스캔 선(2026-10-30, animate·better-ui) ──────────────────────
+ * "불러오는 중" 글 대신 얼굴(또는 머리 윤곽) 위를 위에서 아래로 지나가는 가는 선 하나.
+ * 목적은 상태 표시라 일정 속도(linear, 1.8초)로 반복하고, 선 위쪽에 짧은 잔광을 남긴다.
+ * transform·opacity만 움직여 3D를 준비하느라 메인 스레드가 바빠도 끊기지 않는다. */
+.pf-scan {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.pf-scan-head {
+  display: block;
+  width: 92px;
+  height: 120px;
+  border: 1px solid color-mix(in oklch, var(--v3-text-ink) 16%, transparent);
+  /* 위(머리)가 넓고 아래(턱)가 좁은 윤곽 */
+  border-radius: 50% 50% 46% 46% / 42% 42% 58% 58%;
+}
+.pf-scan-line {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent calc(100% - 28px),
+    color-mix(in oklch, var(--v3-brand-violet) 10%, transparent) calc(100% - 2px),
+    color-mix(in oklch, var(--v3-brand-violet) 85%, transparent) calc(100% - 1px),
+    transparent
+  );
+  transform: translateY(-100%);
+  animation: pf-scan-sweep 1.8s linear infinite;
+}
+@keyframes pf-scan-sweep {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+/* 동작 줄이기: 선은 멈추고, 윤곽이 천천히 밝아졌다 흐려지는 것으로만 알린다 */
+@media (prefers-reduced-motion: reduce) {
+  .pf-scan-line {
+    animation: none;
+    opacity: 0;
+  }
+  .pf-scan {
+    animation: pf-scan-breathe 1.6s ease-in-out infinite alternate;
+  }
+}
+@keyframes pf-scan-breathe {
+  from {
+    opacity: 0.45;
+  }
+}
+
+/* ── 메인 v4 무대 도구줄의 조명(2026-10-30) ─────────────────────────────── */
+.pf-main-light .pp-light-control {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+}
+.pf-main-light .pp-light-pad {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--pf-ink-2);
+}
+.pf-main-light .pp-light-direction {
+  width: 36px;
+  height: 36px;
+}
+.pf-main-light .pp-light-source {
+  width: 6px;
+  height: 6px;
+  background: var(--pf-ink);
+  box-shadow: 0 0 0 2px var(--pf-surface);
+}
+.pf-main-light .pp-light-label {
+  padding-right: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--pf-ink-2);
+}
+
+/* ── 편집실 페이지 끝까지 번지는 3D(2026-10-30) ─────────────────────────────
+ * 큰 화면(1060px~)의 편집실은 3D 캔버스가 페이지 전체를 덮는다(FaceStage bleed="page").
+ * 머리줄·가장자리 쪽은 마스크로 옅게 사라져 글자를 가리지 않고, 머리줄·도구줄·조절 카드·바닥줄은 3D 위에 올린다.
+ * 조절 카드는 메인처럼 반투명 글래스라 뒤의 3D가 비친다. */
+.preface-app .pf-face-stage[data-bleed='page'] {
+  overflow: visible;
+  isolation: auto;
+}
+.pf-face-stage[data-bleed='page'] .pf-editor-bleed {
+  z-index: 0;
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 56px,
+      #000 180px,
+      #000 calc(100% - 140px),
+      transparent
+    ),
+    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 56px,
+      #000 180px,
+      #000 calc(100% - 140px),
+      transparent
+    ),
+    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-composite: intersect;
+}
+.preface-app:has(.pf-face-stage[data-bleed='page'])
+  :is(.pf-lab-toolbar, .pf-lab-inspector, .preface-app > footer, .pf-face-stage > footer) {
+  position: relative;
+  z-index: 2;
+}
+@media (min-width: 1060px) {
+  .preface-app:has(.pf-face-stage[data-bleed='page']) .pf-lab-inspector {
+    background: var(--pf-glass);
+    border: 1px solid var(--pf-hairline);
+    box-shadow:
+      inset 0 1px 0 var(--pf-glass-edge),
+      var(--pf-shadow-float);
+    -webkit-backdrop-filter: blur(var(--pf-glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--pf-glass-blur)) saturate(160%);
+  }
+}
+
+/* ── 조작 카드(2026-11-01) ─────────────────
+ * 3D 무대 옆에 떠 있는 리퀴드 글라스 판. 뒤의 무대가 비치고 위쪽 가장자리·커서 쪽에 빛이 맺힌다.
+ * 나눔선 없이 카드 안 스크롤의 위·아래 끝은 흐림으로 보인다. */
+.pf-lab-inspector {
+  position: relative;
+  isolation: isolate;
+  border-radius: 28px;
+  background: var(--pf-glass);
+  backdrop-filter: blur(28px) saturate(170%);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 var(--pf-glass-edge),
+    inset 0 0 0 1px oklch(1 0 0 / 0.35),
+    0 1px 1px oklch(0.2 0.01 286 / 0.04),
+    0 28px 64px -28px oklch(0.2 0.01 286 / 0.3);
+}
+.pf-lab-inspector::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    420px circle at var(--mx, 70%) var(--my, -10%),
+    oklch(1 0 0 / 0.55),
+    transparent 45%
+  );
+  opacity: 0.7;
+  transition: opacity var(--pf-dur-ui) var(--pf-ease-out);
+}
+.pf-lab-inspector:hover::before {
+  opacity: 1;
+}
+/* 편집 영역 높이를 고정한다(-789). 높이가 자동이면 아래 카드 상한(min(100%, …))의 100%가 걸리지 않아 긴 탭(윤곽·헤어)에서
+ * 카드가 내용만큼 자라고, 편집 영역과 3D 무대가 같이 늘어나 부위 탭을 바꿀 때마다 머리가 내려갔다.
+ * 720px = 전부터 쓰던 최소 높이(짧은 탭일 때의 높이)라 짧은 탭의 모양은 그대로다.
+ * 화면이 높으면 화면에 맞춰 키운다(S15P31B204-838). 1440×900·1920×1080에서 직접 조절 카드가 윤곽·헤어 탭까지 카드 안 스크롤 없이 보이게
+ * 아래로 늘린다. 높이는 내용이 아니라 화면으로 정해 -789처럼 부위 탭을 바꿔도 카드·무대가 뛰지 않는다.
+ * 100svh - 56px = 사이트 헤더(약 80px) 아래를 채우고 아래 여백 24px만 화면 밖으로 내보낸다(꼬리말은 내려 읽는다). 880px 위로는 키우지 않는다 */
+@media (min-width: 1060px) {
+  .pf-lab-shell {
+    height: clamp(720px, calc(100svh - 56px), 880px);
+  }
+}
+/* 도구 줄 세로 맞춤(S15P31B204-838): 오른쪽 묶음(저장 상태·되돌리기·앞으로·원본 보기·공유·완료)과 뒤로가 제목+모델 이름 덩어리의
+ * 가운데가 아니라 제목 줄의 가운데에 오게 한다. 전에는 덩어리 가운데에 맞춰 제목 글자보다 약 11px 아래에 있었다.
+ * 제목 줄과 오른쪽 묶음을 같은 40px 줄로 두고 위에 붙인다. 모델 이름은 그 아래에 매달린다. 가로 위치는 그대로다 */
+@media (min-width: 1060px) {
+  .pf-lab-toolbar {
+    align-items: flex-start;
+  }
+  .pf-lab-toolbar-title {
+    min-height: 40px;
+  }
+  .pf-lab-toolbar-status,
+  .pf-lab-toolbar-actions {
+    display: flex;
+    align-items: center;
+    height: 40px;
+  }
+}
+/* 제목의 `이름 바꾸기` 말풍선 감싸개(S15P31B204-844)가 제목 폭을 정한다: 줄 폭을 넘지 않고 최소 8글자 폭은 지킨다(-812와 같은 규칙).
+ * 안쪽 버튼에 % 폭을 주면 감싸개 폭과 서로 기대어 8글자에서 잘렸다. 버튼은 min-width 0으로 감싸개 안에서만 줄어든다 */
+.pf-lab-toolbar-title > .pp-tooltip {
+  max-width: 100%;
+  min-width: min(100%, 8em);
+}
+/* 제목을 고치다 글자 수 한도에 닿으면 그 아래 모델 이름 자리에 한도 안내를 띄운다(-838). 안내와 겹치지 않게 모델 이름을 잠시 숨긴다 */
+.pf-lab-toolbar:has(#pf-lab-title-hint) .pf-lab-toolbar-subtitle {
+  visibility: hidden;
+}
+/* 휴대폰은 설문 칩이 제목 아래 줄로 내려가 한도 안내와 겹친다(-844). 안내가 떠 있는 동안만 칩을 숨긴다 */
+@media (max-width: 767px) {
+  .pf-lab-toolbar:has(#pf-lab-title-hint) .pf-survey-chip {
+    visibility: hidden;
+  }
+}
+@media (min-width: 1060px) {
+  .pf-lab-inspector {
+    --pf-lab-consult-h: 560px;
+    --pf-lab-viewport-max-h: calc(100svh - 176px);
+    /* 무대 높이만큼 늘리지 않고 내용만큼 떠 있다 */
+    align-self: flex-start;
+    width: 372px;
+    /* 편집 영역(lab-body)과 화면 둘 다를 넘지 않는다. 넘치면 카드 안만 스크롤 */
+    max-height: min(100%, var(--pf-lab-viewport-max-h));
+  }
+  /* 부모 높이가 자동이어도 상담 입력창은 화면 안에 둔다.
+   * `원본 사진` 탭도 같은 고정 높이라 방식을 바꿔도 카드가 뛰지 않는다(S15P31B204-770) */
+  .pf-lab-inspector:has(> [role='tabpanel'][data-mode='consult']),
+  .pf-lab-inspector:has(> [role='tabpanel'][data-mode='photo']) {
+    height: var(--pf-lab-consult-h);
+    max-height: var(--pf-lab-viewport-max-h);
+  }
+  .pf-lab-inspector [role='tabpanel'] {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 14px,
+      #000 calc(100% - 24px),
+      transparent
+    );
+  }
+}
+@media (max-width: 1059px) {
+  .pf-lab-inspector {
+    /* 무대 아래에 겹치지 않게 놓는다(겹치면 무대 안내 문구와 휴대폰의 붙는 무대에 카드 위가 가려진다) */
+    margin-inline: auto;
+    max-width: 640px;
+  }
+}
+/* 태블릿에서는 무대 아래 카드의 대화만 넘긴다. 메시지가 늘어도 입력창은 카드 바닥에 남는다. */
+@media (min-width: 768px) and (max-width: 1059px) {
+  .pf-lab-inspector {
+    --pf-lab-compact-card-h: 525px;
+  }
+  .pf-lab-inspector:has(> [role='tabpanel'][data-mode='consult']) {
+    height: min(var(--pf-lab-compact-card-h), calc(100svh - 32px));
+  }
+  .pf-lab-inspector:has(> [role='tabpanel'][data-mode='photo']) {
+    height: var(--pf-lab-compact-card-h);
+  }
+}
+/* 휴대폰: 메인 체험하기와 같은 아래 시트(2026-11-01, -573). 무대는 붙이지 않고, 카드가 화면 아래에 붙어
+ * 접힘 = 손잡이·방식·부위 탭·첫 조절까지(--pp-sheet-peek, useControlSheet가 잰다), 펼침 = 전체.
+ * 직접 조절은 탭 패널 안에서 넘긴다(접힌 채로도). 펼친 상담은 대화에 더 넓은 공간을 준다. */
+@media (max-width: 767px) {
+  .pf-lab-stage {
+    position: relative;
+    top: auto;
+    z-index: 0;
+    height: 56svh;
+    box-shadow: none;
+    /* 펼칠 때는 시트가 다 올라온 뒤(가려진 다음) 줄인다. 그 전에 줄이면 무대 아래가 잠깐 빈다 */
+    transition: height 0s linear var(--pf-dur-sheet, 420ms);
+  }
+  /* 접힘: 무대를 접힌 시트(--pp-sheet-peek, 시트 부모에도 둔다) 바로 위까지 늘린다. 비운 자리에서도 얼굴을 돌릴 수 있다.
+   * --pf-lab-stage-top = 페이지 맨 위에서 무대까지(LabShell이 잰다). 재기 전에는 56svh 그대로 */
+  .pf-lab-body:has(> .pf-lab-inspector[data-sheet='closed']) > .pf-lab-stage {
+    height: max(
+      56svh,
+      calc(
+        100svh - var(--pf-lab-stage-top, 100svh) - var(--pp-sheet-peek, 32px) -
+          env(safe-area-inset-bottom)
+      )
+    );
+    transition: none;
+  }
+  .pf-lab-inspector {
+    position: sticky;
+    /* 휴대폰 키보드가 뜨면 그 위로 올린다(--pf-lab-kb, LabShell이 visualViewport로 잰다) */
+    bottom: var(--pf-lab-kb, 0px);
+    z-index: 30;
+    max-width: none;
+    width: calc(100% + 32px);
+    /* 펼쳐도 얼굴이 시트 위에 보이는 높이(-525). 시트를 여닫아도 페이지는 움직이지 않는다(LabShell).
+     * 낮은 화면(가로 등)에서는 300px 아래로 줄지 않는다(전 높이 64svh가 그보다 낮으면 전과 같다).
+     * 기본 시트는 조절 부위에 따라 높이가 바뀌지 않는다(-573).
+     * 상담 키보드가 떠도 위에 얼굴·툴바가 96px은 보이게 보이는 화면(--pf-lab-vvh)보다 낮춘다 */
+    height: min(max(min(46svh, 560px), min(64svh, 300px)), calc(var(--pf-lab-vvh, 100svh) - 96px));
+    background: color-mix(in oklab, var(--pf-panel) 94%, transparent);
+    margin-inline: -16px;
+    padding: 0 0 env(safe-area-inset-bottom);
+    overflow: hidden;
+    border-radius: 28px 28px 0 0;
+    /* 접힘 = 첫 조절까지(--pp-sheet-peek)와 홈 표시줄 자리만 남기고 나머지는 화면 밖으로 내린다 */
+    transform: translateY(calc(100% - var(--pp-sheet-peek, 220px) - env(safe-area-inset-bottom)));
+    transition: transform var(--pf-dur-sheet, 420ms) var(--pf-ease-drawer, var(--pf-ease-out));
+  }
+  .pf-lab-inspector[data-sheet='open'] {
+    transform: none;
+  }
+  .pf-lab-inspector[data-sheet='open']:has(> [role='tabpanel'][data-mode='consult']) {
+    height: min(64svh, 560px, calc(var(--pf-lab-vvh, 100svh) - 96px));
+  }
+  /* 조절은 탭 패널 안에서 넘긴다. 끝에 닿아도 페이지로 넘어가지 않는다 */
+  .pf-lab-inspector [role='tabpanel'] {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  /* 접힘: 화면 밖으로 내려간 길이(--pp-sheet-collapse)만큼 아래를 비워, 마지막 조절도 보이는 곳까지 넘겨 올린다 */
+  .pf-lab-inspector[data-sheet='closed'] [role='tabpanel'] {
+    padding-bottom: calc(var(--pp-sheet-collapse, 0px) + 24px);
+  }
+  /* 부위 탭은 조절을 넘겨도 위에 붙어 있다 */
+  .pf-lab-inspector [data-part-rail] {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    margin-inline: -20px;
+    padding: 0 20px 8px;
+    background: var(--pf-panel);
+  }
+  /* 상담: 입력창을 보이는 바닥에 붙이고 안내·대화만 안에서 스크롤한다(패널 자체는 넘기지 않는다).
+   * 접힘이면 위 규칙의 아래 여백만큼 올라와 접힌 높이 바닥에 입력창이 보인다 */
+  .pf-lab-inspector [role='tabpanel'][data-mode='consult'] {
+    overflow-y: hidden;
+    padding-bottom: 12px;
+  }
+  .pf-lab-inspector[data-sheet='closed'] [role='tabpanel'][data-mode='consult'] {
+    padding-bottom: calc(var(--pp-sheet-collapse, 0px) + 12px);
+  }
+  /* `원본 사진`: 사진이 패널 높이를 채우고(contain) 넘기지 않는다(S15P31B204-770) */
+  .pf-lab-inspector [role='tabpanel'][data-mode='photo'] {
+    overflow-y: hidden;
+    padding-bottom: 12px;
+  }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .pf-lab-inspector,
+  .pf-lab-stage {
+    transition: none;
+  }
+}
+:root[data-theme='dark'] .pf-lab-inspector::before {
+  background: radial-gradient(
+    420px circle at var(--mx, 70%) var(--my, -10%),
+    rgb(242 241 238 / 0.08),
+    transparent 45%
+  );
+}
+@media (prefers-reduced-transparency: reduce) {
+  .pf-lab-inspector {
+    background: var(--pf-panel);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .pf-lab-inspector::before {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-lab-inspector::before {
+    display: none;
+  }
+}
+/* 카드 안 스크롤바는 얇고 옅게(유리 판 위에 굵은 막대가 서지 않게) */
+.pf-lab-inspector [role='tabpanel'] {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.2 0.008 286 / 0.18) transparent;
+}

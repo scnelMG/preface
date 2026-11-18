@@ -1,0 +1,22 @@
+// contracts/edit/effects-v1.md: public nose code -> PoC engine parameter.
+export const POC_MORPH_KEYS = Object.freeze({
+  'nose.bridge_height': 'dorsum_height',
+  'nose.bridge_hump': 'dorsum_hump',
+  'nose.bridge_width': 'dorsum_width',
+  'nose.radix_height': 'radix_height',
+  'nose.tip_projection': 'tip_projection',
+  'nose.tip_height': 'tip_height',
+  'nose.tip_rotation': 'tip_rotation',
+  'nose.tip_width': 'tip_width',
+  'nose.tip_fullness': 'tip_fullness',
+  'nose.alar_width': 'alar_width',
+  'nose.alar_flare': 'alar_flare',
+  'nose.columella_show': 'columella_show',
+  'nose.columella_relative_angle': 'nasolabial_angle',
+  'nose.bridge_height_position': 'dorsum_height_pos',
+  'nose.bridge_height_span': 'dorsum_height_span',
+  'nose.bridge_hump_position': 'dorsum_hump_pos',
+  'nose.radix_level': 'radix_level',
+  'nose.alar_balance': 'alar_balance',
+  'nose.columella_width': 'columella_width',
+});

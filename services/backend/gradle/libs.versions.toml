@@ -1,0 +1,22 @@
+# 버전 원본. CI cache key도 이 파일 해시다(.gitlab/ci/common.yml .cache-backend).
+# Spring 계열 라이브러리는 Spring Boot BOM이 정하는 버전을 따른다(여기에 버전을 쓰지 않는다).
+
+[versions]
+spring-boot = "4.1.1"
+spring-dependency-management = "1.1.7"
+foojay = "1.0.0"
+spotless = "8.10.4"
+jacoco = "0.8.15"
+springdoc = "3.1.1"
+archunit = "1.5.1"
+aws-sdk = "2.49.3"
+
+[libraries]
+springdoc-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+archunit-junit5 = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }
+aws-sdk-bom = { module = "software.amazon.awssdk:bom", version.ref = "aws-sdk" }
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

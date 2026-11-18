@@ -1,0 +1,186 @@
+openapi: 3.1.0
+info:
+  title: Preface 프레임 추출 워커 내부 API (INT-EXT-01~03)
+  version: 1.0.0
+  description: |
+    EC2 프레임 추출 워커 ↔ Spring 작업 API(S15P31B204-353). 워커가 docker 내부망으로 Spring에 붙어 작업을 가져가고(pull) 보고한다.
+    워커는 DB·Redis·S3 자격 증명을 갖지 않는다. 파일은 Spring이 발급한 presigned URL로만 주고받는다.
+    흐름·lease·묶음 형식은 같은 폴더 `README.md`를 본다.
+
+    - 인증: 모든 요청에 `X-Internal-Secret`(GPU 워커와 같은 공유 시크릿). 틀리거나 없으면 401 `AUTH_001`.
+    - 작업별 요청(INT-EXT-02·03)에는 claim 때 보낸 값과 같은 `X-Worker-Id`를 붙이고, 본문에 claim 응답의 `attempt`를 넣는다.
+    - 응답은 공통 형식 `{ success, data, error }`. 시간은 ISO-8601 UTC.
+    - 서명 URL·시크릿은 로그에 남기지 않는다(양쪽 모두).
+servers:
+  - url: http://{apiHost}:8080
+    description: 같은 EC2의 Spring api 컨테이너(docker 내부망)
+    variables:
+      apiHost:
+        default: api
+security:
+  - internalSecret: []
+paths:
+  /internal/v1/frame-extraction-jobs/claim:
+    post:
+      operationId: claimExtraction
+      summary: INT-EXT-01 다음 추출 작업 하나 가져가기
+      description: |
+        추출 대기 작업(또는 lease가 끝난 작업)을 먼저 들어온 순서로 하나 넘긴다. 작업 상태는 `QUEUED` 그대로다.
+        시도 수를 넘긴 작업은 이때 `FAILED(TIMEOUT)`로 정리하고 다음 작업을 본다. 작업이 없으면 204 — 몇 초(권장 3~5초, 지터) 쉬고 다시 부른다.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: './schemas/claim-request.schema.json' }
+            example: { workerId: ec2-extractor-01 }
+      responses:
+        '200':
+          description: 작업 하나
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data, error]
+                properties:
+                  success: { const: true }
+                  data: { $ref: './schemas/claim-response.schema.json' }
+                  error: { type: 'null' }
+        '204':
+          description: 대기 중인 작업 없음(본문 없음)
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /internal/v1/frame-extraction-jobs/{jobId}/bundle-url:
+    post:
+      operationId: issueBundleUrl
+      summary: INT-EXT-02 묶음 업로드 URL
+      description: |
+        묶음을 다 만든 뒤 크기·SHA-256을 보내면 그 값이 서명에 들어간 presigned PUT(만료 10분)을 준다. 받은 `headers`를 그대로 붙여 올린다.
+        key는 시도마다 다르다(`users/{userId}/uploads/{uploadId}/frames-a{attempt}.tar`).
+      parameters:
+        - $ref: '#/components/parameters/JobId'
+        - $ref: '#/components/parameters/WorkerId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: './schemas/bundle-url-request.schema.json' }
+      responses:
+        '200':
+          description: 업로드 URL
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data, error]
+                properties:
+                  success: { const: true }
+                  data: { $ref: './schemas/bundle-url-response.schema.json' }
+                  error: { type: 'null' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /internal/v1/frame-extraction-jobs/{jobId}/result:
+    post:
+      operationId: reportExtractionResult
+      summary: INT-EXT-03 추출 결과 보고
+      description: |
+        SUCCEEDED: Spring이 S3의 묶음(크기·체크섬)을 확인하고, 원본 영상 삭제를 예약한 뒤 작업을 GPU 대기열에 넣는다.
+        FAILED: 작업이 `FAILED`가 되고 사용자에게 실패 알림이 간다(GPU까지 가지 않는다).
+        이 워커·시도의 작업이 아니면 `accepted=false`(409가 아님) — 워커는 작업을 버린다. 같은 결과의 재전송은 `accepted=true`.
+      parameters:
+        - $ref: '#/components/parameters/JobId'
+        - $ref: '#/components/parameters/WorkerId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: './schemas/result-request.schema.json' }
+      responses:
+        '200':
+          description: 처리 결과
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data, error]
+                properties:
+                  success: { const: true }
+                  data: { $ref: './schemas/result-response.schema.json' }
+                  error: { type: 'null' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+components:
+  securitySchemes:
+    internalSecret:
+      type: apiKey
+      in: header
+      name: X-Internal-Secret
+      description: Spring 환경 변수 `INTERNAL_API_SECRET`과 같은 값. 워커도 환경 변수로만 받는다. 로그·예외 메시지에 남기지 않는다.
+  parameters:
+    JobId:
+      name: jobId
+      in: path
+      required: true
+      description: claim 응답의 `jobId`
+      schema: { type: string, format: uuid }
+    WorkerId:
+      name: X-Worker-Id
+      in: header
+      required: true
+      description: claim 때 보낸 `workerId`
+      schema: { type: string, pattern: '^[A-Za-z0-9._-]{1,64}$' }
+  schemas:
+    ErrorEnvelope:
+      type: object
+      required: [success, data, error]
+      properties:
+        success: { const: false }
+        data: { type: 'null' }
+        error:
+          type: object
+          required: [code, message, details]
+          properties:
+            code:
+              type: string
+              enum: [COMMON_001, COMMON_002, COMMON_999, AUTH_001, REC_020, REC_021, REC_022]
+            message: { type: string }
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field: { type: string }
+                  reason: { type: string }
+  responses:
+    BadRequest:
+      description: |
+        `COMMON_001` 본문·헤더 형식 위반. 예: bundle.objectKey가 bundle-url이 준 key와 다름, frameCount가 maxFrames 초과,
+        lens.focalPx·focalSource 없음, 묶음이 S3에 없거나 크기·체크섬 불일치, 모르는 failCode, X-Worker-Id 없음
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    Unauthorized:
+      description: '`AUTH_001` X-Internal-Secret 없음·불일치. 설정 오류이므로 재시도하지 말고 알린다'
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    NotFound:
+      description: '`COMMON_002` 모르는 jobId. 작업을 버린다(재시도 금지)'
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    Conflict:
+      description: '`REC_020` 취소된 작업 / `REC_021` 이미 끝난 작업 / `REC_022` 다른 시도에 재배정됨. 작업을 버린다'
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    ServerError:
+      description: '`COMMON_999` Spring 내부 오류. 지수 백오프로 재시도한다(lease 안에)'
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }

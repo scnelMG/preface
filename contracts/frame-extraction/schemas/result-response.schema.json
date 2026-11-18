@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://preface.local/contracts/frame-extraction/result-response.schema.json",
+  "title": "ExtractionResultAck (INT-EXT-03 응답 data)",
+  "description": "accepted=false면 이 워커·시도의 작업이 아니다(취소·lease 회수). 워커는 작업을 버린다 — 올린 묶음은 Spring이 지운다.",
+  "type": "object",
+  "required": [
+    "accepted"
+  ],
+  "properties": {
+    "accepted": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}

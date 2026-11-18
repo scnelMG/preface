@@ -1,0 +1,13 @@
+.venv/
+.uv-cache/
+.pytest_cache/
+__pycache__/
+.env*
+tests/
+*.glb
+*.jpg
+*.png
+*.mp4
+*.pt
+*.pth
+*.zip

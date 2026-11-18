@@ -1,0 +1,442 @@
+/*
+ * 디자인 토큰 — Figma `Wireframe v3.2 최종` > `Foundations · v3` 변수를 그대로 옮겼다.
+ * Figma 값이 바뀌면 이 파일과 tokens.ts를 같이 고친다. 이름 규칙은 apps/web/AGENTS.md "디자인 시스템".
+ * tokens.test.ts가 개수(색 29 · 타입 51)와 이름·값이 두 파일에서 같은지 검사한다.
+ */
+
+/* 색 29개 + v3.2에서 추가된 status/danger. 이름·값이 Figma 변수와 같다(이슈 S15P31B204-272 완료 조건 1). */
+:root {
+  --v3-bg-paper: #faf9f7;
+  --v3-bg-canvas: #faf9f6;
+  --v3-bg-card: #faf8f4;
+  --v3-bg-warm: #f6f3ed;
+  --v3-bg-stone: #f0ece5;
+  --v3-bg-cream: #fffefa;
+  --v3-bg-surface: #ffffff;
+  --v3-line-default: #e5e3de;
+  --v3-line-stone: #e3dcd1;
+  --v3-line-warm: #e2ddd4;
+  --v3-line-sand: #e1d9ce;
+  --v3-text-ink: #1a1a18;
+  --v3-text-muted: #8d8d85;
+  --v3-text-body: #73736d;
+  --v3-text-paragraph: #76766f;
+  --v3-text-stone: #897e70;
+  --v3-text-sand: #a39887;
+  --v3-text-on-dark: #ffffff;
+  --v3-brand-violet: #8655cc;
+  --v3-brand-violet-deep: #76529e;
+  --v3-brand-violet-ink: #79579e;
+  --v3-brand-violet-text: #725293;
+  --v3-brand-violet-soft: #9068c3;
+  --v3-brand-lavender: #c9acef;
+  --v3-brand-lavender-soft: #f0e9f8;
+  --v3-brand-lavender-tint: #f3edf9;
+  --v3-brand-lavender-line: #d6c7e7;
+  --v3-neutral-charcoal: #252129;
+  --v3-overlay-scrim: #171915;
+  --color-status-danger: #b42318; /* Figma: Color/status/danger */
+
+  /* 간격 space/N, 반경 radius/N (단위 px) */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-5: 5px;
+  --space-6: 6px;
+  --space-7: 7px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-18: 18px;
+  --space-20: 20px;
+  --space-22: 22px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --radius-3: 3px;
+  --radius-4: 4px;
+  --radius-5: 5px;
+  --radius-6: 6px;
+  --radius-7: 7px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+}
+
+/* Tailwind 색 유틸리티. bg-bg-paper, text-text-ink, border-line-default, bg-brand-violet ... */
+@theme inline {
+  --color-*: initial; /* Tailwind 기본 팔레트를 끈다. 디자인 토큰 밖의 색을 쓰지 못하게 한다 */
+  --color-bg-paper: var(--v3-bg-paper);
+  --color-bg-canvas: var(--v3-bg-canvas);
+  --color-bg-card: var(--v3-bg-card);
+  --color-bg-warm: var(--v3-bg-warm);
+  --color-bg-stone: var(--v3-bg-stone);
+  --color-bg-cream: var(--v3-bg-cream);
+  --color-bg-surface: var(--v3-bg-surface);
+  --color-line-default: var(--v3-line-default);
+  --color-line-stone: var(--v3-line-stone);
+  --color-line-warm: var(--v3-line-warm);
+  --color-line-sand: var(--v3-line-sand);
+  --color-text-ink: var(--v3-text-ink);
+  --color-text-muted: var(--v3-text-muted);
+  --color-text-body: var(--v3-text-body);
+  --color-text-paragraph: var(--v3-text-paragraph);
+  --color-text-stone: var(--v3-text-stone);
+  --color-text-sand: var(--v3-text-sand);
+  --color-text-on-dark: var(--v3-text-on-dark);
+  --color-brand-violet: var(--v3-brand-violet);
+  --color-brand-violet-deep: var(--v3-brand-violet-deep);
+  --color-brand-violet-ink: var(--v3-brand-violet-ink);
+  --color-brand-violet-text: var(--v3-brand-violet-text);
+  --color-brand-violet-soft: var(--v3-brand-violet-soft);
+  --color-brand-lavender: var(--v3-brand-lavender);
+  --color-brand-lavender-soft: var(--v3-brand-lavender-soft);
+  --color-brand-lavender-tint: var(--v3-brand-lavender-tint);
+  --color-brand-lavender-line: var(--v3-brand-lavender-line);
+  --color-neutral-charcoal: var(--v3-neutral-charcoal);
+  --color-overlay-scrim: var(--v3-overlay-scrim);
+  --color-status-danger: var(--color-status-danger);
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --radius-3: var(--radius-3); /* rounded-3 */
+  --radius-4: var(--radius-4); /* rounded-4 */
+  --radius-5: var(--radius-5); /* rounded-5 */
+  --radius-6: var(--radius-6); /* rounded-6 */
+  --radius-7: var(--radius-7); /* rounded-7 */
+  --radius-8: var(--radius-8); /* rounded-8 */
+  --radius-12: var(--radius-12); /* rounded-12 */
+}
+
+/*
+ * 타입 51개. 클래스 이름은 Figma 스타일 이름에서 만든다.
+ *   v3/KR/Body 13 Regular · lh16.9  ->  type-kr-body-13-regular-lh16p9   (소수점 . -> p)
+ * 줄 간격은 이름에 적힌 소수 값을 쓴다. Figma API는 줄 간격을 정수로 반올림해 준다(16.9 -> 17).
+ * 글꼴은 EN·KR 모두 Pretendard 한 가족이다(2026-10-30 변경, 이전: 영문 DM Sans + 한글 Noto Sans KR).
+ * Figma 스타일 이름의 EN·KR 구분은 크기·굵기 규칙을 가르는 이름으로만 남는다.
+ */
+/* v3/EN/Body 12 Regular · lh15.6 */
+@utility type-en-body-12-regular-lh15p6 {
+  font-size: 12px;
+  line-height: 15.6px;
+  font-weight: 400;
+}
+/* v3/EN/Caption 10 Medium · ls1.8 · lh13 */
+@utility type-en-caption-10-medium-ls1p8-lh13 {
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+}
+/* v3/EN/Caption 10 Regular · lh13 */
+@utility type-en-caption-10-regular-lh13 {
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 400;
+}
+/* v3/EN/Caption 11 Regular · lh14.3 */
+@utility type-en-caption-11-regular-lh14p3 {
+  font-size: 11px;
+  line-height: 14.3px;
+  font-weight: 400;
+}
+/* v3/EN/Caption 11 Regular · lh16.5 */
+@utility type-en-caption-11-regular-lh16p5 {
+  font-size: 11px;
+  line-height: 16.5px;
+  font-weight: 400;
+}
+/* v3/EN/Caption 9 Medium · ls1.6 · lh11.7 */
+@utility type-en-caption-9-medium-ls1p6-lh11p7 {
+  font-size: 9px;
+  line-height: 11.7px;
+  font-weight: 500;
+  letter-spacing: 1.6px;
+}
+/* v3/EN/Caption 9 Regular · lh11.7 */
+@utility type-en-caption-9-regular-lh11p7 {
+  font-size: 9px;
+  line-height: 11.7px;
+  font-weight: 400;
+}
+/* v3/EN/Caption 9 Regular · lh13.5 */
+@utility type-en-caption-9-regular-lh13p5 {
+  font-size: 9px;
+  line-height: 13.5px;
+  font-weight: 400;
+}
+/* v3/EN/Caption 9 Regular · ls1 · lh11.7 */
+@utility type-en-caption-9-regular-ls1-lh11p7 {
+  font-size: 9px;
+  line-height: 11.7px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+/* v3/EN/Caption 9 Regular · ls1.5 · lh11.7 */
+@utility type-en-caption-9-regular-ls1p5-lh11p7 {
+  font-size: 9px;
+  line-height: 11.7px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+}
+/* v3/EN/Micro 6 Regular · ls0.7 · lh10.8 */
+@utility type-en-micro-6-regular-ls0p7-lh10p8 {
+  font-size: 6px;
+  line-height: 10.8px;
+  font-weight: 400;
+  letter-spacing: 0.7px;
+}
+/* v3/EN/Micro 6 Regular · ls1 · lh7.8 */
+@utility type-en-micro-6-regular-ls1-lh7p8 {
+  font-size: 6px;
+  line-height: 7.8px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+/* v3/EN/Micro 7 Regular · ls0.7 · lh12.6 */
+@utility type-en-micro-7-regular-ls0p7-lh12p6 {
+  font-size: 7px;
+  line-height: 12.6px;
+  font-weight: 400;
+  letter-spacing: 0.7px;
+}
+/* v3/EN/Micro 8 Medium · ls1 · lh10.4 */
+@utility type-en-micro-8-medium-ls1-lh10p4 {
+  font-size: 8px;
+  line-height: 10.4px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+/* v3/EN/Micro 8 Medium · ls1.3 · lh10.4 */
+@utility type-en-micro-8-medium-ls1p3-lh10p4 {
+  font-size: 8px;
+  line-height: 10.4px;
+  font-weight: 500;
+  letter-spacing: 1.3px;
+}
+/* v3/EN/Micro 8 Medium · ls1.8 · lh10.4 */
+@utility type-en-micro-8-medium-ls1p8-lh10p4 {
+  font-size: 8px;
+  line-height: 10.4px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+}
+/* v3/EN/Micro 8 Regular · ls1 · lh10.4 */
+@utility type-en-micro-8-regular-ls1-lh10p4 {
+  font-size: 8px;
+  line-height: 10.4px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+/* v3/EN/Micro 8 Regular · ls1 · lh16 */
+@utility type-en-micro-8-regular-ls1-lh16 {
+  font-size: 8px;
+  line-height: 16px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+/* v3/EN/Title 26 Bold · ls-2 · lh26 */
+@utility type-en-title-26-bold-ls-2-lh26 {
+  font-size: 26px;
+  line-height: 26px;
+  font-weight: 700;
+  letter-spacing: -2px;
+}
+/* v3/EN/Title 34 Bold · ls-2.7 · lh34 */
+@utility type-en-title-34-bold-ls-2p7-lh34 {
+  font-size: 34px;
+  line-height: 34px;
+  font-weight: 700;
+  letter-spacing: -2.7px;
+}
+/* v3/KR/Body 12 Medium · lh15.6 */
+@utility type-kr-body-12-medium-lh15p6 {
+  font-size: 12px;
+  line-height: 15.6px;
+  font-weight: 500;
+}
+/* v3/KR/Body 12 Medium · lh19.2 */
+@utility type-kr-body-12-medium-lh19p2 {
+  font-size: 12px;
+  line-height: 19.2px;
+  font-weight: 500;
+}
+/* v3/KR/Body 12 Regular · lh15.6 */
+@utility type-kr-body-12-regular-lh15p6 {
+  font-size: 12px;
+  line-height: 15.6px;
+  font-weight: 400;
+}
+/* v3/KR/Body 12 Regular · lh22.2 */
+@utility type-kr-body-12-regular-lh22p2 {
+  font-size: 12px;
+  line-height: 22.2px;
+  font-weight: 400;
+}
+/* v3/KR/Body 12 Regular · lh22.8 */
+@utility type-kr-body-12-regular-lh22p8 {
+  font-size: 12px;
+  line-height: 22.8px;
+  font-weight: 400;
+}
+/* v3/KR/Body 13 Medium · lh16.9 */
+@utility type-kr-body-13-medium-lh16p9 {
+  font-size: 13px;
+  line-height: 16.9px;
+  font-weight: 500;
+}
+/* v3/KR/Body 13 Regular · lh16.9 */
+@utility type-kr-body-13-regular-lh16p9 {
+  font-size: 13px;
+  line-height: 16.9px;
+  font-weight: 400;
+}
+/* v3/KR/Body 14 Medium · lh18.2 */
+@utility type-kr-body-14-medium-lh18p2 {
+  font-size: 14px;
+  line-height: 18.2px;
+  font-weight: 500;
+}
+/* v3/KR/Caption 10 Medium · lh13 */
+@utility type-kr-caption-10-medium-lh13 {
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 500;
+}
+/* v3/KR/Caption 10 Medium · lh18 */
+@utility type-kr-caption-10-medium-lh18 {
+  font-size: 10px;
+  line-height: 18px;
+  font-weight: 500;
+}
+/* v3/KR/Caption 10 Regular · lh13 */
+@utility type-kr-caption-10-regular-lh13 {
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 10 Regular · lh19 */
+@utility type-kr-caption-10-regular-lh19 {
+  font-size: 10px;
+  line-height: 19px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 10 Regular · lh20 */
+@utility type-kr-caption-10-regular-lh20 {
+  font-size: 10px;
+  line-height: 20px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 11 Medium · lh14.3 */
+@utility type-kr-caption-11-medium-lh14p3 {
+  font-size: 11px;
+  line-height: 14.3px;
+  font-weight: 500;
+}
+/* v3/KR/Caption 11 Regular · lh14.3 */
+@utility type-kr-caption-11-regular-lh14p3 {
+  font-size: 11px;
+  line-height: 14.3px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 11 Regular · lh16.5 */
+@utility type-kr-caption-11-regular-lh16p5 {
+  font-size: 11px;
+  line-height: 16.5px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 11 Regular · lh20.8 */
+@utility type-kr-caption-11-regular-lh20p8 {
+  font-size: 11px;
+  line-height: 20.8px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 11 Regular · lh20.9 */
+@utility type-kr-caption-11-regular-lh20p9 {
+  font-size: 11px;
+  line-height: 20.9px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 9 Regular · lh11.7 */
+@utility type-kr-caption-9-regular-lh11p7 {
+  font-size: 9px;
+  line-height: 11.7px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 9 Regular · lh13.5 */
+@utility type-kr-caption-9-regular-lh13p5 {
+  font-size: 9px;
+  line-height: 13.5px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 9 Regular · lh14.4 */
+@utility type-kr-caption-9-regular-lh14p4 {
+  font-size: 9px;
+  line-height: 14.4px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 9 Regular · lh16.2 */
+@utility type-kr-caption-9-regular-lh16p2 {
+  font-size: 9px;
+  line-height: 16.2px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 9 Regular · lh17.1 */
+@utility type-kr-caption-9-regular-lh17p1 {
+  font-size: 9px;
+  line-height: 17.1px;
+  font-weight: 400;
+}
+/* v3/KR/Caption 9 Regular · ls0.8 · lh11.7 */
+@utility type-kr-caption-9-regular-ls0p8-lh11p7 {
+  font-size: 9px;
+  line-height: 11.7px;
+  font-weight: 400;
+  letter-spacing: 0.8px;
+}
+/* v3/KR/Heading 15 Medium · ls-0.5 · lh19.5 */
+@utility type-kr-heading-15-medium-ls-0p5-lh19p5 {
+  font-size: 15px;
+  line-height: 19.5px;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+}
+/* v3/KR/Micro 7 Regular · lh14 */
+@utility type-kr-micro-7-regular-lh14 {
+  font-size: 7px;
+  line-height: 14px;
+  font-weight: 400;
+}
+/* v3/KR/Micro 8 Regular · lh10.4 */
+@utility type-kr-micro-8-regular-lh10p4 {
+  font-size: 8px;
+  line-height: 10.4px;
+  font-weight: 400;
+}
+/* v3/KR/Micro 8 Regular · lh12 */
+@utility type-kr-micro-8-regular-lh12 {
+  font-size: 8px;
+  line-height: 12px;
+  font-weight: 400;
+}
+/* v3/KR/Micro 8 Regular · lh14.4 */
+@utility type-kr-micro-8-regular-lh14p4 {
+  font-size: 8px;
+  line-height: 14.4px;
+  font-weight: 400;
+}
+/* v3/KR/Title 22 Medium · ls-1 · lh28.6 */
+@utility type-kr-title-22-medium-ls-1-lh28p6 {
+  font-size: 22px;
+  line-height: 28.6px;
+  font-weight: 500;
+  letter-spacing: -1px;
+}
+/* v3/KR/Title 23 Regular · ls-1.3 · lh34.5 */
+@utility type-kr-title-23-regular-ls-1p3-lh34p5 {
+  font-size: 23px;
+  line-height: 34.5px;
+  font-weight: 400;
+  letter-spacing: -1.3px;
+}

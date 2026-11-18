@@ -1,0 +1,17 @@
+case_id,category,expected_intent,expected_effects
+S03,negation,EDIT,nose.tip_projection:-:both
+S05,exclusion,EDIT,nose.tip_height:-:both
+S06,composite,EDIT,nose.tip_height:+:both|nose.alar_width:-:both
+S07,unsupported,REPLY,
+S09,eye_edit,EDIT,eye.inner:+:both
+S10,one_side,REPLY,
+S11,negation,REPLY,
+S12,ambiguous,CLARIFY,
+S13,exclusion,EDIT,nose.bridge_height:+:both
+S14,contrast,EDIT,nose.alar_width:-:both
+S15,unsupported_numeric,REPLY,
+S16,unsupported_numeric,REPLY,
+S17,unsupported,REPLY,
+S20,unsupported,REPLY,
+S21,unsupported,REPLY,
+S22,unsupported,REPLY,

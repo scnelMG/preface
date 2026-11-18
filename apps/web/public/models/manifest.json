@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "assetVersion": "v1",
+  "usage": "public-sample-trial",
+  "synthetic": true,
+  "source": {
+    "name": "GNM Head v3",
+    "url": "https://huggingface.co/google/gnm-v3",
+    "license": "Apache-2.0",
+    "licenseFile": "GNM-LICENSE.txt",
+    "modified": true,
+    "modifications": [
+      "Synthetic male and female bald head presets with embedded skin and eye textures",
+      "Continuous brow and glabella surface refinement and interbrow pigment cleanup",
+      "Reduced female perioral projection",
+      "Bound existing nose slider codes and alar width direction; added independent vertical tip-height blendshape; neutral geometry and textures unchanged",
+      "Embedded textures re-encoded as WebP (EXT_texture_webp, quality 90); geometry and metadata byte-identical (S15P31B204-555)",
+      "Added contour morph targets (cheekbone, chin projection/length/width, cheek volume, jaw angle) as sparse _neg/_pos pairs with services/gpu-worker/reconstruction/tools/contour_morphs.py; neutral geometry and textures unchanged",
+      "Added audited two-way relative face-shape targets to both synthetic samples; neutral geometry, textures, and existing targets unchanged",
+      "Reduced weight-shape displacement near mouth corners so combined edits keep the lip boundary clear; neutral geometry, textures, and other targets unchanged",
+      "Rebaked contour targets with mouth-line protection and final-mesh validation; neutral geometry, textures, nose and weight targets unchanged"
+    ]
+  },
+  "models": [
+    {
+      "key": "base-female",
+      "file": "base-female.glb",
+      "bytes": 4809396,
+      "sha256": "ab4e4d37809b382531ba923e19d7d634c38e93aae027a7265c8a4b3d685d7931",
+      "defaultMorphWeights": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "morphTargets": [
+        "nose.bridge_height",
+        "nose.tip_projection",
+        "nose.tip_rotation",
+        "nose.alar_width",
+        "eyeOpen",
+        "jawContour",
+        "chinForward",
+        "nose.tip_height",
+        "contour.cheekbone_neg",
+        "contour.cheekbone_pos",
+        "contour.chin_projection_neg",
+        "contour.chin_projection_pos",
+        "contour.chin_length_neg",
+        "contour.chin_length_pos",
+        "contour.chin_width_neg",
+        "contour.chin_width_pos",
+        "contour.cheek_volume_neg",
+        "contour.cheek_volume_pos",
+        "contour.jaw_angle_neg",
+        "contour.jaw_angle_pos",
+        "contour.weight_shape_neg",
+        "contour.weight_shape_pos"
+      ],
+      "thumbnail": {
+        "file": "base-female.webp",
+        "bytes": 9000,
+        "sha256": "fb027ce5c6672426fe422fb3fb5d4f7c0cd90e258c6a56a577a931cd4f7bfcf0",
+        "render": "apps/web FaceViewer 'front' preset, weights 0, 480px canvas, cropped to alpha bounds + 6% margin, 320px tall WebP q86 (S15P31B204-437)"
+      }
+    },
+    {
+      "key": "base-male",
+      "file": "base-male.glb",
+      "bytes": 4815568,
+      "sha256": "c856a88dd70667f9be3e17c5eaa3d65760eedfd504a7bf4319ec6ca31bbca1c5",
+      "defaultMorphWeights": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "morphTargets": [
+        "nose.bridge_height",
+        "nose.tip_projection",
+        "nose.tip_rotation",
+        "nose.alar_width",
+        "eyeOpen",
+        "jawContour",
+        "chinForward",
+        "nose.tip_height",
+        "contour.cheekbone_neg",
+        "contour.cheekbone_pos",
+        "contour.chin_projection_neg",
+        "contour.chin_projection_pos",
+        "contour.chin_length_neg",
+        "contour.chin_length_pos",
+        "contour.chin_width_neg",
+        "contour.chin_width_pos",
+        "contour.cheek_volume_neg",
+        "contour.cheek_volume_pos",
+        "contour.jaw_angle_neg",
+        "contour.jaw_angle_pos",
+        "contour.weight_shape_neg",
+        "contour.weight_shape_pos"
+      ],
+      "thumbnail": {
+        "file": "base-male.webp",
+        "bytes": 9208,
+        "sha256": "1006c5559d511b874790f22ab6e6ae68841e661a49a0cc18c232672013b1a161",
+        "render": "apps/web FaceViewer 'front' preset, weights 0, 480px canvas, cropped to alpha bounds + 6% margin, 320px tall WebP q86 (S15P31B204-437)"
+      }
+    }
+  ],
+  "limitations": [
+    "Prototype sample anatomy and partially procedural skin",
+    "Synthetic scale; not a clinical measurement or surgical outcome prediction",
+    "Relative demonstration controls; not validated for all combined morph states"
+  ]
+}

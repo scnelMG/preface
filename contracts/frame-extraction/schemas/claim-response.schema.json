@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://preface.local/contracts/frame-extraction/claim-response.schema.json",
+  "title": "ExtractionClaim (INT-EXT-01 응답 data)",
+  "description": "가져간 추출 작업. input.downloadUrl은 서명 URL이라 로그에 남기지 않는다. 워커는 모르는 필드를 무시해야 한다.",
+  "type": "object",
+  "required": [
+    "jobId",
+    "attempt",
+    "input",
+    "maxFrames",
+    "claimedAt",
+    "leaseTimeoutSec"
+  ],
+  "properties": {
+    "jobId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "attempt": {
+      "description": "추출 시도 번호(1부터). bundle-url·result 요청 본문에 그대로 돌려준다",
+      "type": "integer",
+      "minimum": 1
+    },
+    "input": {
+      "description": "원본 얼굴 영상. downloadUrl은 presigned GET(만료 10분)",
+      "type": "object",
+      "required": [
+        "downloadUrl",
+        "expiresAt",
+        "contentType",
+        "sizeBytes",
+        "checksumSha256"
+      ],
+      "properties": {
+        "downloadUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "contentType": {
+          "type": "string",
+          "enum": [
+            "video/mp4",
+            "video/webm",
+            "video/quicktime"
+          ]
+        },
+        "sizeBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "checksumSha256": {
+          "description": "원본 SHA-256(base64). 다르면 FAILED(INTERNAL)",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{43}=$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "maxFrames": {
+      "description": "묶음에 넣을 수 있는 프레임 최대 장 수. 고정 장 수가 아니다",
+      "type": "integer",
+      "minimum": 1
+    },
+    "claimedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "leaseTimeoutSec": {
+      "description": "이 시간 안에 result를 보내지 않으면 다른 워커가 다시 가져간다(시도 수 초과 시 FAILED(TIMEOUT))",
+      "type": "integer",
+      "minimum": 1
+    },
+    "capture": {
+      "description": "촬영 방식·기종(S15P31B204-617). 없으면 필드가 없다(예전 업로드). 워커는 deviceModel을 렌즈 표(device_profiles.json) 출발값으로만 쓰고, 영상 안 렌즈 기록이 있으면 그쪽이 이긴다. deviceModel은 사용자가 고른 값일 수 있다. trace는 웹 녹화 촬영 기록(S15P31B204-640)으로, 웹 녹화이고 검사를 통과했을 때만 있다",
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "WEB_RECORDER",
+            "FILE"
+          ]
+        },
+        "deviceModel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "trace": {
+          "description": "웹 녹화 촬영 기록(S15P31B204-640, 실패 원인 개선 계획 S0-1·S0-8·F-3). 웹 가이드가 보낸 그대로 저장해 넘기고 서버는 해석하지 않는다. 추출 워커가 회전 부족 판정(QUALITY_ANGLE, S1-1)·구간 자르기(S1-6)·각도 기준 선택(S1-2)에 쓴다. 서버 검사는 trace 2,000점·steps 30개 상한과 시각 증가 순서뿐이다. 시각은 녹화 시작(MediaRecorder start) 기준 ms라 첫 프레임과 수십 ms 차이가 날 수 있다. 각도는 도이고, yaw·pitch는 서버 video_scan.head_angles(=prepare.json yaw)와 같은 식·부호다(거울 반전하지 않은 원본). 워커는 값을 다시 검사하고 프레임 각도와 맞지 않으면 버린다(S15P31B204-662)",
+          "type": "object",
+          "properties": {
+            "version": {
+              "description": "기록 형식 버전",
+              "type": "integer",
+              "minimum": 1
+            },
+            "guideVersion": {
+              "description": "웹 가이드 버전(captureTrace.ts GUIDE_VERSION). GUIDE_STEPS의 순서·key·단계 수가 바뀌면 올린다",
+              "type": "string"
+            },
+            "trackerVersion": {
+              "description": "얼굴 추적 버전(예: mediapipe-0.10.14)",
+              "type": "string"
+            },
+            "meta": {
+              "description": "웹 가이드 LiveCaptureMeta(durationMs·stopReason·stepsDone·stepsTotal·mimeType·bothSides: 양쪽 끝을 다 담았는지, S15P31B204-672). 값은 검사하지 않는다",
+              "type": "object"
+            },
+            "steps": {
+              "description": "가이드 단계 구간. name은 웹 GUIDE_STEPS의 key이고 같은 key가 두 번 나올 수 있다(지금은 backfront: 정면 유지와 마무리 정면). 같은 key는 배열 순서로 구분한다. guideVersion live-capture-2026-11-11부터 순서는 recleft·tofront(가운데로)·switchhand(정면에서 손 바꾸기)·sweepleft·backfront·headup·headdown·backfront(S15P31B204-771), 그 전은 recleft·sweepleft·backfront·headup·headdown·backfront",
+              "type": "array",
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "startMs",
+                  "endMs"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "startMs": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "endMs": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            "trace": {
+              "description": "머리 각도 표본(약 20 Hz) [tMs, yaw, pitch, found]. 얼굴을 놓친 표본은 found 0, 각도 null. tMs는 증가 순서",
+              "type": "array",
+              "maxItems": 2000,
+              "items": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "prefixItems": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  {
+                    "enum": [
+                      0,
+                      1
+                    ]
+                  }
+                ]
+              }
+            },
+            "trackSettings": {
+              "description": "카메라 트랙 getSettings() 그대로(F-3). 해상도·fps는 서버 probe가 파일에서 읽으므로 참고용",
+              "type": "object"
+            },
+            "gyro": {
+              "description": "선택. [tMs, deg] 줄의 배열(약 20 Hz, 최대 2000줄). 휴대폰이 중력 방향 축으로 돈 누적 각도(자이로 각속도를 쌓은 값). 0은 녹화 시작인 오른쪽 끝이고 정면이 아니다. 왼쪽 끝으로 갈수록 커지며 부호는 기종 공통이다(11/09 아이폰·갤럭시 실측: 정면 약 +90~100, 왼쪽 끝 약 +185). 정면 기준 각도는 첫 backfront 단계 endMs(정면을 유지해 끝난 시각)의 값을 빼서 쓰고(guideVersion live-capture-2026-11-11부터는 정면에서 손 바꾸기를 마친 switchhand 단계 endMs도 정면이다), 그 값은 얼굴 yaw와 부호가 반대다(약 -yaw). S15P31B204-733 수정(!591) 전 녹화의 값은 축을 잘못 읽어 쓰지 않는다. 센서가 없으면 빠진다. 워커는 프레임 고르기의 좌우 진행에만 쓰고, 얼굴 yaw와 직선 관계(기울기 절댓값 0.5~2, 상관 0.8 이상)가 아니면 쓰지 않는다(S15P31B204-677·-735)",
+              "type": "array",
+              "maxItems": 2000,
+              "items": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

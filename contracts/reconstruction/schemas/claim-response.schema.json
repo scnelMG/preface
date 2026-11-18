@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://preface.local/contracts/reconstruction/claim-response.schema.json",
+  "title": "ClaimedJob (INT-REC-01 응답 data)",
+  "description": "가져간 작업. 공통 응답의 data에 들어간다. 워커는 모르는 필드를 무시해야 한다(필드 추가는 하위 호환 변경). input.downloadUrl은 서명 URL이라 로그에 남기지 않는다.",
+  "type": "object",
+  "required": [
+    "jobId",
+    "input",
+    "outputPrefix",
+    "morphSchemaVersion",
+    "claimedAt",
+    "heartbeatIntervalSec",
+    "leaseTimeoutSec"
+  ],
+  "properties": {
+    "jobId": {
+      "description": "복원 작업 ID(UUID). INT-REC-02~04 경로의 {jobId}",
+      "type": "string",
+      "format": "uuid"
+    },
+    "input": {
+      "description": "프레임 묶음(S15P31B204-353). 원본 영상은 EC2 추출 워커가 묶음을 만든 직후 지워져 워커에 가지 않는다. downloadUrl은 presigned GET(만료 10분)이므로 받자마자 내려받는다. 만료되면 작업을 FAILED(INTERNAL)로 보고한다. 묶음 구조는 contracts/frame-extraction/README.md \"묶음 형식\"",
+      "type": "object",
+      "required": [
+        "downloadUrl",
+        "expiresAt",
+        "contentType",
+        "sizeBytes",
+        "checksumSha256",
+        "frameCount",
+        "lens"
+      ],
+      "properties": {
+        "downloadUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "contentType": {
+          "description": "압축 없는 tar",
+          "type": "string",
+          "enum": [
+            "application/x-tar"
+          ]
+        },
+        "sizeBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "checksumSha256": {
+          "description": "묶음 SHA-256(base64). 내려받은 파일과 다르면 FAILED(INTERNAL)",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{43}=$"
+        },
+        "frameCount": {
+          "description": "묶음 images/ 장 수. 최대 100장이고 고정이 아니다(선명도·얼굴 검사로 걸러 82~97장처럼 달라진다)",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "lens": {
+          "$ref": "../frame-extraction/lens.schema.json"
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputPrefix": {
+      "description": "GPU 시도별 결과 객체 key 접두. 결과 보고의 *ObjectKey는 INT-REC-04 발급 key와 정확히 같아야 한다",
+      "type": "string",
+      "pattern": "^users/[0-9a-f-]{36}/models/[0-9a-f-]{36}/a[1-9][0-9]*/$"
+    },
+    "morphSchemaVersion": {
+      "description": "결과 메시가 지원해야 하는 morph 파라미터 스키마 버전. 결과 보고에 그대로 돌려준다",
+      "type": "string",
+      "pattern": "^v[0-9]+$"
+    },
+    "claimedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "heartbeatIntervalSec": {
+      "description": "이 간격 안에 진행 보고(INT-REC-02)를 한 번 이상 보낸다. 단계가 그대로면 같은 stage를 다시 보내면 된다(하트비트)",
+      "type": "integer",
+      "minimum": 1
+    },
+    "leaseTimeoutSec": {
+      "description": "마지막 claim·진행 보고 뒤 이 시간이 지나면 Spring이 작업을 회수한다(재배정 또는 FAILED(TIMEOUT)). 회수된 작업의 보고는 continue=false·409 REC_022를 받는다",
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "additionalProperties": false
+}

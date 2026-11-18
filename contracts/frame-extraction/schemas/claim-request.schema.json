@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://preface.local/contracts/frame-extraction/claim-request.schema.json",
+  "title": "ExtractionClaimRequest (INT-EXT-01)",
+  "description": "추출 워커가 다음 작업 하나를 가져갈 때 보낸다. workerId는 프로세스마다 고정된 식별자. 이후 요청에는 같은 값을 X-Worker-Id 헤더로 보낸다.",
+  "type": "object",
+  "required": [
+    "workerId"
+  ],
+  "properties": {
+    "workerId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]{1,64}$"
+    }
+  },
+  "additionalProperties": false
+}

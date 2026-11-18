@@ -1,0 +1,462 @@
+{
+ "_doc": "Lens profiles for capture devices. focal_px = (long side / 2) / tan(horizontal FOV of the long side / 2) x video_crop. Field of view from the spec (diagonal, 4:3 still) or the 35 mm equivalent; video_crop = narrower video field (stabilisation / 16:9 crop). Values marked 'estimate' are to be checked against calibrated captures. Galaxy rows other than S24 (2026-10-27): 35 mm equivalent or spec FOV from BE research + the S24 video_crop; match = model code without the region letter (S20 FE left out on purpose -> lens search). iPhone rows (2026-10-27): Apple publishes no front focal length, so the 35 mm equivalent comes from real video records of the generation (12: 25, 14 Plus / 16 Pro: 24, 17 Pro: 20) and the Apple specs (MP, aperture, autofocus) group the models; match = model name as the video records it, the longest match wins (iPhone 17e over iPhone 17).",
+ "galaxy-s24-front": {
+  "label": "Galaxy S24 셀프(전면) 카메라",
+  "diag_fov_deg": 80,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-S921",
+   "SM-S926",
+   "SM-S928"
+  ],
+  "source": "spec 80 deg FoV (f/2.2, 1/3.94in); video_crop: eun01 2026-10-15 (f=1560 px at 1080x1920 put the jaw / profile outline on the photos; auto lens search picked 897 = 6 % wider face)",
+  "status": "estimate"
+ },
+ "galaxy-s20-front": {
+  "label": "Galaxy S20 / S20+ / S20 Ultra 셀프(전면) 카메라",
+  "equiv_mm": 26,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-G980",
+   "SM-G981",
+   "SM-G985",
+   "SM-G986",
+   "SM-G988"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): 26 mm equivalent (public reviews); video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-s21-front": {
+  "label": "Galaxy S21 / S21+ / S21 Ultra 셀프(전면) 카메라",
+  "equiv_mm": 26,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-G991",
+   "SM-G996",
+   "SM-G998"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): 25-26 mm equivalent (sources disagree, 26 taken like its siblings; about 4 % apart); video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-s21fe-front": {
+  "label": "Galaxy S21 FE 셀프(전면) 카메라",
+  "diag_fov_deg": 81,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-G990"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): official FOV 81 deg (26 mm equivalent); video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-s22-front": {
+  "label": "Galaxy S22 / S22+ / S22 Ultra 셀프(전면) 카메라",
+  "equiv_mm": 26,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-S901",
+   "SM-S906",
+   "SM-S908"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): 26 mm equivalent (public material); video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-s23-front": {
+  "label": "Galaxy S23 / S23+ / S23 Ultra 셀프(전면) 카메라",
+  "equiv_mm": 26,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-S911",
+   "SM-S916",
+   "SM-S918"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): 26 mm equivalent (public reviews); video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-s23fe-s24fe-front": {
+  "label": "Galaxy S23 FE / S24 FE 셀프(전면) 카메라",
+  "equiv_mm": 26,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-S711",
+   "SM-S721"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): 26 mm equivalent (official + reviews); video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-s25-front": {
+  "label": "Galaxy S25 / S25+ 셀프(전면) 카메라",
+  "equiv_mm": 26,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-S931",
+   "SM-S936"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): 26 mm equivalent (public reviews); video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-s25ultra-front": {
+  "label": "Galaxy S25 Ultra 셀프(전면) 카메라",
+  "equiv_mm": 26,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-S938"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): 25-26 mm equivalent (sources disagree, 26 taken; about 4 % apart); video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-s25edge-front": {
+  "label": "Galaxy S25 Edge 셀프(전면) 카메라",
+  "diag_fov_deg": 85,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-S937"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): no mm figure, review FOV 85 deg (no official source); model code from iFixit / certification records; video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-s25fe-front": {
+  "label": "Galaxy S25 FE 셀프(전면) 카메라",
+  "diag_fov_deg": 80,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-S731"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): official FOV 80 deg (26 mm equivalent); model code from certification records; video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-s26-front": {
+  "label": "Galaxy S26 / S26+ / S26 Ultra 셀프(전면) 카메라",
+  "equiv_mm": 23,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-S942",
+   "SM-S947",
+   "SM-S948"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): 23 mm equivalent (camera spec text); model codes from certification records, SM-S947 was once listed as S26 Edge (Edge cancelled, code reused for Plus) - check with a real video; video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-s26fe-front": {
+  "label": "Galaxy S26 FE 셀프(전면) 카메라",
+  "diag_fov_deg": 85,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-S741"
+  ],
+  "source": "BE research 2026-10-27 (S15P31B204-358): official FOV 85 deg (mm withheld); model code from certification records; video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-a-26mm-front": {
+  "label": "Galaxy A14·A15·A16·A34·A52·A52s·A53·A54·A55·A72·A73 셀프(전면) 카메라",
+  "equiv_mm": 26,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-A145",
+   "SM-A146",
+   "SM-A155",
+   "SM-A156",
+   "SM-A165",
+   "SM-A166",
+   "SM-A346",
+   "SM-A525",
+   "SM-A526",
+   "SM-A528",
+   "SM-A536",
+   "SM-A546",
+   "SM-A556",
+   "SM-A725",
+   "SM-A736"
+  ],
+  "source": "S15P31B204-468 research 2026-10-30: Samsung publishes no front FOV for the A series. GSMArena 26 mm: A14 (https://www.gsmarena.com/samsung_galaxy_a14-12151.php), A14 5G (-12004), A15 (-12637), A34 (-12074), A52 (-10641), A52 5G (-10631), A52s (-11039), A53 (-11268), A54 (-12070), A55 (-12824), A72 (-10469), A73 (-11257). A15 5G / A16 / A16 5G have no figure: same 13MP f/2.0 front as the A15 (Wikipedia 27 mm / 78.1 deg, uncited). Wikipedia lists 25 mm for A34 / A52 / A53 / A54 (about 4 % apart). Production 10-29: an A52s ran the full lens search and picked 943 px (the search also picked 897 px for the S24 where 1560 px fits, so it is not a measurement). video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-a-25mm-front": {
+  "label": "Galaxy A23·A24·A25·A33·A35 셀프(전면) 카메라",
+  "equiv_mm": 25,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-A235",
+   "SM-A236",
+   "SM-A245",
+   "SM-A256",
+   "SM-A336",
+   "SM-A356"
+  ],
+  "source": "S15P31B204-468 research 2026-10-30: Samsung publishes no front FOV for the A series. GSMArena 25 mm: A24 (https://www.gsmarena.com/samsung_galaxy_a24_4g-12176.php), A23 5G (https://www.gsmarena.com/samsung_galaxy_a23_5g-11736.php). A23 / A25 / A33 / A35: GSMArena has no figure, Wikipedia 25 mm (uncited). video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-zflip4-front": {
+  "label": "Galaxy Z Flip4 안쪽 셀프(전면) 카메라",
+  "diag_fov_deg": 80,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-F721"
+  ],
+  "source": "Samsung newsroom spec 10MP F2.4, FOV 80 deg (https://news.samsung.com/global/introducing-samsung-galaxy-z-flip4-and-galaxy-z-fold4-the-most-versatile-devices-changing-the-way-we-interact-with-smartphones); GSMArena 26 mm (https://www.gsmarena.com/samsung_galaxy_z_flip4-11538.php). Inner camera (phone open); folded, the rear cameras film. video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-zflip5-zflip6-front": {
+  "label": "Galaxy Z Flip5 / Z Flip6 안쪽 셀프(전면) 카메라",
+  "diag_fov_deg": 85,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-F731",
+   "SM-F741"
+  ],
+  "source": "Samsung newsroom spec 10MP F2.2, FOV 85 deg (Flip5 https://news.samsung.com/global/samsung-galaxy-z-flip5-and-galaxy-z-fold5-delivering-flexibility-and-versatility-without-compromise; Flip6 https://news.samsung.com/global/samsung-galaxy-z-fold-6-and-z-flip-6-elevate-galaxy-ai-to-new-heights); GSMArena 23 mm. A Z Flip7 original video records 22 / 23 in udta/smta/lens (S15P31B204-467). Inner camera (phone open). video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "galaxy-zfold4-6-cover-front": {
+  "label": "Galaxy Z Fold4 / Fold5 / Fold6 커버 화면 셀프(전면) 카메라",
+  "diag_fov_deg": 85,
+  "sensor_aspect": [
+   4,
+   3
+  ],
+  "video_crop": 1.09,
+  "match": [
+   "SM-F936",
+   "SM-F946",
+   "SM-F956"
+  ],
+  "source": "Samsung newsroom spec cover camera 10MP F2.2, FOV 85 deg (Fold4 https://news.samsung.com/global/introducing-samsung-galaxy-z-flip4-and-galaxy-z-fold4-the-most-versatile-devices-changing-the-way-we-interact-with-smartphones; Fold5 https://news.samsung.com/global/samsung-galaxy-z-flip5-and-galaxy-z-fold5-delivering-flexibility-and-versatility-without-compromise; Fold6 https://news.samsung.com/global/samsung-galaxy-z-fold-6-and-z-flip-6-elevate-galaxy-ai-to-new-heights); GSMArena 24 mm. The video does not say which camera filmed: the cover camera is taken (the phone used folded, like a bar phone). The inner under-display camera is 4MP, FOV 80 deg (Fold6 newsroom: 85) / 26 mm - a video from it has a narrower field and its fixed trial may fail, then the lens search runs (S15P31B204-467). video_crop 1.09 borrowed from galaxy-s24-front (eun01 measured): 35 mm / FOV figures are for the 4:3 still, video is narrower",
+  "status": "estimate"
+ },
+ "iphone12-front": {
+  "label": "iPhone 12 셀프(전면, TrueDepth) 카메라",
+  "equiv_mm": 25,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone 12",
+   "iPhone13,2"
+  ],
+  "source": "QuickTime metadata of an original iPhone 12 front video (woo02, 2026-10-22): camera.focal_length.35mm_equivalent 25, lens 2.71 mm f/2.2, 16:9 video frame equivalent like iphone17pro-front (= 1273 px at 1080x1920). Before: 23 mm + video_crop 1.12 assumed (1429 px, 12 % too long)",
+  "status": "measured (file record)"
+ },
+ "iphone13-front": {
+  "label": "iPhone 13 / 13 mini / 13 Pro / 13 Pro Max 셀프(전면) 카메라",
+  "equiv_mm": 25,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone 13"
+  ],
+  "source": "Apple specs: 12MP f/2.2 TrueDepth, no front autofocus listed (https://support.apple.com/en-us/111872, 111873, 111871, 111870); 25 mm from the iPhone 12 file record (same 12MP f/2.2 front camera); Apple tech specs list no front focal length / FOV; trimmed videos (Photos app) keep the model name but drop the lens record, so this row is used for them (2026-10-27)",
+  "status": "estimate (same spec as iPhone 12)"
+ },
+ "iphone14-front": {
+  "label": "iPhone 14 / 14 Plus 셀프(전면) 카메라",
+  "equiv_mm": 24,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone 14"
+  ],
+  "source": "Apple specs: 12MP f/1.9 TrueDepth, autofocus with Focus Pixels (https://support.apple.com/en-us/111850, 111854); QuickTime record of an original iPhone 14 Plus front video (seo01): 35mm_equivalent 24; Apple tech specs list no front focal length / FOV; trimmed videos (Photos app) keep the model name but drop the lens record, so this row is used for them (2026-10-27)",
+  "status": "measured (file record, 14 Plus)"
+ },
+ "iphone14pro-front": {
+  "label": "iPhone 14 Pro 셀프(전면) 카메라",
+  "equiv_mm": 24,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone 14 Pro"
+  ],
+  "source": "no iPhone 14 Pro original yet: iPhone 14 Plus (seo01) and 16 Pro (min01) originals record 24 mm with the same 2.69 mm f/1.9 front lens -> 24 mm (= 1222 px at 1080x1920), 2026-10-22. Check with a 14 Pro original",
+  "status": "estimate (same lens, 14 Plus / 16 Pro records)"
+ },
+ "iphone15-front": {
+  "label": "iPhone 15 / 15 Plus / 15 Pro / 15 Pro Max 셀프(전면) 카메라",
+  "equiv_mm": 24,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone 15"
+  ],
+  "source": "Apple specs: 12MP f/1.9 TrueDepth, autofocus with Focus Pixels (https://support.apple.com/en-us/111831, 111830, 111829, 111828); 24 mm from the 14 Plus / 16 Pro file records; Apple tech specs list no front focal length / FOV; trimmed videos (Photos app) keep the model name but drop the lens record, so this row is used for them (2026-10-27)",
+  "status": "estimate (same spec as 14 / 16)"
+ },
+ "iphone16-front": {
+  "label": "iPhone 16 / 16 Plus / 16e 셀프(전면) 카메라",
+  "equiv_mm": 24,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone 16"
+  ],
+  "source": "Apple specs: 12MP f/1.9 TrueDepth, autofocus with Focus Pixels (https://support.apple.com/en-us/121029, 121030, 122208); 24 mm from the 16 Pro file record; Apple tech specs list no front focal length / FOV; trimmed videos (Photos app) keep the model name but drop the lens record, so this row is used for them (2026-10-27)",
+  "status": "estimate (same spec as 16 Pro)"
+ },
+ "iphone16pro-front": {
+  "label": "iPhone 16 Pro 셀프(전면) 카메라",
+  "equiv_mm": 24,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone 16 Pro"
+  ],
+  "source": "QuickTime metadata of an original iPhone 16 Pro front video (min01 original, 2026-10-22): 35mm_equivalent 24, lens 2.69 mm f/1.9 (= 1222 px at 1080x1920). Before: copied from iphone12-front (1429 px, 17 % too long)",
+  "status": "measured (file record)"
+ },
+ "iphone17e-front": {
+  "label": "iPhone 17e 셀프(전면) 카메라",
+  "equiv_mm": 24,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone 17e"
+  ],
+  "source": "Apple specs: 12MP f/1.9 TrueDepth, autofocus, not Center Stage (https://support.apple.com/en-us/126470); 24 mm from the 14 Plus / 16 Pro file records; Apple tech specs list no front focal length / FOV; trimmed videos (Photos app) keep the model name but drop the lens record, so this row is used for them (2026-10-27)",
+  "status": "estimate (same spec as 16 generation)"
+ },
+ "iphone17-front": {
+  "label": "iPhone 17 셀프(전면, Center Stage) 카메라",
+  "equiv_mm": 20,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone 17"
+  ],
+  "source": "Apple specs: 18MP Center Stage f/1.9, autofocus with Focus Pixels (square sensor) (https://support.apple.com/en-us/125089); 20 mm from the 17 Pro file record; 20 mm taken as the 16:9 video frame's equivalent like iphone17pro-front (if it is the square sensor's, ~1255 px); Apple tech specs list no front focal length / FOV; trimmed videos (Photos app) keep the model name but drop the lens record, so this row is used for them (2026-10-27)",
+  "status": "estimate (same spec as 17 Pro)"
+ },
+ "iphone17pro-front": {
+  "label": "iPhone 17 Pro 셀프(전면, Center Stage) 카메라",
+  "equiv_mm": 20,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone 17 Pro"
+  ],
+  "source": "QuickTime metadata of an original 17 Pro front video (chae01, 2026-10-19): camera.focal_length.35mm_equivalent 20, lens 2.715 mm f/1.9; taken as the 16:9 video frame's equivalent (if it is the square sensor's, the focal is ~1255 px instead of ~1018) - check with --focal",
+  "status": "estimate"
+ },
+ "iphoneair-front": {
+  "label": "iPhone Air 셀프(전면, Center Stage) 카메라",
+  "equiv_mm": 20,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone Air"
+  ],
+  "source": "Apple specs: 18MP Center Stage f/1.9, autofocus with Focus Pixels (square sensor) (https://support.apple.com/en-us/125092); 20 mm from the 17 Pro file record; 20 mm taken as the 16:9 video frame's equivalent like iphone17pro-front (if it is the square sensor's, ~1255 px); Apple tech specs list no front focal length / FOV; trimmed videos (Photos app) keep the model name but drop the lens record, so this row is used for them (2026-10-27)",
+  "status": "estimate (same spec as 17 Pro)"
+ },
+ "iphone18pro-front": {
+  "label": "iPhone 18 Pro / 18 Pro Max 셀프(전면, Center Stage) 카메라",
+  "equiv_mm": 20,
+  "sensor_aspect": [
+   16,
+   9
+  ],
+  "video_crop": 1.0,
+  "match": [
+   "iPhone 18 Pro"
+  ],
+  "source": "Apple specs: 18MP Center Stage f/1.9, autofocus with Focus Pixels (square sensor) (https://support.apple.com/en-us/148590, 148591); 20 mm from the 17 Pro file record; 20 mm taken as the 16:9 video frame's equivalent like iphone17pro-front (if it is the square sensor's, ~1255 px); Apple tech specs list no front focal length / FOV; trimmed videos (Photos app) keep the model name but drop the lens record, so this row is used for them (2026-10-27)",
+  "status": "estimate (same spec as 17 Pro)"
+ }
+}

@@ -1,0 +1,71 @@
+{
+  "status": "SUCCEEDED",
+  "meshObjectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/mesh.glb",
+  "rigObjectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/rig.json",
+  "expressionObjectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/expression.json",
+  "textureObjectKey": null,
+  "thumbnailObjectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/thumbnail.webp",
+  "meshFormat": "GLB",
+  "morphSchemaVersion": "v1",
+  "eyeReview": {"L": "absent", "R": "present"},
+  "eyePartsSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "eyeApproval": {
+    "schemaVersion": "v1",
+    "binding": {
+      "meshSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "rigSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "eyePartsSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "engine": "synthetic-engine",
+      "rigVersion": "v1",
+      "topologyVersion": "synthetic-topology"
+    },
+    "limits": {"inline:height": 60, "inout:height": 100, "outline:height": 80, "inner": 100, "outer": 70, "lower": 100, "upper": 40}
+  },
+  "noseApproval": {
+    "schemaVersion": "v1",
+    "binding": {
+      "meshSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "rigSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "fitSha": "synthetic-fit-sha",
+      "engine": "synthetic-engine",
+      "rigVersion": "v1",
+      "topologyVersion": "synthetic-topology"
+    },
+    "ranges": {
+      "nose.bridge_height": {"min": -0.1, "max": 0.1},
+      "nose.tip_projection": {"min": -0.1, "max": 0.1},
+      "nose.tip_height": {"min": -0.1, "max": 0.1},
+      "nose.tip_rotation": {"min": -0.1, "max": 0.1},
+      "nose.alar_width": {"min": -0.1, "max": 0.1}
+    }
+  },
+  "measurements": {},
+  "qualityReport": {
+    "faceDetectedRatio": 0.97,
+    "yawRangeDeg": 62.0,
+    "meanLuma": 0.54
+  },
+  "videoMeta": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "codec": "hevc",
+    "durationMs": 35100,
+    "rotation": 90,
+    "hdr": false,
+    "bitrate": 8200000,
+    "deviceMake": "SyntheticCam",
+    "deviceModel": "Test-1",
+    "recordedAt": "2026-10-22T06:20:00Z",
+    "encoder": "synthetic",
+    "originalSuspect": false
+  },
+  "durationMs": 212000,
+  "captureImages": {
+    "FRONT": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/captures/front.jpg",
+    "LEFT": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/captures/left.jpg",
+    "RIGHT": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/captures/right.jpg",
+    "LEFT_45": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/captures/left_45.jpg",
+    "RIGHT_45": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/captures/right_45.jpg"
+  }
+}

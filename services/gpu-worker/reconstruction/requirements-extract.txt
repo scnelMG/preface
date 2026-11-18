@@ -1,0 +1,9 @@
+# EC2 frame extraction (tools/frames_bundle.py extract) - CPU only, Linux, Python 3.12.
+# Pinned: the video decoder bundled in opencv-contrib-python decides which frames are picked
+# (Windows 61.x vs Linux 62.x wheels picked different frames for the same video, 2026-10-26).
+numpy==2.5.4
+opencv-contrib-python==5.0.0.93
+mediapipe==0.10.14
+protobuf==4.25.9
+pillow==13.0.0
+pillow-heif==1.8.1

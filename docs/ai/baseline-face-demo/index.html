@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>원본 3D 얼굴 분석 · 합성 데모</title>
+    <style>
+      :root { font-family: Pretendard, "Noto Sans KR", system-ui, sans-serif; color: #272333; background: #f7f5f2; }
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      main { max-width: 1150px; margin: auto; padding: 42px 24px 64px; }
+      header { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; margin-bottom: 30px; }
+      .eyebrow { color: #7555a6; font-size: 13px; font-weight: 750; letter-spacing: .08em; }
+      h1 { font-size: clamp(28px, 4vw, 42px); line-height: 1.25; margin: 12px 0 10px; letter-spacing: -.045em; }
+      p { line-height: 1.65; }
+      .intro { color: #726c7b; max-width: 580px; margin: 0; }
+      .pill { background: #ebe5f4; color: #61448f; border-radius: 100px; padding: 10px 15px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+      .layout { display: grid; grid-template-columns: minmax(320px, 1.08fr) minmax(320px, .92fr); gap: 20px; }
+      .panel { border: 1px solid #e7e1de; background: #fff; border-radius: 24px; box-shadow: 0 12px 36px rgba(60, 43, 75, .04); }
+      .viewer { min-height: 550px; padding: 24px; display: flex; flex-direction: column; }
+      .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+      h2 { font-size: 19px; margin: 0; letter-spacing: -.025em; }
+      .hint { font-size: 13px; color: #8b8490; }
+      .face-wrap { flex: 1; display: grid; place-items: center; min-height: 420px; background: radial-gradient(circle at 50% 42%, #f6f1f9 0, #faf8f7 48%, #fff 78%); border-radius: 20px; margin: 18px 0; position: relative; overflow: hidden; }
+      svg { width: min(84%, 370px); height: auto; filter: drop-shadow(0 18px 20px rgba(76, 52, 86, .08)); }
+      .view-tabs { display: flex; gap: 8px; }
+      button { cursor: pointer; font: inherit; }
+      .view-tabs button { border: 1px solid #e7e1e8; border-radius: 100px; background: #fff; color: #746b7b; padding: 8px 16px; }
+      .view-tabs button[aria-pressed="true"] { background: #7451ad; border-color: #7451ad; color: #fff; }
+      .right { display: grid; gap: 20px; }
+      .summary { padding: 26px 28px; }
+      .summary p { color: #706a77; margin: 10px 0 0; font-size: 15px; }
+      .summary .finding { color: #30253e; font-size: 24px; font-weight: 750; letter-spacing: -.035em; }
+      .evidence { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+      .evidence span { flex: 1; min-width: 135px; border-radius: 14px; background: #f7f4f9; padding: 12px 14px; color: #776f7c; font-size: 12px; }
+      .evidence strong { display: block; color: #604388; font-size: 22px; margin-bottom: 3px; }
+      .metric { padding: 24px 28px; display: grid; gap: 10px; }
+      .metric-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+      .metric .label { font-size: 14px; font-weight: 700; color: #675f6d; }
+      .metric strong { font-size: 31px; letter-spacing: -.04em; color: #644295; }
+      .metric p { margin: 0; color: #77707e; font-size: 14px; }
+      .tag { font-size: 12px; border-radius: 100px; padding: 6px 10px; color: #736885; background: #f3eff7; }
+      .source { font-size: 12px; color: #8b8490; }
+      .source a { color: #7555a6; }
+      .next { padding: 23px 28px; background: #f1ebf7; border-color: #e1d5ee; }
+      .next p { margin: 8px 0 0; color: #665d6c; font-size: 14px; }
+      .next ol { margin: 14px 0 0; padding-left: 21px; color: #665d6c; line-height: 1.65; font-size: 14px; }
+      .next li + li { margin-top: 8px; }
+      .note { margin-top: 20px; color: #8a838d; font-size: 13px; }
+      [hidden] { display: none !important; }
+      @media (max-width: 820px) { main { padding: 28px 16px 50px; } header { display: block; } .pill { display: inline-block; margin-top: 16px; } .layout { grid-template-columns: 1fr; } .viewer { min-height: 450px; } .face-wrap { min-height: 325px; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <div class="eyebrow">PREFACE · 3D BASELINE ANALYSIS</div>
+          <h1>바꾸기 전, 지금의 얼굴부터 살펴볼게요.</h1>
+          <p class="intro">원본 얼굴의 윤곽을 먼저 보고, 코를 정면과 측면에서 살펴봅니다. 아래 설명은 공개된 전문가 평가 틀을 참고한 합성 예시입니다.</p>
+        </div>
+        <span class="pill">합성 모델 데모</span>
+      </header>
+      <div class="layout">
+        <section class="panel viewer" aria-label="합성 얼굴 도식">
+          <div class="panel-head"><h2>원본 3D · 측정 위치</h2><span class="hint">합성 좌표의 2D 도식</span></div>
+          <div class="face-wrap">
+            <svg id="front" viewBox="0 0 360 440" role="img" aria-label="합성 얼굴 정면과 콧볼 측정선">
+              <defs><linearGradient id="skin" x1="0" x2="1"><stop stop-color="#e6d9d0"/><stop offset=".52" stop-color="#f4e9df"/><stop offset="1" stop-color="#e5d6cc"/></linearGradient></defs>
+              <path d="M83 98 Q180 15 277 98 L283 247 Q270 326 180 364 Q90 326 77 247Z" fill="url(#skin)" stroke="#d9c9bf" stroke-width="2"/>
+              <line x1="83" y1="205" x2="277" y2="205" stroke="#8062a8" stroke-width="2" stroke-dasharray="5 5" opacity=".8"/>
+              <line x1="108" y1="306" x2="252" y2="306" stroke="#b28c72" stroke-width="2" stroke-dasharray="5 5" opacity=".8"/>
+              <text x="283" y="209" fill="#6b479b" font-size="12">광대</text>
+              <text x="258" y="310" fill="#8a6a56" font-size="12">턱각</text>
+              <path d="M108 154 Q137 141 157 156 M203 156 Q225 141 252 154" fill="none" stroke="#756a70" stroke-width="4" stroke-linecap="round"/>
+              <ellipse cx="134" cy="164" rx="15" ry="7" fill="#5b5158"/><ellipse cx="226" cy="164" rx="15" ry="7" fill="#5b5158"/>
+              <path d="M180 155 Q170 216 164 238 Q180 254 196 238 Q190 216 180 155" fill="#d8c1b5" stroke="#c7ab9e" stroke-width="2"/>
+              <path d="M156 244 Q180 259 204 244" fill="none" stroke="#ba968c" stroke-width="3"/>
+              <path d="M150 294 Q180 308 210 294" fill="none" stroke="#ad807c" stroke-width="4" stroke-linecap="round"/>
+              <line x1="144" y1="246" x2="216" y2="246" stroke="#7e57b1" stroke-width="3"/>
+              <circle cx="144" cy="246" r="7" fill="#7e57b1"/><circle cx="216" cy="246" r="7" fill="#7e57b1"/>
+              <rect x="112" y="267" rx="11" width="136" height="30" fill="#fff" opacity=".94"/><text x="180" y="287" text-anchor="middle" fill="#6b479b" font-size="13" font-weight="700">콧볼 양쪽 거리</text>
+            </svg>
+            <svg id="side" viewBox="0 0 360 440" role="img" aria-label="합성 얼굴 측면과 코끝 돌출 측정선" hidden>
+              <path d="M93 65 Q174 28 237 75 Q266 123 246 163 Q255 187 284 213 Q297 227 271 235 Q278 260 255 275 Q259 316 225 348 Q183 374 125 343 Q81 303 76 237 Q59 120 93 65Z" fill="#eddfd5" stroke="#d3bdb2" stroke-width="2"/>
+              <path d="M205 147 Q227 138 244 151" fill="none" stroke="#776a6e" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="230" cy="156" r="6" fill="#554a50"/><path d="M255 269 Q226 279 213 274" fill="none" stroke="#b48885" stroke-width="4"/>
+              <line x1="243" y1="215" x2="285" y2="215" stroke="#7e57b1" stroke-width="3"/>
+              <circle cx="243" cy="215" r="7" fill="#7e57b1"/><circle cx="285" cy="215" r="7" fill="#7e57b1"/>
+              <rect x="175" y="244" rx="11" width="144" height="30" fill="#fff" opacity=".94"/><text x="247" y="264" text-anchor="middle" fill="#6b479b" font-size="13" font-weight="700">코끝 앞뒤 위치</text>
+            </svg>
+          </div>
+          <div class="view-tabs" role="group" aria-label="얼굴 시점"><button id="frontButton" aria-pressed="true">정면</button><button id="sideButton" aria-pressed="false">측면</button></div>
+        </section>
+        <div class="right">
+          <section class="panel summary"><h2>01 · 얼굴형 분석</h2><p class="finding" id="faceFinding">분석 중</p><p id="faceExplanation">광대와 턱, 코뿌리와 턱끝의 관계를 확인하고 있습니다.</p><div class="evidence"><span><strong id="jawRatio">계산 중</strong>턱각 폭 / 광대 폭</span><span><strong id="faceRatio">계산 중</strong>코뿌리~턱끝 / 광대 폭</span></div><p class="source">평가 항목: <a href="https://pubmed.ncbi.nlm.nih.gov/33144908/" target="_blank" rel="noreferrer">미용의학 전문가 합의</a> · <a href="https://elementsofmorphology.nih.gov/index.cgi?lid=2cdf1af83bac307d514927d4feacf687" target="_blank" rel="noreferrer">얼굴형 용어 기준</a></p></section>
+          <section class="panel metric"><div class="metric-top"><span class="label">정면 · 콧볼 폭</span><span class="tag">원본 3D</span></div><strong id="alarValue">계산 중</strong><p id="alarExplanation">코 폭과 얼굴 전체 폭의 관계를 확인하고 있습니다.</p><span class="source">측정 정의: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC13466362/" target="_blank" rel="noreferrer">3D 얼굴 계측 문헌</a></span></section>
+          <section class="panel metric"><div class="metric-top"><span class="label">측면 · 코끝 앞뒤 위치</span><span class="tag">원본 3D</span></div><strong id="projectionValue">계산 중</strong><p>코 세로 길이에 대한 코끝의 상대적인 앞쪽 거리입니다. 측면 형태를 설명하는 지표예요.</p><span class="source">측정 정의: <a href="https://github.com/scnelMG/preface/blob/main/services/gpu-worker/reconstruction/pipeline/evaluate.py" target="_blank" rel="noreferrer">저장소 코 형상 측정</a></span></section>
+          <section class="panel next" id="guide"><h2>02 · 분석에서 이어지는 비교</h2><p id="guideIntro">원본 윤곽을 기준으로 바꿔 볼 위치를 정합니다.</p><ol><li>정면에서는 <strong>콧볼 너비</strong>를 조절해 얼굴 중앙의 폭이 어떻게 보이는지 비교해 보세요.</li><li>측면에서는 <strong>코끝 앞뒤</strong>를 조절해 옆모습의 변화를 비교해 보세요.</li></ol><p>수정이 필요하다는 판정이 아니라, 원하는 방향을 고르기 위한 출발점입니다. 실제 3D 적용은 이 데모에 연결되지 않았습니다.</p></section>
+        </div>
+      </div>
+      <p class="note" id="datasetNote">합성 특징점 데이터를 읽고 있습니다.</p>
+    </main>
+    <script id="fixture" type="application/json">{"dataset":"합성 원본 3D 예제","fixture":{"landmarks":{"nasion":[0,0.45,0.72],"pronasale":[0,-0.12,0.9735],"subnasale":[0,-0.29,0.70],"alarLeft":[-0.16,-0.21,0.7155],"alarRight":[0.16,-0.21,0.7155],"zygionLeft":[-0.58,-0.06,0.65],"zygionRight":[0.58,-0.06,0.65],"gonionLeft":[-0.45,-0.55,0.60],"gonionRight":[0.45,-0.55,0.60],"gnathion":[0,-0.72,0.62]},"quality":{"source":"synthetic","landmarksReliable":true,"absoluteScaleKnown":false}}}</script>
+    <script>
+      const front = document.getElementById('front');
+      const side = document.getElementById('side');
+      const frontButton = document.getElementById('frontButton');
+      const sideButton = document.getElementById('sideButton');
+      function showView(view) {
+        const isFront = view === 'front';
+        front.hidden = !isFront;
+        side.hidden = isFront;
+        frontButton.setAttribute('aria-pressed', String(isFront));
+        sideButton.setAttribute('aria-pressed', String(!isFront));
+      }
+      frontButton.addEventListener('click', () => showView('front'));
+      sideButton.addEventListener('click', () => showView('side'));
+      const embeddedFixture = JSON.parse(document.getElementById('fixture').textContent);
+      const dataPromise = location.protocol === 'file:' ? Promise.resolve(embeddedFixture) : fetch('./data.json').then((response) => {
+        if (!response.ok) throw Error('data unavailable');
+        return response.json();
+      });
+      dataPromise.then((data) => {
+        const { nasion, pronasale, subnasale, alarLeft, alarRight, zygionLeft, zygionRight, gonionLeft, gonionRight, gnathion } = data.fixture.landmarks;
+        if (![nasion, pronasale, subnasale, alarLeft, alarRight, zygionLeft, zygionRight, gonionLeft, gonionRight, gnathion].every((point) =>
+          Array.isArray(point) && point.length === 3 && point.every(Number.isFinite))) throw Error('invalid landmarks');
+        const height = nasion[1] - subnasale[1];
+        const faceHeight = nasion[1] - gnathion[1];
+        const cheekWidth = Math.abs(zygionLeft[0] - zygionRight[0]);
+        const jawWidth = Math.abs(gonionLeft[0] - gonionRight[0]);
+        if (!(height > 0 && faceHeight > 0 && cheekWidth > 0 && jawWidth > 0) || !data.fixture.quality.landmarksReliable) throw Error('invalid landmarks');
+        const width = Math.abs(alarLeft[0] - alarRight[0]);
+        const projection = pronasale[2] - (alarLeft[2] + alarRight[2]) / 2;
+        const jawRatio = Math.round(jawWidth / cheekWidth * 100);
+        const faceRatio = Math.round(faceHeight / cheekWidth * 100);
+        document.getElementById('faceFinding').textContent = jawRatio < 100 ? '광대에서 턱으로 좁아지는 윤곽' : jawRatio > 100 ? '턱 쪽 폭이 더 넓은 윤곽' : '광대와 턱 폭이 같은 윤곽';
+        document.getElementById('faceExplanation').textContent = `광대 양쪽을 기준으로 턱각의 너비는 ${jawRatio}%이고, 코뿌리에서 턱끝까지의 길이는 광대 폭의 ${faceRatio}%입니다. 이 얼굴 안의 비율을 설명한 것으로, 정해진 미적 기준과 비교한 결과는 아닙니다.`;
+        document.getElementById('jawRatio').textContent = `${jawRatio}%`;
+        document.getElementById('faceRatio').textContent = `${faceRatio}%`;
+        document.getElementById('alarValue').textContent = `${Math.round(width / height * 100)}%`;
+        document.getElementById('alarExplanation').textContent = `콧볼 폭은 같은 얼굴의 광대 폭으로 보면 ${Math.round(width / cheekWidth * 100)}%입니다. 정면의 코 폭은 얼굴 윤곽과 함께 살펴봅니다.`;
+        document.getElementById('projectionValue').textContent = `${Math.round(projection / height * 100)}%`;
+        document.getElementById('guideIntro').textContent = `원본은 턱각 폭이 광대의 ${jawRatio}%, 콧볼 폭은 광대의 ${Math.round(width / cheekWidth * 100)}%입니다. 이 윤곽을 기준으로 정면의 코 폭과 측면의 코끝 위치를 각각 비교해 보세요.`;
+        document.getElementById('datasetNote').textContent = `${data.dataset} · 단위 없는 상대 비율 · 임상 판정이나 개인별 수정 권고가 아닙니다.`;
+      }).catch(() => {
+        document.getElementById('faceFinding').textContent = '얼굴형 분석 보류';
+        document.getElementById('faceExplanation').textContent = '특징점 품질을 확인할 수 없어 윤곽을 설명하지 않았습니다.';
+        document.getElementById('jawRatio').textContent = '측정 불가';
+        document.getElementById('faceRatio').textContent = '측정 불가';
+        document.getElementById('alarValue').textContent = '측정 불가';
+        document.getElementById('alarExplanation').textContent = '코와 얼굴 폭의 관계를 표시하지 않았습니다.';
+        document.getElementById('projectionValue').textContent = '측정 불가';
+        document.getElementById('guide').hidden = true;
+        document.getElementById('datasetNote').textContent = '특징점 데이터가 없어 분석을 표시하지 않았습니다.';
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "status": "FAILED",
+  "failCodes": ["QUALITY_ANGLE"],
+  "debugMessage": "yaw range 18deg < 40deg",
+  "qualityReport": {
+    "faceDetectedRatio": 0.95,
+    "yawRangeDeg": 18.0
+  },
+  "videoMeta": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "codec": "h264",
+    "durationMs": 31000,
+    "rotation": 0,
+    "hdr": false,
+    "bitrate": 6000000,
+    "originalSuspect": false
+  },
+  "durationMs": 41000
+}

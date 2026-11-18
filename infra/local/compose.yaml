@@ -1,0 +1,77 @@
+# 로컬 개발용 의존 서비스: MySQL 8·Redis 7·S3 호환 스토리지. 앱(api·web)은 각자 PC에서 띄운다.
+#   시작: docker compose -f infra/local/compose.yaml up -d
+#   종료: docker compose -f infra/local/compose.yaml down        (데이터 유지)
+#   초기화: docker compose -f infra/local/compose.yaml down -v   (데이터 삭제)
+# 값은 services/backend의 local 프로필 기본값(application-local.yml)과 맞춘다.
+# 비밀번호는 로컬 전용 기본값이다. 서버에서 이 파일을 쓰지 않는다(서버는 infra/ec2/app).
+#
+# S3 호환 스토리지는 SeaweedFS를 쓴다. MinIO는 Docker Hub 공식 이미지 배포가 끝났다.
+#   주소 http://localhost:9000 (path-style), 버킷 preface-local, 키는 아무 값이나 받는다(로컬은 인증 없음)
+name: preface-local
+
+services:
+  mysql:
+    image: mysql:8.0.46
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_DATABASE: preface
+      MYSQL_USER: preface
+      MYSQL_PASSWORD: ${DB_PASSWORD:-preface}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      # 서버와 같게 DB 시각을 UTC로 둔다(infra/ec2/app/compose.yaml)
+      - --default-time-zone=+00:00
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  redis:
+    image: redis:7.4.11-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  s3:
+    image: chrislusf/seaweedfs:4.48
+    command: ["server", "-dir=/data", "-s3", "-s3.port=9000", "-master.volumeSizeLimitMB=1024", "-volume.max=0"]
+    ports:
+      - "127.0.0.1:9000:9000"
+    volumes:
+      - s3_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:9000/status || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+
+  # 버킷을 한 번 만들고 끝난다. 이미 있으면 그대로 둔다
+  s3-init:
+    image: chrislusf/seaweedfs:4.48
+    depends_on:
+      s3: { condition: service_healthy }
+    entrypoint: ["sh", "-c"]
+    command:
+      - echo "s3.bucket.create -name ${S3_BUCKET:-preface-local}" | weed shell -master=s3:9333 2>&1 | grep -v "already exists" || true
+    restart: "no"
+
+volumes:
+  mysql_data: {}
+  redis_data: {}
+  s3_data: {}

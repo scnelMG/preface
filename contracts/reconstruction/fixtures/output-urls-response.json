@@ -1,0 +1,104 @@
+{
+  "mesh": {
+    "objectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/mesh.glb",
+    "uploadUrl": "https://storage.example.invalid/synthetic/mesh.glb",
+    "method": "PUT",
+    "headers": {
+      "Content-Type": "model/gltf-binary",
+      "x-amz-server-side-encryption": "AES256"
+    },
+    "expiresAt": "2026-10-22T06:44:00Z"
+  },
+  "rig": {
+    "objectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/rig.json",
+    "uploadUrl": "https://storage.example.invalid/synthetic/rig.json",
+    "method": "PUT",
+    "headers": {
+      "Content-Type": "application/json",
+      "x-amz-server-side-encryption": "AES256"
+    },
+    "expiresAt": "2026-10-22T06:44:00Z"
+  },
+  "expression": {
+    "objectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/expression.json",
+    "uploadUrl": "https://storage.example.invalid/synthetic/expression.json",
+    "method": "PUT",
+    "headers": {
+      "Content-Type": "application/json",
+      "x-amz-server-side-encryption": "AES256"
+    },
+    "expiresAt": "2026-10-22T06:44:00Z"
+  },
+  "texture": {
+    "objectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/texture.png",
+    "uploadUrl": "https://storage.example.invalid/synthetic/texture.png",
+    "method": "PUT",
+    "headers": {
+      "Content-Type": "image/png",
+      "x-amz-server-side-encryption": "AES256"
+    },
+    "expiresAt": "2026-10-22T06:44:00Z"
+  },
+  "thumbnail": {
+    "objectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/thumbnail.webp",
+    "uploadUrl": "https://storage.example.invalid/synthetic/thumbnail.webp",
+    "method": "PUT",
+    "headers": {
+      "Content-Type": "image/webp",
+      "x-amz-server-side-encryption": "AES256"
+    },
+    "expiresAt": "2026-10-22T06:44:00Z"
+  },
+  "captures": {
+    "FRONT": {
+      "objectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/captures/front.jpg",
+      "uploadUrl": "https://storage.example.invalid/synthetic/captures/front.jpg",
+      "method": "PUT",
+      "headers": {
+        "Content-Type": "image/jpeg",
+        "x-amz-server-side-encryption": "AES256"
+      },
+      "expiresAt": "2026-10-22T06:44:00Z"
+    },
+    "LEFT": {
+      "objectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/captures/left.jpg",
+      "uploadUrl": "https://storage.example.invalid/synthetic/captures/left.jpg",
+      "method": "PUT",
+      "headers": {
+        "Content-Type": "image/jpeg",
+        "x-amz-server-side-encryption": "AES256"
+      },
+      "expiresAt": "2026-10-22T06:44:00Z"
+    },
+    "RIGHT": {
+      "objectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/captures/right.jpg",
+      "uploadUrl": "https://storage.example.invalid/synthetic/captures/right.jpg",
+      "method": "PUT",
+      "headers": {
+        "Content-Type": "image/jpeg",
+        "x-amz-server-side-encryption": "AES256"
+      },
+      "expiresAt": "2026-10-22T06:44:00Z"
+    },
+    "LEFT_45": {
+      "objectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/captures/left_45.jpg",
+      "uploadUrl": "https://storage.example.invalid/synthetic/captures/left_45.jpg",
+      "method": "PUT",
+      "headers": {
+        "Content-Type": "image/jpeg",
+        "x-amz-server-side-encryption": "AES256"
+      },
+      "expiresAt": "2026-10-22T06:44:00Z"
+    },
+    "RIGHT_45": {
+      "objectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/captures/right_45.jpg",
+      "uploadUrl": "https://storage.example.invalid/synthetic/captures/right_45.jpg",
+      "method": "PUT",
+      "headers": {
+        "Content-Type": "image/jpeg",
+        "x-amz-server-side-encryption": "AES256"
+      },
+      "expiresAt": "2026-10-22T06:44:00Z"
+    }
+  }
+}

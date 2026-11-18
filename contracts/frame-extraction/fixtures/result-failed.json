@@ -1,0 +1,8 @@
+{
+  "attempt": 1,
+  "status": "FAILED",
+  "failCodes": [
+    "QUALITY_NO_FACE"
+  ],
+  "debugMessage": "usable frames 12 < 20"
+}

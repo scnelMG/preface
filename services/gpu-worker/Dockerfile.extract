@@ -1,0 +1,27 @@
+# EC2 프레임 추출 워커(S15P31B204-353). 계약: contracts/frame-extraction
+# 추출은 AI 파트 reconstruction/tools/frames_bundle.py(S15P31B204-355)가 한다. 영상 디코더(OpenCV에 들어 있는 FFmpeg) 버전에 따라
+# 뽑히는 프레임이 달라지므로 기반 이미지와 reconstruction/requirements-extract.txt 버전을 바꾸지 않는다(Linux 기준).
+FROM python:3.12.15-slim
+
+WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1
+# libgl1·libglib2.0-0: OpenCV·MediaPipe가 쓰는 시스템 라이브러리
+# ffmpeg: 원본 영상 정보(videoMeta)를 읽는 ffprobe(S15P31B204-395). 프레임 추출은 OpenCV 안의 FFmpeg을 그대로 쓴다
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 ffmpeg \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir uv==0.11.26 \
+    && useradd --create-home --uid 10001 preface
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
+COPY reconstruction ./reconstruction
+# 추출 패키지는 워커와 같은 Python 환경에. 얼굴 인식 모델(3.7MB)은 빌드 때 Google 공식 주소에서 받아 SHA-256을 검사한다(git에 없음)
+# 실행 중 임시 파일은 reconstruction/work/에 쓰고 끝나면 지운다
+RUN uv pip install --python /app/.venv/bin/python -r reconstruction/requirements-extract.txt \
+    && cd reconstruction && /app/.venv/bin/python tools/fetch_models.py \
+    && mkdir -p work && chown preface work
+COPY app ./app
+USER preface
+ENV EXTRACT_CMD="/app/.venv/bin/python /app/reconstruction/tools/frames_bundle.py"
+# python을 PID 1로 직접 띄운다: 배포가 보내는 SIGTERM을 워커가 받아 하던 추출을 마치고 끝낸다(S15P31B204-531)
+CMD ["/app/.venv/bin/python", "-m", "app.extractor.worker"]

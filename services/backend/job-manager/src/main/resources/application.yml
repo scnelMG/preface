@@ -1,0 +1,80 @@
+spring:
+  application:
+    name: preface-job-manager
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      # 운영은 비밀번호를 건다. 비어 있으면 인증 없이 붙는다(로컬·CI)
+      password: ${REDIS_PASSWORD:}
+  task:
+    scheduling:
+      # 삭제(매시간, 몇 분 걸릴 수 있음)가 lease 회수(1분)를 막지 않게 스레드를 둘 둔다
+      pool:
+        size: 2
+
+preface:
+  # S3 호환 스토리지. api와 같은 환경 변수. 키를 비우면 AWS 기본 자격 증명 체인을 쓴다
+  storage:
+    endpoint: ${S3_ENDPOINT:}
+    region: ${S3_REGION:ap-northeast-2}
+    bucket: ${S3_BUCKET}
+    access-key: ${S3_ACCESS_KEY:}
+    secret-key: ${S3_SECRET_KEY:}
+    path-style-access: ${S3_PATH_STYLE_ACCESS:false}
+  # lease 회수 규칙. api(claim 응답 leaseTimeoutSec)와 같은 값이어야 한다(contracts/reconstruction/README.md)
+  reconstruction:
+    lease-timeout: 600s
+    max-attempts: 2
+    failed-upload-retention: 24h
+    # 회수 주기. lease(600초)에 비해 짧게 둬 죽은 작업이 대기열로 돌아가는 지연을 1분 안으로 줄인다
+    lease-recovery-interval: 60s
+    # 프레임 준비 뒤 GPU가 이만큼 가져가지 않으면 FAILED(TIMEOUT)(S15P31B204-528). GPU Pod 기동 시간을 고려한 임시값(인프라·AI와 협의)
+    queue-timeout: 20m
+    # 추출 대기 시간 초과(S15P31B204-593). lease·시도 수는 api의 extract-lease-timeout·extract-max-attempts와 같아야 한다.
+    # 접수 또는 마지막 claim 뒤 아무 추출 워커도 가져가지 않으면 FAILED(TIMEOUT). GPU 대기(queue-timeout)와 맞춘 임시값
+    extract-lease-timeout: 600s
+    extract-max-attempts: 2
+    extract-queue-timeout: 20m
+  # Mattermost 실패 알림(S15P31B204-530). api와 같은 키·환경 변수. webhook이 비어 있으면 보내지 않는다
+  mattermost:
+    webhook-url: ${MM_NOTIFY_WEBHOOK_URL:}
+    # DM 속 링크의 FE 주소. 따로 안 주면 QR 주소(같은 FE)를 쓴다
+    web-base-url: ${MM_NOTIFY_WEB_BASE_URL:${CAPTURE_QR_BASE_URL:}}
+    timeout: 3s
+  # 자동 삭제(FN-HIS-03~05, FN-AUTH-04 S3 정리)
+  deletion:
+    cron: "0 0 * * * *"
+    empty-simulation-ttl: 24h
+    soft-delete-retention: 30d
+    batch-size: 100
+    max-retries: 5
+    # 동의서·처리방침 본문의 보관 기간(S15P31B204-354): 알림 90일, 탈퇴 회원의 동의·삭제 기록 1년
+    notification-retention: 90d
+    withdrawn-record-retention: 365d
+
+server:
+  # 외부에 열지 않는다. 헬스 체크용으로만 쓴다
+  port: 8081
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # prometheus: EC2 모니터링이 docker 망 안에서만 읽는다(S15P31B204-454)
+        include: health,prometheus

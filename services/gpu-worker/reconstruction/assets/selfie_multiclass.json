@@ -1,0 +1,14 @@
+{
+ "file": "C:\\Users\\SSAFY\\Documents\\Codex\\2026-10-12\\tjd\\outputs\\live-mirror-poc\\tools\\..\\assets\\selfie_multiclass_256x256.tflite",
+ "bytes": 16371837,
+ "sha256": "c6748b1253a99067ef71f7e26ca71096cd449baefa8f101900ea23016507e0e0",
+ "check_frame": "work\\eun02\\prep\\images\\v0_eun02_01466.jpg",
+ "class_share_pct": {
+  "background": 47.7,
+  "hair": 3.1,
+  "body_skin": 2.7,
+  "face_skin": 13.6,
+  "clothes": 33.0,
+  "others": 0.0
+ }
+}

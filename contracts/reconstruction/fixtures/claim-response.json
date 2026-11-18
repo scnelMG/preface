@@ -1,0 +1,22 @@
+{
+  "jobId": "7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40",
+  "input": {
+    "downloadUrl": "https://storage.example.invalid/synthetic/frames-a1.tar",
+    "expiresAt": "2026-10-22T06:40:00Z",
+    "contentType": "application/x-tar",
+    "sizeBytes": 41000000,
+    "checksumSha256": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+    "frameCount": 91,
+    "lens": {
+      "focalPx": 1412.5,
+      "focalSource": "file",
+      "focal35mm": 26,
+      "deviceModel": "Synthetic-1"
+    }
+  },
+  "outputPrefix": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/models/7b0e4c2d-9f1a-4e3b-8c5d-2a6f1e9b3c40/a1/",
+  "morphSchemaVersion": "v1",
+  "claimedAt": "2026-10-22T06:30:05Z",
+  "heartbeatIntervalSec": 120,
+  "leaseTimeoutSec": 600
+}

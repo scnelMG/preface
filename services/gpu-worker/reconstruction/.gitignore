@@ -1,0 +1,14 @@
+# model weights (tools/fetch_models.py) and run outputs (face data) never go to git
+assets/*.task
+work/
+inbox/
+__pycache__/
+# GPU worker models (tools/fetch_models.py --all) and the files it derives
+assets/*.tflite
+assets/gnm/v3_0/
+assets/gnm/template_map.npz
+assets/gnm/gnm_inspect.json
+assets/gnm/.gitignore
+# run outputs outside work/: editable case (face data) and texture-bake cache
+cases/
+assets/cache/

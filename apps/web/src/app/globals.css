@@ -1,0 +1,73 @@
+@import 'tailwindcss';
+@import '../shared/design/tokens.css';
+@import '../shared/design/system.css';
+@import '../shared/ui/components.css';
+
+/**
+ * 디자인 토큰: Figma v3 원본은 shared/design/tokens.css, 화면이 쓰는 v4 시스템(색·글자·모션·부품)은 shared/design/system.css.
+ * 색은 토큰 유틸리티(bg-bg-paper, text-text-ink …)로만 쓴다. Tailwind 기본 팔레트는 꺼 두었다.
+ */
+@theme inline {
+  /* 로고·영문·숫자·한글 모두 Pretendard 한 가족(layout.tsx가 가져오는 pretendard 패키지의 CSS).
+     한 글줄에서 영문과 한글의 높이·굵기가 어긋나지 않게 한다(2026-10-30, S15P31B204-460) */
+  --font-sans: 'Pretendard Variable', Pretendard, sans-serif;
+  /* 보조 글꼴(2026-10-31): 랜딩 거대 글자의 세리프 이탤릭, 순번·단계 숫자의 고정폭(layout.tsx가 @fontsource 파일을 가져온다) */
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Figma에는 Desktop 1440 / Mobile 390 프레임만 있다. md(768px) 이상을 Desktop으로 본다.
+     Tailwind 기본값과 같아서 따로 적지 않는다. 콘텐츠 최대 폭은 Desktop 헤더 폭(1360) */
+  --container-page: 1360px;
+}
+
+@layer base {
+  /* 고칠 수 없는 글자 위에서는 글자 커서(I) 대신 화살표를 보인다(S15P31B204-852). 커서는 상속되므로 body에 한 번 둔다.
+     글자 선택은 막지 않는다. 링크(브라우저 기본 손가락)·3D 화면(grab)처럼 자기 커서를 정한 요소는 그대로다 */
+  body {
+    background-color: var(--v3-bg-paper);
+    color: var(--v3-text-ink);
+    cursor: default;
+  }
+  /* 글자를 입력하는 곳만 글자 커서. :where로 우선순위를 0으로 두어 요소가 정한 커서(cursor-pointer 등)가 이긴다 */
+  :where(
+    input:not(
+      [type='button'],
+      [type='submit'],
+      [type='reset'],
+      [type='checkbox'],
+      [type='radio'],
+      [type='range'],
+      [type='color'],
+      [type='file'],
+      [type='image'],
+      [type='hidden']
+    ),
+    textarea,
+    [contenteditable]:not([contenteditable='false'])
+  ) {
+    cursor: text;
+  }
+
+  /* Figma에 포커스 상태가 없어 접근성용으로만 추가한다 */
+  :focus-visible {
+    outline: 2px solid var(--v3-brand-violet);
+    outline-offset: 2px;
+  }
+
+  /* 브라우저 기본 표면도 서비스 색으로 맞춘다: 선택 영역·입력 커서·스크롤바(2026-10-30) */
+  ::selection {
+    background: color-mix(in oklch, var(--v3-brand-violet) 18%, transparent);
+    color: var(--v3-text-ink);
+  }
+  input,
+  textarea {
+    caret-color: var(--v3-brand-violet);
+  }
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--v3-text-ink) 22%, transparent) transparent;
+  }
+  a {
+    text-underline-offset: 0.2em;
+  }
+}

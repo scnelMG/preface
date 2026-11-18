@@ -1,0 +1,11 @@
+{
+  "_comment": "W8b S1 (2026-10-20): local subdivision levels per GNM vertex group for the detail layer (gnm-detail-v1). A vertex's level = max over the groups it belongs to (weight > 0.3); a skin face is split 1->4 at level L when all three vertices have level >= L; neighbouring faces get 1->2 / 1->3 transition splits. Levels are a proposal (만두 2026-10-20): eyes 2, nose 2, lips 1, chin 1. Only the skin (material 0) is subdivided.",
+  "priority": ["eye", "nose", "lip", "chin"],
+  "regions": {
+    "eye":  {"level": 2, "groups": ["left_orbital_region", "right_orbital_region", "left_brow_region", "right_brow_region", "left_infraorbital_region", "right_infraorbital_region"]},
+    "nose": {"level": 2, "groups": ["nose_region"]},
+    "lip":  {"level": 1, "groups": ["upper_lip_region", "lower_lip_region"]},
+    "chin": {"level": 1, "groups": ["chin_region"]}
+  },
+  "group_weight_threshold": 0.3
+}

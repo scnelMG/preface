@@ -1,0 +1,29 @@
+# 통합 테스트(@Tag("integration")) 전용. 로컬은 Testcontainers가 접속 정보를 덮어쓰고,
+# CI(be:it)는 환경 변수 DB_URL·DB_USERNAME·DB_PASSWORD·REDIS_HOST로 GitLab services에 붙는다.
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/preface}
+    username: ${DB_USERNAME:test}
+    password: ${DB_PASSWORD:test}
+  flyway:
+    enabled: true
+
+server:
+  port: 0
+
+preface:
+  # S3는 테스트에서 DeletionStorage를 mock한다. 접속하지 않는 주소와 가짜 키(실제 비밀 아님)
+  storage:
+    endpoint: http://localhost:9000
+    region: ap-northeast-2
+    bucket: preface-it
+    access-key: it-fake-access-key
+    secret-key: it-fake-secret-key-not-a-real-secret
+    path-style-access: true
+  reconstruction:
+    # 테스트가 직접 부른다. 스케줄은 사실상 돌지 않게 길게(시작 지연도 같은 값)
+    lease-recovery-interval: 1h
+  deletion:
+    # "-" = 스케줄 끔. 테스트가 runOnce()·scheduled()를 직접 부른다
+    cron: "-"
+    max-retries: 3

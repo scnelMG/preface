@@ -1,0 +1,6 @@
+# 배포 시 migration 전용 실행(ECS run-task). 웹 서버를 띄우지 않고 Flyway만 돌린 뒤 종료한다.
+spring:
+  main:
+    web-application-type: none
+  flyway:
+    enabled: true

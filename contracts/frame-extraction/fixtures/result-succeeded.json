@@ -1,0 +1,28 @@
+{
+  "attempt": 1,
+  "status": "SUCCEEDED",
+  "bundle": {
+    "objectKey": "users/1d2e3f40-5a6b-4c7d-8e9f-0a1b2c3d4e5f/uploads/3c4d5e6f-7a8b-4c9d-8e0f-1a2b3c4d5e6f/frames-a1.tar",
+    "sizeBytes": 41000000,
+    "checksumSha256": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=",
+    "frameCount": 91
+  },
+  "lens": {
+    "focalPx": 1412.5,
+    "focalSource": "file",
+    "focal35mm": 26,
+    "deviceMake": "Synthetic",
+    "deviceModel": "Synthetic-1",
+    "imageWidth": 1080,
+    "imageHeight": 1920
+  },
+  "videoMeta": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "codec": "hevc",
+    "durationMs": 35000,
+    "rotation": 90,
+    "deviceModel": "Synthetic-1"
+  }
+}

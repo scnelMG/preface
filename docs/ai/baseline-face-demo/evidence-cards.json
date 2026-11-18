@@ -1,0 +1,71 @@
+{
+  "version": "2026-11-04-v1",
+  "cards": {
+    "FACE_SHAPE": {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33144908/",
+      "sourceType": "expert_consensus",
+      "claim": "얼굴형은 광대와 아래 얼굴의 윤곽을 함께 관찰한다. 이 관찰만으로 개인의 선호 방향을 정하지 않는다.",
+      "use": "observation",
+      "limits": "아시아 지역의 미용의학 전문가 합의이며 산업계 원고 지원이 있다. 모든 얼굴의 미적 기준이나 개인별 수정 처방이 아니다."
+    },
+    "NOSE_LANDMARKS": {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13466362/",
+      "sourceType": "scoping_review",
+      "claim": "양쪽 콧볼의 가장 바깥쪽 특징점과 양쪽 눈의 안쪽 특징점은 서로 다른 위치로 정의해 측정한다.",
+      "use": "measurement_definition",
+      "limits": "특징점 정의의 예비 검토다. 자동 추출 정확도, 인구 평균, 조절 방향은 검증하지 않는다."
+    },
+    "NOSE_VIEWS": {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7159929/",
+      "sourceType": "clinical_method_review",
+      "claim": "코와 얼굴은 정면·측면·아래쪽 시점을 나누어 관찰한다. 정면에서는 콧볼 바닥의 너비도 확인한다.",
+      "use": "observation",
+      "limits": "진료용 관찰 절차다. 서비스의 3D 모델이나 개인별 조절량을 검증하지 않는다."
+    },
+    "TIP_CHIN_CONTEXT": {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3109328/",
+      "sourceType": "clinical_review",
+      "claim": "측면의 코끝 돌출감은 턱끝과 코 시작점의 위치에 영향을 받으므로 함께 살핀다.",
+      "use": "confounder",
+      "limits": "턱끝 위치가 신뢰 가능하게 측정되지 않으면 코끝 방향을 권하지 않는다."
+    },
+    "ALAR_FIRST_COMPARISON": {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9337225/",
+      "sourceType": "expert_narrative",
+      "claim": "정면의 콧볼 폭이 눈 안쪽 사이 거리보다 넓으면 소폭 좁힘을 검토할 수 있다는 전문가 의견이 있다.",
+      "use": "synthetic_comparison_hypothesis",
+      "measurements": ["alarWidth", "intercanthalDistance"],
+      "control": "nose.alar_width",
+      "direction": "narrow",
+      "limits": "비수술 코 성형에 관한 서술적 전문가 의견이다. 개인의 미적 정답, 임상 안전 범위, 3D 조절량을 제시하지 않으며 문화·개인 선호에 따라 달라진다. 합성 데모 외 자동 제안에 사용하지 않는다."
+    },
+    "AESTHETIC_LIMITS": {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37695808/",
+      "sourceType": "literature_review",
+      "claim": "얼굴의 이상적 비율로 알려진 측정치 중 다수는 경험적으로 일관되게 검증되지 않았다.",
+      "use": "limitation",
+      "limits": "개인별 미모 점수나 정답 비율을 생성하지 않는 근거다."
+    },
+    "NOSE_PREFERENCE_VARIATION": {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13458594/",
+      "sourceType": "systematic_review",
+      "claim": "코의 미적 선호는 문화·세대·조사 맥락에 따라 달라지며 하나의 고정된 목표 비율로 환원하기 어렵다.",
+      "use": "limitation",
+      "limits": "집단별 선호 차이를 보여 주지만 이 서비스 이용자의 선호나 특정 얼굴의 최적 변형을 예측하지 않는다."
+    },
+    "OBSERVED_REQUEST_TRENDS": {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7605391/",
+      "sourceType": "expert_consensus_survey",
+      "claim": "일부 아시아 지역의 미용의학 전문가가 진료에서 관찰한 얼굴형·코 형태와 환자 요청의 범주를 보고했다.",
+      "use": "population_context_only",
+      "limits": "대표성 있는 이용자 통계나 동일한 3D 얼굴형별 시술 빈도가 아니다. 산업계 원고 지원이 있으며 개인별 조절 추천에 쓰지 않는다."
+    },
+    "PROCEDURE_VOLUME": {
+      "url": "https://www.plasticsurgery.org/documents/news/statistics/2024/plastic-surgery-statistics-report-2024.pdf",
+      "sourceType": "professional_society_statistics",
+      "claim": "미국 성형외과 학회의 연간 자료는 코 성형 등 시술 범주의 전체 건수를 집계한다.",
+      "use": "aggregate_context_only",
+      "limits": "얼굴 3D 형태·개인 선호·결과 만족도와 연결되지 않아 '비슷한 얼굴이 자주 하는 시술'의 근거가 아니다."
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://preface.local/contracts/frame-extraction/bundle-url-request.schema.json",
+  "title": "BundleUrlRequest (INT-EXT-02)",
+  "description": "묶음을 다 만든 뒤 크기·체크섬을 보내 업로드 URL을 받는다. 서명에 크기·체크섬이 들어가 다른 파일은 S3가 거절한다.",
+  "type": "object",
+  "required": [
+    "attempt",
+    "sizeBytes",
+    "checksumSha256"
+  ],
+  "properties": {
+    "attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "sizeBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "checksumSha256": {
+      "description": "묶음 SHA-256(base64)",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{43}=$"
+    }
+  },
+  "additionalProperties": false
+}

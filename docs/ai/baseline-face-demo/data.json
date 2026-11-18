@@ -1,0 +1,49 @@
+{
+  "dataset": "합성 원본 3D 예제",
+  "description": "실제 얼굴이나 인구 평균이 아닌 수식 기반 3D 특징점 예제. 단위는 임의 단위다.",
+  "sources": [
+    {
+      "id": "fullface-2026",
+      "title": "Anatomical References for the Study of 3D Facial Photographs",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13466362/",
+      "usedFor": "콧볼 양쪽 거리와 코끝·코밑 특징점의 측정 개념"
+    },
+    {
+      "id": "preface-canonical",
+      "title": "Preface 합성 코 특징점 계산",
+      "url": "https://github.com/scnelMG/preface/blob/main/services/gpu-worker/reconstruction/pipeline/canonical.py",
+      "usedFor": "원본 메시의 코끝·콧볼·코밑 특징점과 방향 정의"
+    },
+    {
+      "id": "clinician-assessment-2020",
+      "title": "A New Simplified Visual Assessment Tool Describing Facial Morphotypes Observed and Desired in Asian Populations",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33144908/",
+      "usedFor": "전문가 합의의 전체 얼굴→정면/측면→상·하안면과 코 관찰 순서. 선호·치료 목표값은 사용하지 않음"
+    },
+    {
+      "id": "nih-face-terms",
+      "title": "Standard Terminology for the Head and Face",
+      "url": "https://elementsofmorphology.nih.gov/index.cgi?lid=2cdf1af83bac307d514927d4feacf687",
+      "usedFor": "광대와 턱 폭으로 정면 윤곽을 설명하는 용어. 임상 분류명은 사용하지 않음"
+    }
+  ],
+  "fixture": {
+    "landmarks": {
+      "nasion": [0, 0.45, 0.72],
+      "pronasale": [0, -0.12, 0.9735],
+      "subnasale": [0, -0.29, 0.70],
+      "alarLeft": [-0.16, -0.21, 0.7155],
+      "alarRight": [0.16, -0.21, 0.7155],
+      "zygionLeft": [-0.58, -0.06, 0.65],
+      "zygionRight": [0.58, -0.06, 0.65],
+      "gonionLeft": [-0.45, -0.55, 0.60],
+      "gonionRight": [0.45, -0.55, 0.60],
+      "gnathion": [0, -0.72, 0.62]
+    },
+    "quality": {
+      "source": "synthetic",
+      "landmarksReliable": true,
+      "absoluteScaleKnown": false
+    }
+  }
+}
