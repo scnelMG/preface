@@ -29,6 +29,25 @@
 
 주로 사용한 기술은 **Java·Spring Boot, React·TypeScript, Redis, GMS**다. 공통 3D 편집 엔진·모델 검증 계약은 관련 팀원과 연동했으며, 아래의 복원 속도·생성 실패율·유저 테스트 결과는 **팀 성과**다. 개인 작업 범위는 원본 Git 작성 이력과 공개된 구현·테스트를 대조해 정리했다.
 
+### AI 상담 시연
+
+<table>
+<tr>
+<td width="48%" align="center"><img src="docs/assets/readme/ai-consult.gif" alt="쌍꺼풀을 만든 뒤 다음 조절을 묻자, 기존 변경을 유지하며 사각턱·턱끝 길이 비교를 추천하는 상담 화면" width="360"></td>
+<td valign="middle">
+
+**이미 바꾼 부위는 유지하고, 다음 조절을 제안한다.**
+
+사용자가 쌍꺼풀 변경 후 다음 조절을 물으면, 현재 시안을 바탕으로 비교할 부위와 관찰 근거를 카드로 제시한다. 추천은 해당 조절과 3D 비교 화면으로 이어진다.
+
+이 시연에서 확인할 부분은 **자연어 질문 → 유지 조건 반영 → 추천 카드**의 연결이다. 아래 설계·테스트 링크에서 서버와 화면의 처리도 확인할 수 있다.
+
+<sub>2026-11-17 발표자료에 수록된 실제 상담 UI다. 얼굴·계정 정보가 없는 카드 영역만 사용했다.</sub>
+
+</td>
+</tr>
+</table>
+
 ## 핵심 설계 결정
 
 ### 1. AI의 해석과 얼굴의 변경을 별도 단계로 처리했다
@@ -66,6 +85,16 @@ AI가 요청을 이해해도 모델에서 지원하지 않거나 저장에 실�
 ## 왜 만들었나
 
 원하는 얼굴의 변화를 말이나 다른 사람의 사진만으로 설명하기는 어렵다. Preface는 자기 얼굴을 입체로 보고 직접 바꾸면서, 원하는 모습을 구체화할 수 있도록 만든 서비스다. 사전 사용자 조사에서도 기존 시뮬레이션과 상담의 어려움을 확인했다.
+
+<table>
+<tr>
+<td width="33%" align="center"><img src="docs/assets/readme/painpoint-simulation.gif" alt="가상 인물로 연출한 휴대폰 2D 시뮬레이션 상황" width="100%"><br><b>2D 시뮬레이션의 한계</b></td>
+<td width="33%" align="center"><img src="docs/assets/readme/painpoint-visit.gif" alt="가상 인물로 연출한 후기 검색과 상담 방문 고민" width="100%"><br><b>병원 방문의 부담</b></td>
+<td width="33%" align="center"><img src="docs/assets/readme/painpoint-consult.gif" alt="가상 인물로 연출한 참고 사진을 통한 상담 장면" width="100%"><br><b>말과 참고 사진으로 하는 상담</b></td>
+</tr>
+</table>
+
+<sub>발표자료의 가상 인물 상황 예시다. 실제 사용자·환자의 사진이나 조사 장면이 아니다.</sub>
 
 | 문제 | 조사 결과[^survey] |
 | --- | --- |
@@ -108,6 +137,11 @@ AI가 요청을 이해해도 모델에서 지원하지 않거나 저장에 실�
 
 > 시뮬레이션이며 수술 결과 예측이 아니다.
 
+<p align="center">
+<img src="docs/assets/readme/capture-guide.gif" alt="발표자료의 촬영 안내 애니메이션: 휴대폰을 얼굴 주변으로 천천히 움직여 좌우 모습을 담는다" width="560"><br>
+<sub>촬영 안내: 앱 설치 없이 휴대폰 브라우저에서 얼굴의 여러 각도를 담는다.</sub>
+</p>
+
 ## 휴대폰 영상 47초가 3D 얼굴이 되기까지
 
 <details>
@@ -117,7 +151,7 @@ AI가 요청을 이해해도 모델에서 지원하지 않거나 저장에 실�
 
 <table>
 <tr>
-<td width="50%" align="center"><img src="apps/web/public/guide/capture-sequence.gif" alt="휴대폰을 들고 얼굴을 한 바퀴 찍는 순서" width="100%"><br><sub>① 녹화: 음성 안내를 따라 얼굴을 한 바퀴 담는다</sub></td>
+<td width="50%" align="center"><img src="apps/web/public/guide/capture-sequence-still.png" alt="휴대폰을 들고 얼굴을 한 바퀴 찍는 순서" width="100%"><br><sub>① 녹화: 음성 안내를 따라 얼굴을 한 바퀴 담는다</sub></td>
 <td width="50%" align="center"><img src="apps/web/public/models/base-female.webp" alt="GNM 기본 머리" width="60%"><br><sub>④ 모든 결과는 같은 구조의 기본 머리에서 출발한다.<br>그래서 누구의 얼굴이든 같은 제어점으로 편집한다</sub></td>
 </tr>
 </table>
@@ -138,14 +172,18 @@ AI가 요청을 이해해도 모델에서 지원하지 않거나 저장에 실�
 
 3D 복원·촬영·인프라·화면 개선을 합친 팀의 결과다. 개인 담당 기능의 성능 수치로 해석하지 않는다.
 
-<div align="center">
+<table>
+<tr>
+<td width="50%"><img src="docs/assets/readme/generation-failure.png" alt="팀 성과: 각도 기반 프레임 선택 적용 전후 3D 생성 실패율 34.5%에서 9.3%로 감소" width="100%"></td>
+<td width="50%"><img src="docs/assets/readme/modeling-time.png" alt="팀 성과: 3D 생성 시간 13분 37초에서 3분 24초로 단축" width="100%"></td>
+</tr>
+<tr>
+<td><img src="docs/assets/readme/user-similarity.png" alt="팀 성과: 유저 테스트의 얼굴 유사도 평가가 10점 만점 6.36에서 8.11로 증가" width="100%"></td>
+<td><img src="docs/assets/readme/skin-feedback.png" alt="팀 성과: 피부가 어색하다는 응답이 63.6%에서 15.8%로 감소" width="100%"></td>
+</tr>
+</table>
 
-| 3D 생성 실패율 | 한 명 처리 시간 | 닮은 정도 (10점 만점) | 피부가 어색하다는 응답 |
-| :---: | :---: | :---: | :---: |
-| 34.5% → **9.3%** | 13분 37초 → **3분 24초** | 6.36 → **8.11** | 63.6% → **15.8%** |
-| 발표자료의 생성 기록[^ops] | PoC·개선 후 비교[^time] | 1·2차 유저 테스트[^ut] | 1·2차 유저 테스트[^ut] |
-
-</div>
+발표자료의 생성 실패율[^ops]·생성 시간[^time]·1·2차 유저 테스트[^ut] 결과다. 이미지를 누르면 원본 크기로 볼 수 있다.
 
 ## 팀의 3D 복원 개선
 
@@ -185,6 +223,14 @@ AI가 요청을 이해해도 모델에서 지원하지 않거나 저장에 실�
 
 모두 합쳐 **817초(13분 37초) → 204초(3분 24초)**, 4분의 1이 됐다.
 
+<img src="docs/assets/readme/texture-gpu.gif" alt="발표자료의 개념 애니메이션: 텍스처 칸의 반복 계산을 순차 처리하다 GPU에서 함께 처리하는 방식으로 전환" width="100%">
+
+<sub>텍스처 베이킹의 CPU·GPU 처리 개념을 비교한 발표 애니메이션이다.</sub>
+
+<img src="docs/assets/readme/cpu-parallel.gif" alt="발표자료의 개념 애니메이션: 사진별 독립 계산을 코어 하나에서 순차 처리하는 방식과 여러 코어에서 병렬 처리하는 방식 비교" width="100%">
+
+<sub>사진별 독립 계산의 순차·병렬 처리 개념이다. 코어 8개로 단순화한 설명이며 실시간 자원 사용량 화면이 아니다.</sub>
+
 </details>
 
 ### 여러 명이 한꺼번에 요청하면
@@ -193,7 +239,16 @@ AI가 요청을 이해해도 모델에서 지원하지 않거나 저장에 실�
 
 캠퍼스 부스에서 **23명의 요청이 집중된 운영 사례의 평균 완료 시간은 5분 53초**였다. 이는 해당 운영 사례의 결과이며, 지속적인 동시접속 23명이나 최대 처리량을 보장하는 부하 테스트 수치는 아니다.
 
+<img src="docs/assets/readme/workers.gif" alt="발표자료의 개념 애니메이션: 워커 하나에서 요청 대기가 길어지는 모습과 Redis 대기열을 워커 4개가 나눠 처리하는 모습" width="100%">
+
+<sub>워커 1개와 4개의 처리 구조를 설명한 개념 애니메이션이다. 화면의 대기 인원·시간은 운영 로그나 부하 테스트 계측값이 아니다.</sub>
+
 ## 시스템 아키텍처
+
+<img src="docs/assets/readme/architecture.png" alt="발표자료의 시스템 아키텍처: Caddy·Spring API·MySQL·Redis·Job Manager·GPU Worker·S3·GMS의 연결" width="100%">
+
+<details>
+<summary>구성 요소와 연결을 텍스트 다이어그램으로 보기</summary>
 
 ```mermaid
 flowchart LR
@@ -206,11 +261,11 @@ flowchart LR
     api -->|넣기 · 꺼내기| redis[(Redis 리스트<br/>작업 대기)]
     jm[Job Manager<br/>멈춘 작업 복구] -->|되돌림| redis
     api -->|검증| ev[Edit Validator<br/>편집 검증]
-    fx[Frame Extractor<br/>사진 뽑기] -->|작업 요청| api
   end
 
   subgraph gpu[워커 서버 · GPU]
     worker[GPU Worker<br/>3D 만들기]
+    fx[Frame Extractor<br/>사진 뽑기] -->|작업 요청| api
   end
 
   worker -->|작업 요청| api
@@ -218,6 +273,8 @@ flowchart LR
   api -->|OAuth| oauth[카카오 · 구글 로그인]
   api -->|AI 상담| gms[GMS]
 ```
+
+</details>
 
 GPU 워커는 Redis에 직접 붙지 않고 API에 작업을 요청해 받아 간다. API와 Job Manager는 진행 보고와 lease를 통해 중단 작업을 관리한다.
 
@@ -278,6 +335,7 @@ pnpm dev
 - 기본 머리 모델: Google GNM Head ([Apache License 2.0](apps/web/public/models/GNM-LICENSE.txt))
 - 공개 샘플은 실제 사용자 얼굴이 아닌 합성 모델이다. [출처·변경 내역](apps/web/public/models/manifest.json)
 - 프로젝트 전체에 새로운 오픈소스 라이선스를 임의로 부여하지 않았다.
+- README의 이미지·애니메이션은 제공된 발표자료에서 가져왔다. [파일별 출처·변환 내역](docs/assets/readme/README.md)
 
 ## 공개 사본 안내
 
