@@ -11,7 +11,7 @@
 부위를 골라 원하는 만큼 바꿔 보며 전후를 비교하는 웹 서비스다.
 
 **박민규 · AI 상담·3D 편집 연동**<br>
-<sub>SSAFY 15기 자율 프로젝트 · B204 · 7인 팀</sub>
+<sub>SSAFY 15기 2학기 프로젝트 · 7인 팀 · 대전 캠퍼스 발표회 진출</sub>
 
 [개인 기여](#개인-기여) · [설계 결정](#핵심-설계-결정) · [서비스 소개](#주요-기능) · [팀 성과](#팀-성과) · [로컬 실행](#로컬-실행)
 
@@ -25,9 +25,9 @@
 | --- | --- |
 | 상담·편집 적용 | 자연어를 지원 효과의 후보로 해석하고, 추가 질문·서버 검증·저장 결과를 대화와 변경 카드에 연결했다 |
 | 근거 기반 추천 | 현재 시안의 측정·조절 전후 시험값과 연결된 후보를 검증하고, 슬라이더·3D 비교로 이어 줬다 |
-| 상태·실패 복구 | 중복 GMS 호출과 오래된 제안의 적용을 차단하고, 화면 복귀 시 저장된 추천·적용 결과를 복원했다 |
+| 상태·실패 복구 | 중복 LLM 호출과 오래된 제안의 적용을 차단하고, 화면 복귀 시 저장된 추천·적용 결과를 복원했다 |
 
-**담당 기술:** Java·Spring Boot, React·TypeScript, Redis, GMS
+**담당 기술:** Java·Spring Boot, React·TypeScript, Redis, LLM API(SSAFY GMS)
 
 공통 3D 편집 엔진·모델 검증 계약은 관련 팀원과 연동했다. 복원 속도·생성 실패율·유저 테스트 결과는 아래에서 **팀 성과**로 구분했다.
 
@@ -56,13 +56,13 @@
 
 AI가 요청을 이해해도 모델에서 지원하지 않거나 저장에 실패하면 얼굴은 바뀌지 않는다. 상담 API는 **편집 후보**를 만들고, 적용 API가 소유권·`stateVersion`·모델별 허용 범위와 형상 검증 결과를 확인한 뒤 저장하도록 연결했다. 화면의 성공 안내·변경 카드는 저장된 `applyResult`를 기준으로 만든다. 실패한 후보가 대화 기록에서 적용된 것처럼 보이지 않게 처리했다.
 
-외부 GMS 호출은 DB 트랜잭션 밖에서 수행하고, 저장 시점에 상태를 다시 확인한다. 같은 요청 ID는 Redis에서 7일간 선점해 재전송 시 GMS를 다시 호출하지 않는다.
+외부 LLM 호출은 DB 트랜잭션 밖에서 수행하고, 저장 시점에 상태를 다시 확인한다. 같은 요청 ID는 Redis에서 7일간 선점해 재전송 시 LLM을 다시 호출하지 않는다.
 
 [상담·저장 구현](services/backend/api/src/main/java/com/preface/api/consult/service/ConsultService.java) · [호출 중복 차단](services/backend/api/src/main/java/com/preface/api/consult/service/SpringConsultClient.java#L2069) · [클라이언트의 적용 결과 처리](apps/web/src/features/edit/lab/useConsult.ts#L80)
 
 ### 2. 추천의 근거를 현재 3D 시안과 연결했다
 
-일반적인 미용 조언은 사용자가 이미 바꾼 얼굴이나 유지하려는 부위를 반영하지 못한다. 현재 시안에서 조절 전후를 시험한 측정값과 참고 자료를 후보에 연결하고, GMS에는 그 후보 안에서 선택·설명하도록 요청했다. 반환된 후보·측정·근거 ID와 방향을 다시 대조해, 준비한 근거와 맞지 않는 결과는 채택하지 않는다.
+일반적인 미용 조언은 사용자가 이미 바꾼 얼굴이나 유지하려는 부위를 반영하지 못한다. 현재 시안에서 조절 전후를 시험한 측정값과 참고 자료를 후보에 연결하고, LLM에는 그 후보 안에서 선택·설명하도록 요청했다. 반환된 후보·측정·근거 ID와 방향을 다시 대조해, 준비한 근거와 맞지 않는 결과는 채택하지 않는다.
 
 추천 카드는 이유를 읽는 데서 끝나지 않고 해당 슬라이더와 3D 비교를 열 수 있게 했다. 새 시안에 예전 측정값을 표시하거나, 반영되지 않은 변경을 이미 적용했다고 설명하지 않게 했다.
 
@@ -72,12 +72,12 @@ AI가 요청을 이해해도 모델에서 지원하지 않거나 저장에 실�
 
 상담 도중 슬라이더를 움직이거나 새 대화를 시작하면 이전 제안이 현재 얼굴과 맞지 않을 수 있다. 후보를 시안의 편집 버전·대화 경계와 연결하고, 오래된 제안의 적용은 차단했다. 상담 화면으로 복귀할 때는 서버에 저장된 추천·적용 결과를 복원한다.
 
-정상 응답과 **중복 요청·GMS 실패·버전 충돌·대화 전환·화면 복귀** 동작을 회귀 테스트로 확인했다.
+정상 응답과 **중복 요청·LLM 실패·버전 충돌·대화 전환·화면 복귀** 동작을 회귀 테스트로 확인했다.
 
 | 확인할 상황 | 기대 동작 | 검증 코드 |
 | --- | --- | --- |
-| 같은 상담 요청을 재전송 | GMS 호출과 대화를 중복 생성하지 않는다 | [통합 테스트](services/backend/api/src/test/java/com/preface/api/consult/ConsultFlowIT.java#L1218) |
-| GMS가 지연되거나 실패 | 사용자 메시지·편집 후보를 저장하지 않는다 | [실패 경로 테스트](services/backend/api/src/test/java/com/preface/api/consult/ConsultFlowIT.java#L1118) |
+| 같은 상담 요청을 재전송 | LLM 호출과 대화를 중복 생성하지 않는다 | [통합 테스트](services/backend/api/src/test/java/com/preface/api/consult/ConsultFlowIT.java#L1218) |
+| LLM 응답이 지연되거나 실패 | 사용자 메시지·편집 후보를 저장하지 않는다 | [실패 경로 테스트](services/backend/api/src/test/java/com/preface/api/consult/ConsultFlowIT.java#L1118) |
 | 상담 후 편집 버전이 달라짐 | 변경을 거절하고 얼굴과 이력을 유지한다 | [버전 충돌 테스트](services/backend/api/src/test/java/com/preface/api/consult/ConsultFlowIT.java#L1027) |
 | 새 대화에서 이전 후보를 적용 | 기존 편집은 보존하고 이전 후보 적용은 차단한다 | [대화 경계 테스트](services/backend/api/src/test/java/com/preface/api/consult/ConsultFlowIT.java#L87) |
 | 슬라이더에서 상담으로 복귀 | 기존 추천과 비교 동작을 유지한다 | [화면 복귀 테스트](apps/web/src/features/edit/lab/ConsultPanel.test.tsx#L200) |
@@ -252,7 +252,7 @@ AI가 요청을 이해해도 모델에서 지원하지 않거나 저장에 실�
 
 ## 시스템 아키텍처
 
-<img src="docs/assets/readme/architecture.png" alt="발표자료의 시스템 아키텍처: Caddy·Spring API·MySQL·Redis·Job Manager·GPU Worker·S3·GMS의 연결" width="100%">
+<img src="docs/assets/readme/architecture.png" alt="발표자료의 시스템 아키텍처: Caddy·Spring API·MySQL·Redis·Job Manager·GPU Worker·S3·LLM API(GMS)의 연결" width="100%">
 
 <details>
 <summary>구성 요소와 연결을 텍스트 다이어그램으로 보기</summary>
@@ -278,7 +278,7 @@ flowchart LR
   worker -->|작업 요청| api
   worker -->|저장| s3[(Amazon S3<br/>결과 파일)]
   api -->|OAuth| oauth[카카오 · 구글 로그인]
-  api -->|AI 상담| gms[GMS]
+  api -->|AI 상담| gms[LLM API]
 ```
 
 </details>
@@ -309,7 +309,7 @@ cp .env.example .env.local
 pnpm dev
 ```
 
-`http://localhost:3000/lab`에서 합성 기본 모델을 사용하는 화면을 확인한다. 로그인·상담·개인 모델 생성은 백엔드, 스토리지, OAuth·GMS 설정과 GPU 환경이 추가로 필요하다. [개발·검증 명령](docs/development.md)
+`http://localhost:3000/lab`에서 합성 기본 모델을 사용하는 화면을 확인한다. 로그인·상담·개인 모델 생성은 백엔드, 스토리지, OAuth·LLM API(GMS) 설정과 GPU 환경이 추가로 필요하다. [개발·검증 명령](docs/development.md)
 
 공개본은 운영 접속 정보와 재배포 범위를 확인하지 못한 홍보용 자산을 제외했다. 랜딩의 일부 영상·3D 연출은 포함되지 않으며, 원본 운영 서비스를 명령 한 번으로 재현하는 배포 패키지는 아니다. [공개 범위와 제외 항목](docs/public-scope.md)
 
@@ -346,7 +346,7 @@ pnpm dev
 
 ## 공개 사본 안내
 
-SSAFY 15기 B204 팀이 개발한 Preface를 개인 포트폴리오로 소개하는 저장소다. 팀원과 담당 영역을 보존하고, 개인 기여와 팀 성과를 구분했다. 원본 GitLab의 최종 코드에서 공개용 사본을 만들었으며 과거 Git 이력·Jira·MR·운영 자료는 옮기지 않았다.
+SSAFY 15기 7인 팀이 개발한 preface를 개인 포트폴리오로 소개하는 저장소다. 팀원과 담당 영역을 보존하고, 개인 기여와 팀 성과를 구분했다. 원본 GitLab의 최종 코드에서 공개용 사본을 만들었으며 과거 Git 이력·Jira·MR·운영 자료는 옮기지 않았다.
 
 실제 얼굴 사진·촬영 영상·개인화 모델, 토큰·비밀번호·개인 환경 파일은 공개 대상에서 제외한다. [공개본의 기준과 검증 범위](docs/public-scope.md)
 
